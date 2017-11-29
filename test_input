@@ -1,0 +1,18 @@
+Object1
+{
+  field_one : int12;
+  field_two : u4;
+}
+
+Object2
+{
+  field_three : uint18;
+  field_four : s14;
+  field_five : float64;
+}
+
+Object3
+{
+  field_six : float32;
+  field_seven : bool[field_six];
+}
