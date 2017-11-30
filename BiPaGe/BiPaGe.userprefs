@@ -1,0 +1,16 @@
+﻿<Properties StartupConfiguration="{91345714-1A2C-4F26-9C41-C1385422A955}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../generated_csharp/BiPaGeBaseVisitor.cs">
+    <Files>
+      <File FileName="BiPaGe/Program.cs" Line="6" Column="28" />
+      <File FileName="../generated_csharp/BiPaGeParser.cs" Line="35" Column="45" />
+      <File FileName="../generated_csharp/BiPaGeBaseVisitor.cs" Line="35" Column="22" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.BiPaGe PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>
