@@ -13,5 +13,5 @@ Identifier: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
 file: object*;
 object: Identifier '{' field+ '}';
-field: Identifier ':' (FieldType | Identifier) multiplier? ';';
+field: name=Identifier ':' (basic_type=FieldType | complex_type=Identifier) multiplier? ';';
 multiplier: '[' (NumberLiteral | Identifier ('.' Identifier)*) ']';
