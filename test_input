@@ -14,5 +14,14 @@ Object2
 Object3
 {
   field_six : float32;
-  field_seven : bool[field_six];
+  field_seven : bool;
+}
+
+ObjectWithCollections
+{
+  size_field : uint16;
+  embedded : Object2;
+  collection_one : int32[5]; // hard coded size
+  collection_two : bool[size_field]; // sized from field
+  collection_three : float64[embedded.field_three];
 }
