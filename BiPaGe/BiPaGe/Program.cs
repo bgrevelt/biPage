@@ -61,6 +61,7 @@ namespace BiPaGe
                     case "u": 
                         return new AST.FieldTypes.Unsigned(type);
                     case "float" : 
+                    case "f":
                         return new AST.FieldTypes.Float(type);
                     case "bool" : 
                         return new AST.FieldTypes.Boolean();
@@ -117,8 +118,37 @@ field_five: float64;
 
 Object3
 {
-field_six: float32;
+field_six: f32;
 field_seven: bool;
+}
+
+ObjectWithCollections
+{
+  size_field : uint16;
+  embedded : Object2;
+  collection_one : int32[5]; // hard coded size
+  collection_two : bool[size_field]; // sized from field
+  collection_three : float64[embedded.field_three];
+}
+";
+            var invalid_input =
+@"Object1 
+{
+field_one: int1;
+field_two: u1;
+}
+
+Object2
+{
+field_three: uint18;
+field_four: s0;
+field_five: float12;
+}
+
+Object3
+{
+field_six: float49;
+field_seven: bool5;
 }
 
 ObjectWithCollections
@@ -140,7 +170,19 @@ ObjectWithCollections
 
             var test = new Test();
             var AST = test.Visit(f);
-            AST.Print(0);
+            List<String> errors = new List<string>();
+            List<String> warnings = new List<string>();
+            bool valid = AST.CheckSemantics(errors, warnings);
+            foreach(var error in errors)
+            {
+                Console.WriteLine(String.Format("Error: {0}", error));
+            }
+            foreach (var warning in warnings)
+            {
+                Console.WriteLine(String.Format("Warning: {0}", warning));
+            }
+            if(valid)
+                AST.Print(0);
         }
 
 

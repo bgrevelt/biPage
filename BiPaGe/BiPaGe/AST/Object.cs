@@ -30,5 +30,18 @@ namespace BiPaGe.AST
                 field.Print(indentLevel + 1);
             }
         }
+
+        public override bool CheckSemantics(IList<String> errors, IList<String> warnings)
+        {
+            bool semantics_valid = true;
+
+            foreach (var field in fields)
+            {
+                if (!field.CheckSemantics(errors, warnings))
+                    semantics_valid = false;
+            }
+
+            return semantics_valid;
+        }
     }
 }

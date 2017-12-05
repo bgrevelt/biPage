@@ -1,26 +1,24 @@
 ﻿<Properties StartupConfiguration="{91345714-1A2C-4F26-9C41-C1385422A955}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="BiPaGe Status">
     <Files>
-      <File FileName="BiPaGe/Program.cs" Line="27" Column="1" />
-      <File FileName="../generated_csharp/BiPaGeParser.cs" Line="392" Column="1" />
-      <File FileName="../generated_csharp/BiPaGeBaseVisitor.cs" Line="65" Column="1" />
-      <File FileName="BiPaGe/AST/EmptyClass.cs" Line="4" Column="28" />
-      <File FileName="BiPaGe/AST/Parser.cs" Line="14" Column="51" />
-      <File FileName="BiPaGe/AST/Object.cs" Line="4" Column="21" />
-      <File FileName="BiPaGe/AST/Field.cs" Line="11" Column="30" />
-      <File FileName="BiPaGe/AST/FieldTypes/Enum.cs" Line="2" Column="32" />
-      <File FileName="BiPaGe/AST/FieldTypes/Collection.cs" Line="2" Column="32" />
-      <File FileName="BiPaGe/AST/FieldTypes/Signed.cs" Line="2" Column="32" />
-      <File FileName="BiPaGe/AST/FieldTypes/Float.cs" Line="2" Column="32" />
-      <File FileName="BiPaGe/AST/FieldTypes/Boolean.cs" Line="2" Column="32" />
+      <File FileName="../BiPaGe.g4" Line="7" Column="49" />
+      <File FileName="BiPaGe/AST/IASTNode.cs" Line="9" Column="59" />
+      <File FileName="BiPaGe/AST/Object.cs" Line="40" Column="59" />
       <File FileName="BiPaGe/AST/FieldType.cs" Line="4" Column="36" />
-      <File FileName="BiPaGe/AST/IASTNode.cs" Line="8" Column="24" />
-      <File FileName="BiPaGe/AST/Literals/NumberLiteral.cs" Line="2" Column="30" />
-      <File FileName="BiPaGe/AST/Identifiers/FieldIdentifier.cs" Line="4" Column="36" />
+      <File FileName="BiPaGe/AST/Field.cs" Line="25" Column="56" />
+      <File FileName="BiPaGe/AST/Literals/NumberLiteral.cs" Line="25" Column="23" />
+      <File FileName="BiPaGe/AST/Identifiers/FieldIdentifier.cs" Line="15" Column="1" />
+      <File FileName="BiPaGe/AST/Identifiers/ObjectIdentifier.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe/AST/FieldTypes/Boolean.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe/AST/FieldTypes/Collection.cs" Line="27" Column="34" />
+      <File FileName="BiPaGe/AST/FieldTypes/Float.cs" Line="16" Column="50" />
+      <File FileName="BiPaGe/AST/FieldTypes/SizedType.cs" Line="6" Column="22" />
+      <File FileName="BiPaGe/AST/FieldTypes/Enum.cs" Line="2" Column="32" />
       <File FileName="BiPaGe/AST/IMultiplier.cs" Line="2" Column="21" />
-      <File FileName="BiPaGe/AST/FieldTypes/SizedType.cs" Line="2" Column="32" />
-      <File FileName="BiPaGe/AST/FieldTypes/Unsigned.cs" Line="2" Column="32" />
-      <File FileName="BiPaGe/AST/Identifiers/ObjectIdentifier.cs" Line="4" Column="46" />
+      <File FileName="BiPaGe/AST/FieldTypes/Unsigned.cs" Line="23" Column="123" />
+      <File FileName="BiPaGe/AST/FieldTypes/Signed.cs" Line="18" Column="87" />
+      <File FileName="BiPaGe/AST/Parser.cs" Line="40" Column="26" />
+      <File FileName="BiPaGe/Program.cs" Line="164" Column="52" />
       <File FileName="BiPaGe Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>

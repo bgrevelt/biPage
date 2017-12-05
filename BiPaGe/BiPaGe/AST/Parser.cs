@@ -27,5 +27,17 @@ namespace BiPaGe.AST
                 o.Print(indentLevel + 1);
             }
         }
+
+        public override bool CheckSemantics(IList<string> errors, IList<string> warnings)
+        {
+            bool valid = true;
+            foreach (var o in Objects)
+            {
+                if (!o.CheckSemantics(errors, warnings))
+                    valid = false;
+            }
+
+            return valid;
+        }
     }
 }
