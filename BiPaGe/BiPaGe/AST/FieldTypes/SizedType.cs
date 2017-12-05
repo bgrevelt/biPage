@@ -1,7 +1,7 @@
 ﻿using System;
-namespace BiPaGe.AST.Types.BasicTypes
+namespace BiPaGe.AST.FieldTypes
 {
-    public abstract class SizedType : BasicType
+    public abstract class SizedType : AST.FieldType
     {
         public UInt32 Size { get; } // The size of the integer field in bits
 

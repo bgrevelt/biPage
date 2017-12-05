@@ -6,12 +6,12 @@ namespace BiPaGe.AST
     public class Parser : IASTNode
     {
         public String Name { get; }
-        public IEnumerable<Types.Object> Objects
+        public IEnumerable<AST.Object> Objects
         {
             get;
         }
 
-        public Parser(String name, IEnumerable<Types.Object> objects)
+        public Parser(String name, IEnumerable<AST.Object> objects)
         {
             this.Objects = objects;
             this.Name = name;

@@ -58,21 +58,20 @@
     </Compile>
     <Compile Include="AST\Parser.cs" />
     <Compile Include="AST\Field.cs" />
-    <Compile Include="AST\Types\Enum.cs" />
-    <Compile Include="AST\Types\BasicType.cs" />
-    <Compile Include="AST\Types\Object.cs" />
-    <Compile Include="AST\Types\BasicTypes\Signed.cs" />
-    <Compile Include="AST\Types\BasicTypes\Float.cs" />
-    <Compile Include="AST\Types\BasicTypes\Boolean.cs" />
-    <Compile Include="AST\Types\Collection.cs" />
-    <Compile Include="AST\Types\Type.cs" />
+    <Compile Include="AST\FieldTypes\Enum.cs" />
+    <Compile Include="AST\FieldTypes\Collection.cs" />
     <Compile Include="AST\IASTNode.cs" />
-    <Compile Include="AST\Types\BasicTypes\NumberLiteral.cs" />
-    <Compile Include="AST\Types\FieldIdentifier.cs" />
-    <Compile Include="AST\Types\IMultiplier.cs" />
-    <Compile Include="AST\Types\BasicTypes\SizedType.cs" />
-    <Compile Include="AST\Types\BasicTypes\Unsigned.cs" />
-    <Compile Include="AST\Types\ObjectId.cs" />
+    <Compile Include="AST\Literals\NumberLiteral.cs" />
+    <Compile Include="AST\Identifiers\FieldIdentifier.cs" />
+    <Compile Include="AST\Identifiers\ObjectIdentifier.cs" />
+    <Compile Include="AST\IMultiplier.cs" />
+    <Compile Include="AST\FieldTypes\Boolean.cs" />
+    <Compile Include="AST\FieldTypes\Float.cs" />
+    <Compile Include="AST\FieldTypes\Signed.cs" />
+    <Compile Include="AST\FieldTypes\SizedType.cs" />
+    <Compile Include="AST\FieldTypes\Unsigned.cs" />
+    <Compile Include="AST\FieldType.cs" />
+    <Compile Include="AST\Object.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -82,8 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AST\" />
-    <Folder Include="AST\Types\" />
-    <Folder Include="AST\Types\BasicTypes\" />
+    <Folder Include="AST\FieldTypes\" />
+    <Folder Include="AST\Literals\" />
+    <Folder Include="AST\Identifiers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

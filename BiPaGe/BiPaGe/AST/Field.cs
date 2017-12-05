@@ -4,9 +4,9 @@ namespace BiPaGe.AST
     public class Field : IASTNode
     { 
         public String Name { get; }
-        public AST.Types.Type Type { get; }
+        public AST.FieldType Type { get; }
 
-        public Field(String name, AST.Types.Type type)
+        public Field(String name, AST.FieldType type)
         {
             this.Name = name;
             this.Type = type;

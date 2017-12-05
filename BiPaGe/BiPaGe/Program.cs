@@ -10,7 +10,7 @@ namespace BiPaGe
     {
         public override AST.IASTNode VisitObjects(BiPaGeParser.ObjectsContext context)
         {
-            List<AST.Types.Object> objects = new List<AST.Types.Object>();
+            List<AST.Object> objects = new List<AST.Object>();
             foreach (var obj in context.@object())
             {
                 objects.Add((dynamic)obj.Accept(this));
@@ -29,13 +29,13 @@ namespace BiPaGe
 
             var objectName = context.Identifier().GetText();
 
-            return new AST.Types.Object(objectName, fields);
+            return new AST.Object(objectName, fields);
         }
 
         public override AST.IASTNode VisitField(BiPaGeParser.FieldContext context)
         {
             var fieldName = context.name.Text;
-            AST.Types.Type type = (dynamic)context.fieldType().Accept(this);
+            AST.FieldType type = (dynamic)context.fieldType().Accept(this);
             return new AST.Field(fieldName, type);
         }
 
@@ -44,7 +44,7 @@ namespace BiPaGe
             if(context.Identifier() != null)
             {
                 // this is a complex field (e.g. the type is another object)
-                return new AST.Types.ObjectId(context.Identifier().GetText()); 
+                return new AST.Identifiers.ObjectIdentifier(context.Identifier().GetText()); 
             }
             else
             {
@@ -56,14 +56,14 @@ namespace BiPaGe
                 {
                     case "int": 
                     case "s":
-                        return new AST.Types.BasicTypes.Signed(type);
+                        return new AST.FieldTypes.Signed(type);
                     case "uint" :
                     case "u": 
-                        return new AST.Types.BasicTypes.Unsigned(type);
+                        return new AST.FieldTypes.Unsigned(type);
                     case "float" : 
-                        return new AST.Types.BasicTypes.Float(type);
+                        return new AST.FieldTypes.Float(type);
                     case "bool" : 
-                        return new AST.Types.BasicTypes.Boolean();
+                        return new AST.FieldTypes.Boolean();
                 }
             }
 
@@ -73,16 +73,16 @@ namespace BiPaGe
 
         public override AST.IASTNode VisitCollection(BiPaGeParser.CollectionContext context)
         {
-            AST.Types.Type type = (dynamic)context.singular().Accept(this);
-            AST.Types.IMultiplier multiplier = (dynamic)context.multiplier().Accept(this);
+            AST.FieldType type = (dynamic)context.singular().Accept(this);
+            AST.IMultiplier multiplier = (dynamic)context.multiplier().Accept(this);
 
-            return new AST.Types.Collection(type, multiplier);
+            return new AST.FieldTypes.Collection(type, multiplier);
         }
 
         public override AST.IASTNode VisitMultiplier(BiPaGeParser.MultiplierContext context)
         {
             if (context.NumberLiteral() != null)
-                return new AST.Types.BasicTypes.NumberLiteral(context.NumberLiteral().GetText());
+                return new AST.Literals.NumberLiteral(context.NumberLiteral().GetText());
             else
             {
                 String identifier = "";
@@ -92,7 +92,7 @@ namespace BiPaGe
                 }
                 identifier.Remove(identifier.Length - 1);
 
-                return new AST.Types.FieldIdentifier(identifier);
+                return new AST.Identifiers.FieldIdentifier(identifier);
             }
         }
     }

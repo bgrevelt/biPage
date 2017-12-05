@@ -1,12 +1,12 @@
 ﻿using System;
-namespace BiPaGe.AST.Types
+namespace BiPaGe.AST.FieldTypes
 {
-    public class Collection : AST.Types.Type
+    public class Collection : AST.FieldType
     {
-        public Type Type { get; }
+        public FieldType Type { get; }
         public IMultiplier Size { get; } 
         
-        public Collection(Type type, IMultiplier multiplier)
+        public Collection(FieldType type, IMultiplier multiplier)
         {
             this.Type = type;
             this.Size = multiplier;

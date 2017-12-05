@@ -1,7 +1,7 @@
 ﻿using System;
-namespace BiPaGe.AST.Types.BasicTypes
+namespace BiPaGe.AST.FieldTypes
 {
-    public class Boolean : BasicType
+    public class Boolean : AST.FieldType
     {
         public Boolean()
         {

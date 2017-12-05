@@ -1,10 +1,10 @@
 ﻿using System;
-namespace BiPaGe.AST.Types
+namespace BiPaGe.AST.Identifiers
 {
-    public class ObjectId : AST.Types.Type
+    public class ObjectIdentifier : AST.FieldType
     {
         public String Id { get; }
-        public ObjectId(String id)
+        public ObjectIdentifier(String id)
         {
             this.Id = id;
         }

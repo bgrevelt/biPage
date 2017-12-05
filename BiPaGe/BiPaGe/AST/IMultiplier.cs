@@ -1,5 +1,5 @@
 ﻿using System;
-namespace BiPaGe.AST.Types
+namespace BiPaGe.AST
 {
     public abstract class IMultiplier : IASTNode
     {

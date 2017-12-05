@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BiPaGe.AST.Types
+namespace BiPaGe.AST
 {
     public class Object : IASTNode
     {

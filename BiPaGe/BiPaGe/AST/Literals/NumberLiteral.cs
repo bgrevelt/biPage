@@ -1,5 +1,5 @@
 ﻿using System;
-namespace BiPaGe.AST.Types.BasicTypes
+namespace BiPaGe.AST.Literals
 {
     public class NumberLiteral : IMultiplier
     {

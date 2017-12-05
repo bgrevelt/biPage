@@ -1,5 +1,5 @@
 ﻿using System;
-namespace BiPaGe.AST.Types.BasicTypes
+namespace BiPaGe.AST.FieldTypes
 {
     public class Unsigned : SizedType
     {

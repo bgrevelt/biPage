@@ -1,5 +1,5 @@
 ﻿using System;
-namespace BiPaGe.AST.Types
+namespace BiPaGe.AST.FieldTypes
 {
     public class EnumField
     {

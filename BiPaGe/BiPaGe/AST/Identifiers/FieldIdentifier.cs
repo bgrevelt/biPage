@@ -1,5 +1,5 @@
 ﻿using System;
-namespace BiPaGe.AST.Types
+namespace BiPaGe.AST.Identifiers
 {
     public class FieldIdentifier : IMultiplier
     {
