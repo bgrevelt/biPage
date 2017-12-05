@@ -6,7 +6,7 @@ using Antlr4.Runtime;
 
 namespace BiPaGe
 {
-    class Test : BiPaGeBaseVisitor<AST.IASTNode>
+    class Visitor : BiPaGeBaseVisitor<AST.IASTNode>
     {
         public override AST.IASTNode VisitObjects(BiPaGeParser.ObjectsContext context)
         {
@@ -168,7 +168,7 @@ ObjectWithCollections
 
             var f = parser.objects();
 
-            var test = new Test();
+            var test = new Visitor();
             var AST = test.Visit(f);
             List<String> errors = new List<string>();
             List<String> warnings = new List<string>();

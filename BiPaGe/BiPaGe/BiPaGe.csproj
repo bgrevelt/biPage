@@ -34,6 +34,9 @@
       <HintPath>..\packages\Antlr4.Runtime.Standard.4.7.1\lib\net35\Antlr4.Runtime.Standard.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="AST\FieldTypes\Unsigned.cs" />
     <Compile Include="AST\FieldType.cs" />
     <Compile Include="AST\Object.cs" />
+    <Compile Include="Test\NUnitTestClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -84,6 +88,7 @@
     <Folder Include="AST\FieldTypes\" />
     <Folder Include="AST\Literals\" />
     <Folder Include="AST\Identifiers\" />
+    <Folder Include="Test\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
