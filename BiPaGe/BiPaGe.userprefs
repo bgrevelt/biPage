@@ -1,14 +1,35 @@
 ﻿<Properties StartupConfiguration="{91345714-1A2C-4F26-9C41-C1385422A955}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="../generated_csharp/BiPaGeBaseVisitor.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BiPaGe/AST/Types/ObjectId.cs">
     <Files>
-      <File FileName="BiPaGe/Program.cs" Line="6" Column="28" />
-      <File FileName="../generated_csharp/BiPaGeParser.cs" Line="35" Column="45" />
-      <File FileName="../generated_csharp/BiPaGeBaseVisitor.cs" Line="35" Column="22" />
+      <File FileName="BiPaGe/Program.cs" Line="53" Column="180" />
+      <File FileName="../generated_csharp/BiPaGeParser.cs" Line="392" Column="1" />
+      <File FileName="../generated_csharp/BiPaGeBaseVisitor.cs" Line="65" Column="1" />
+      <File FileName="BiPaGe/AST/EmptyClass.cs" Line="4" Column="28" />
+      <File FileName="BiPaGe/AST/Parser.cs" Line="17" Column="30" />
+      <File FileName="BiPaGe/AST/Types/Object.cs" Line="21" Column="34" />
+      <File FileName="BiPaGe/AST/Field.cs" Line="4" Column="34" />
+      <File FileName="BiPaGe/AST/Types/BasicType.cs" Line="6" Column="25" />
+      <File FileName="BiPaGe/AST/Types/Enum.cs" Line="2" Column="27" />
+      <File FileName="BiPaGe/AST/Types/Collection.cs" Line="12" Column="36" />
+      <File FileName="BiPaGe/AST/Types/BasicTypes/Signed.cs" Line="4" Column="36" />
+      <File FileName="BiPaGe/AST/Types/BasicTypes/Float.cs" Line="6" Column="51" />
+      <File FileName="BiPaGe/AST/Types/BasicTypes/Boolean.cs" Line="4" Column="37" />
+      <File FileName="BiPaGe/AST/Types/Type.cs" Line="4" Column="33" />
+      <File FileName="BiPaGe/AST/IASTNode.cs" Line="4" Column="30" />
+      <File FileName="BiPaGe/AST/Types/BasicTypes/NumberLiteral.cs" Line="8" Column="9" />
+      <File FileName="BiPaGe/AST/Types/FieldIdentifier.cs" Line="3" Column="2" />
+      <File FileName="BiPaGe/AST/Types/IMultiplier.cs" Line="4" Column="44" />
+      <File FileName="BiPaGe/AST/Types/BasicTypes/SizedType.cs" Line="11" Column="10" />
+      <File FileName="BiPaGe/AST/Types/BasicTypes/Unsigned.cs" Line="11" Column="1" />
+      <File FileName="BiPaGe/AST/Types/ObjectId.cs" Line="6" Column="26" />
+      <File FileName="../BiPaGe.g4" Line="19" Column="34" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/Bouke/Documents/Development/parser_generator/github/BiPaGe/BiPaGe/Program.cs" relfile="BiPaGe/Program.cs" line="57" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />

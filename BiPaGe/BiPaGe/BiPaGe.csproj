@@ -33,6 +33,7 @@
     <Reference Include="Antlr4.Runtime.Standard">
       <HintPath>..\packages\Antlr4.Runtime.Standard.4.7.1\lib\net35\Antlr4.Runtime.Standard.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -55,9 +56,34 @@
     <Compile Include="..\..\generated_csharp\BiPaGeVisitor.cs">
       <Link>BiPaGeVisitor.cs</Link>
     </Compile>
+    <Compile Include="AST\Parser.cs" />
+    <Compile Include="AST\Field.cs" />
+    <Compile Include="AST\Types\Enum.cs" />
+    <Compile Include="AST\Types\BasicType.cs" />
+    <Compile Include="AST\Types\Object.cs" />
+    <Compile Include="AST\Types\BasicTypes\Signed.cs" />
+    <Compile Include="AST\Types\BasicTypes\Float.cs" />
+    <Compile Include="AST\Types\BasicTypes\Boolean.cs" />
+    <Compile Include="AST\Types\Collection.cs" />
+    <Compile Include="AST\Types\Type.cs" />
+    <Compile Include="AST\IASTNode.cs" />
+    <Compile Include="AST\Types\BasicTypes\NumberLiteral.cs" />
+    <Compile Include="AST\Types\FieldIdentifier.cs" />
+    <Compile Include="AST\Types\IMultiplier.cs" />
+    <Compile Include="AST\Types\BasicTypes\SizedType.cs" />
+    <Compile Include="AST\Types\BasicTypes\Unsigned.cs" />
+    <Compile Include="AST\Types\ObjectId.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\..\BiPaGe.g4">
+      <Link>BiPaGe.g4</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AST\" />
+    <Folder Include="AST\Types\" />
+    <Folder Include="AST\Types\BasicTypes\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

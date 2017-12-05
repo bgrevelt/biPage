@@ -1,75 +1,99 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 
 namespace BiPaGe
 {
-    class Test : BiPaGeBaseVisitor<int>
+    class Test : BiPaGeBaseVisitor<AST.IASTNode>
     {
-        private int indent = 0;
-
-        public override int VisitFile(BiPaGeParser.FileContext context)
+        public override AST.IASTNode VisitObjects(BiPaGeParser.ObjectsContext context)
         {
-            Console.WriteLine("File");
-            indent++;
+            List<AST.Types.Object> objects = new List<AST.Types.Object>();
             foreach (var obj in context.@object())
             {
-                obj.Accept(this);
+                objects.Add((dynamic)obj.Accept(this));
             }
-            indent--;
-            return 0;
+
+            return new AST.Parser("No name yet", objects);
         }
 
-        private void do_indent()
+        public override AST.IASTNode VisitObject(BiPaGeParser.ObjectContext context)
         {
-            for (int i = 0; i < indent; ++i)
-                Console.Write('\t');
-        }
-
-        public override int VisitObject(BiPaGeParser.ObjectContext context)
-        {
-            do_indent();
-            Console.WriteLine("Object: " + context.Identifier().GetText());
-            indent++;
+            List<AST.Field> fields = new List<AST.Field>();
             foreach (var field in context.field())
             {
-                field.Accept(this);
+                fields.Add((dynamic)field.Accept(this));
             }
-            indent--;
-            return 0;
+
+            var objectName = context.Identifier().GetText();
+
+            return new AST.Types.Object(objectName, fields);
         }
 
-        public override int VisitField(BiPaGeParser.FieldContext context)
+        public override AST.IASTNode VisitField(BiPaGeParser.FieldContext context)
         {
-            do_indent();
-            var type = "";
-            if (context.basic_type != null)
-                type = context.basic_type.Text;
-            else
-                type = context.complex_type.Text;
-            Console.WriteLine("Field! " + context.name.Text + ", " + type);
-            indent++;
-            if (context.multiplier() != null)
-                context.multiplier().Accept(this);
-            indent--;
-            return 0;
+            var fieldName = context.name.Text;
+            AST.Types.Type type = (dynamic)context.fieldType().Accept(this);
+            return new AST.Field(fieldName, type);
         }
 
-        public override int VisitMultiplier(BiPaGeParser.MultiplierContext context)
+        public override AST.IASTNode VisitSingular(BiPaGeParser.SingularContext context)
         {
-            do_indent();
-            Console.Write("Multiplier! ");
-            if (context.Identifier().Length != 0)
+            if(context.Identifier() != null)
             {
-                foreach (var id in context.Identifier())
-                    Console.Write(id.GetText() + ".");
+                // this is a complex field (e.g. the type is another object)
+                return new AST.Types.ObjectId(context.Identifier().GetText()); 
             }
             else
             {
-                Console.Write(context.NumberLiteral().GetText());
+                // TODO: assert basictype is valid
+                // The basictype identifier is of the form 
+                var type = context.BasicType().GetText();
+                var type_only = type.TrimEnd("0123456789".ToCharArray());
+                switch(type_only)
+                {
+                    case "int": 
+                    case "s":
+                        return new AST.Types.BasicTypes.Signed(type);
+                    case "uint" :
+                    case "u": 
+                        return new AST.Types.BasicTypes.Unsigned(type);
+                    case "float" : 
+                        return new AST.Types.BasicTypes.Float(type);
+                    case "bool" : 
+                        return new AST.Types.BasicTypes.Boolean();
+                }
             }
 
-            Console.WriteLine();
-            return 0;
+            // TODO: solve better
+            throw new ArgumentException();
+        } 
+
+        public override AST.IASTNode VisitCollection(BiPaGeParser.CollectionContext context)
+        {
+            AST.Types.Type type = (dynamic)context.singular().Accept(this);
+            AST.Types.IMultiplier multiplier = (dynamic)context.multiplier().Accept(this);
+
+            return new AST.Types.Collection(type, multiplier);
+        }
+
+        public override AST.IASTNode VisitMultiplier(BiPaGeParser.MultiplierContext context)
+        {
+            if (context.NumberLiteral() != null)
+                return new AST.Types.BasicTypes.NumberLiteral(context.NumberLiteral().GetText());
+            else
+            {
+                String identifier = "";
+                foreach(var id in context.Identifier())
+                {
+                    identifier = identifier + id.GetText() + ".";
+                }
+                identifier.Remove(identifier.Length - 1);
+
+                return new AST.Types.FieldIdentifier(identifier);
+            }
         }
     }
 
@@ -112,7 +136,7 @@ ObjectWithCollections
             var tokens = new CommonTokenStream(lexer);
             var parser = new BiPaGeParser(tokens);
 
-            var f = parser.file();
+            var f = parser.objects();
 
             var test = new Test();
             test.Visit(f);
