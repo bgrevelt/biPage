@@ -9,5 +9,10 @@ namespace BiPaGe.AST.Types.BasicTypes
         {
             this.content = content;
         }
+
+        public override void Print(int indentLevel)
+        {
+            PrintIndented(String.Format("Number literal: {0}", content), indentLevel);
+        }
     }
 }

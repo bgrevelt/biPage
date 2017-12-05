@@ -139,7 +139,8 @@ ObjectWithCollections
             var f = parser.objects();
 
             var test = new Test();
-            test.Visit(f);
+            var AST = test.Visit(f);
+            AST.Print(0);
         }
 
 

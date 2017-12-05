@@ -6,5 +6,10 @@ namespace BiPaGe.AST.Types.BasicTypes
         public Boolean()
         {
         }
+
+        public override void Print(int indentLevel)
+        {
+            PrintIndented("Boolean", indentLevel);
+        }
     }
 }

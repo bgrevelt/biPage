@@ -11,5 +11,12 @@ namespace BiPaGe.AST.Types
             this.Type = type;
             this.Size = multiplier;
         }
+
+        public override void Print(int indentLevel)
+        {
+            PrintIndented("collection", indentLevel);
+            Type.Print(indentLevel + 1);
+            Size.Print(indentLevel + 1);
+        }
     }
 }

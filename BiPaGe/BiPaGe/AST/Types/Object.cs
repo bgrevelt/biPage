@@ -20,5 +20,15 @@ namespace BiPaGe.AST.Types
             this.identifier = identifier;
             this.fields = fields;
         }
+
+        public override void Print(int indentLevel)
+        {
+            PrintIndented(String.Format("Object {0}: ", identifier), indentLevel);
+
+            foreach (var field in fields)
+            {
+                field.Print(indentLevel + 1);
+            }
+        }
     }
 }

@@ -8,5 +8,10 @@ namespace BiPaGe.AST.Types
         {
             this.id = id;
         }
+
+        public override void Print(int indentLevel)
+        {
+            PrintIndented(String.Format("Field id: {0}", id), indentLevel);
+        }
     }
 }

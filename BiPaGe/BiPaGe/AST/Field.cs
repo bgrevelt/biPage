@@ -11,5 +11,11 @@ namespace BiPaGe.AST
             this.Name = name;
             this.Type = type;
         }
+
+        public override void Print(int indentLevel)
+        {
+            PrintIndented(String.Format("Field {0}: ", Name), indentLevel);
+            Type.Print(indentLevel + 1);
+        }
     }
 }
