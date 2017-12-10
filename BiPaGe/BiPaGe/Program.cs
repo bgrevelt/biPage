@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 
@@ -51,7 +52,6 @@ namespace BiPaGe
                 // TODO: assert basictype is valid
                 // The basictype identifier is of the form 
                 var type = context.BasicType().GetText();
-                Console.WriteLine(String.Format("Singular {0} at {1}:{2}", type, context.BasicType().Symbol.Line, context.BasicType().Symbol.Column));
                 var type_only = type.TrimEnd("0123456789".ToCharArray());
                 switch(type_only)
                 {
@@ -109,6 +109,28 @@ namespace BiPaGe
         }
     }
 
+    public class ErrorListener : BaseErrorListener, IAntlrErrorListener<int>
+    {
+        private IList<SemanticAnalysis.Error> errors;
+        private IList<SemanticAnalysis.Warning> warnings;
+
+        public ErrorListener(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
+        {
+            this.errors = errors;
+            this.warnings = warnings;
+        }
+        public override void SyntaxError(System.IO.TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
+        {
+            this.errors.Add(new SemanticAnalysis.Error(new AST.SourceInfo(line, charPositionInLine), msg));
+        }
+
+        public void SyntaxError(TextWriter output, IRecognizer recognizer, int offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
+        {
+            this.errors.Add(new SemanticAnalysis.Error(new AST.SourceInfo(line, charPositionInLine), msg));
+        }
+    }
+
+
     class MainClass
     {
         public static void Main(string[] args)
@@ -158,7 +180,7 @@ field_five: float12;
 
 Object3
 {
-field_six: float49;
+field_six, flaot49;
 field_seven: bool5;
 }
 
@@ -177,12 +199,18 @@ ObjectWithCollections
             var tokens = new CommonTokenStream(lexer);
             var parser = new BiPaGeParser(tokens);
 
+            var errors = new List<SemanticAnalysis.Error>();
+            var warnings = new List<SemanticAnalysis.Warning>();
+
+            var errorListener = new ErrorListener(errors, warnings);
+            lexer.RemoveErrorListeners();
+            lexer.AddErrorListener(errorListener);
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(errorListener);
             var f = parser.objects();
 
             var test = new Visitor();
             var AST = test.Visit(f);
-            var errors = new List<SemanticAnalysis.Error>();
-            var warnings = new List<SemanticAnalysis.Warning>();
             bool valid = AST.CheckSemantics(errors, warnings);
             foreach(var error in errors)
             {
