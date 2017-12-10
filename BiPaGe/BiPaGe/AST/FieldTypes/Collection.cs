@@ -8,7 +8,7 @@ namespace BiPaGe.AST.FieldTypes
         public FieldType Type { get; }
         public IMultiplier Size { get; } 
         
-        public Collection(FieldType type, IMultiplier multiplier)
+        public Collection(SourceInfo sourceInfo, FieldType type, IMultiplier multiplier) : base(sourceInfo)
         {
             this.Type = type;
             this.Size = multiplier;
@@ -21,7 +21,7 @@ namespace BiPaGe.AST.FieldTypes
             Size.Print(indentLevel + 1);
         }
 
-        public override bool CheckSemantics(IList<String> errors, IList<String> warnings)
+        public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
             bool type_valid = Type.CheckSemantics(errors, warnings);
             bool size_valid = Size.CheckSemantics(errors, warnings);

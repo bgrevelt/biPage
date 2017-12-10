@@ -15,7 +15,7 @@ namespace BiPaGe.AST
             get;
         }
 
-        public Object(String identifier, IEnumerable<Field> fields)
+        public Object(SourceInfo sourceInfo, String identifier, IEnumerable<Field> fields) : base(sourceInfo)
         {
             this.identifier = identifier;
             this.fields = fields;
@@ -31,7 +31,7 @@ namespace BiPaGe.AST
             }
         }
 
-        public override bool CheckSemantics(IList<String> errors, IList<String> warnings)
+        public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
             bool semantics_valid = true;
 

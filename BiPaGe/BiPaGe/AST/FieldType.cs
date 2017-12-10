@@ -3,7 +3,7 @@ namespace BiPaGe.AST
 {
     public abstract class FieldType : IASTNode
     {
-        public FieldType()
+        public FieldType(SourceInfo sourceInfo) : base(sourceInfo)
         {
         }
     }

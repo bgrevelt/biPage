@@ -5,15 +5,15 @@ namespace BiPaGe.AST.FieldTypes
 {
     public class Float : SizedType
     {
-        public Float(String typeId) : base(typeId)
+        public Float(SourceInfo sourceInfo, String typeId) : base(sourceInfo, typeId)
         {
         }
 
-        public override bool CheckSemantics(IList<String> errors, IList<String> warnings)
+        public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
             if(Size != 32 && Size != 64)
             {
-                errors.Add(String.Format("Size {0} not supported for floating point type. Only float32 and float64 are supported", Size));
+                errors.Add(new SemanticAnalysis.Error(sourceInfo, String.Format("Size {0} not supported for floating point type. Only float32 and float64 are supported", Size)));
                 return false;
             }
 

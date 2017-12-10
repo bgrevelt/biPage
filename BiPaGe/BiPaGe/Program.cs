@@ -16,7 +16,7 @@ namespace BiPaGe
                 objects.Add((dynamic)obj.Accept(this));
             }
 
-            return new AST.Parser("No name yet", objects);
+            return new AST.Parser(GetSourceInfo(context.Start), "No name yet", objects);
         }
 
         public override AST.IASTNode VisitObject(BiPaGeParser.ObjectContext context)
@@ -29,14 +29,14 @@ namespace BiPaGe
 
             var objectName = context.Identifier().GetText();
 
-            return new AST.Object(objectName, fields);
+            return new AST.Object(GetSourceInfo(context.Start), objectName, fields);
         }
 
         public override AST.IASTNode VisitField(BiPaGeParser.FieldContext context)
         {
             var fieldName = context.name.Text;
             AST.FieldType type = (dynamic)context.fieldType().Accept(this);
-            return new AST.Field(fieldName, type);
+            return new AST.Field(GetSourceInfo(context.Start), fieldName, type);
         }
 
         public override AST.IASTNode VisitSingular(BiPaGeParser.SingularContext context)
@@ -44,27 +44,28 @@ namespace BiPaGe
             if(context.Identifier() != null)
             {
                 // this is a complex field (e.g. the type is another object)
-                return new AST.Identifiers.ObjectIdentifier(context.Identifier().GetText()); 
+                return new AST.Identifiers.ObjectIdentifier(GetSourceInfo(context.Identifier()), context.Identifier().GetText()); 
             }
             else
             {
                 // TODO: assert basictype is valid
                 // The basictype identifier is of the form 
                 var type = context.BasicType().GetText();
+                Console.WriteLine(String.Format("Singular {0} at {1}:{2}", type, context.BasicType().Symbol.Line, context.BasicType().Symbol.Column));
                 var type_only = type.TrimEnd("0123456789".ToCharArray());
                 switch(type_only)
                 {
                     case "int": 
                     case "s":
-                        return new AST.FieldTypes.Signed(type);
+                        return new AST.FieldTypes.Signed(GetSourceInfo(context.Start), type);
                     case "uint" :
                     case "u": 
-                        return new AST.FieldTypes.Unsigned(type);
+                        return new AST.FieldTypes.Unsigned(GetSourceInfo(context.Start), type);
                     case "float" : 
                     case "f":
-                        return new AST.FieldTypes.Float(type);
+                        return new AST.FieldTypes.Float(GetSourceInfo(context.Start), type);
                     case "bool" : 
-                        return new AST.FieldTypes.Boolean();
+                        return new AST.FieldTypes.Boolean(GetSourceInfo(context.Start));
                 }
             }
 
@@ -77,13 +78,13 @@ namespace BiPaGe
             AST.FieldType type = (dynamic)context.singular().Accept(this);
             AST.IMultiplier multiplier = (dynamic)context.multiplier().Accept(this);
 
-            return new AST.FieldTypes.Collection(type, multiplier);
+            return new AST.FieldTypes.Collection(GetSourceInfo(context.Start), type, multiplier);
         }
 
         public override AST.IASTNode VisitMultiplier(BiPaGeParser.MultiplierContext context)
         {
             if (context.NumberLiteral() != null)
-                return new AST.Literals.NumberLiteral(context.NumberLiteral().GetText());
+                return new AST.Literals.NumberLiteral(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
             else
             {
                 String identifier = "";
@@ -93,8 +94,18 @@ namespace BiPaGe
                 }
                 identifier.Remove(identifier.Length - 1);
 
-                return new AST.Identifiers.FieldIdentifier(identifier);
+                return new AST.Identifiers.FieldIdentifier(GetSourceInfo(context.Start), identifier);
             }
+        }
+
+        private AST.SourceInfo GetSourceInfo(Antlr4.Runtime.Tree.ITerminalNode node)
+        {
+            return GetSourceInfo(node.Symbol);
+        }
+
+        private AST.SourceInfo GetSourceInfo(Antlr4.Runtime.IToken token)
+        {
+            return new AST.SourceInfo(token.Line, token.Column);
         }
     }
 
@@ -161,7 +172,7 @@ ObjectWithCollections
 }
 ";
 
-            var inputStream = new AntlrInputStream(input);
+            var inputStream = new AntlrInputStream(invalid_input);
             var lexer = new BiPaGeLexer(inputStream);
             var tokens = new CommonTokenStream(lexer);
             var parser = new BiPaGeParser(tokens);
@@ -170,16 +181,16 @@ ObjectWithCollections
 
             var test = new Visitor();
             var AST = test.Visit(f);
-            List<String> errors = new List<string>();
-            List<String> warnings = new List<string>();
+            var errors = new List<SemanticAnalysis.Error>();
+            var warnings = new List<SemanticAnalysis.Warning>();
             bool valid = AST.CheckSemantics(errors, warnings);
             foreach(var error in errors)
             {
-                Console.WriteLine(String.Format("Error: {0}", error));
+                Console.WriteLine(error.ToString());
             }
             foreach (var warning in warnings)
             {
-                Console.WriteLine(String.Format("Warning: {0}", warning));
+                Console.WriteLine(warning.ToString());
             }
             if(valid)
                 AST.Print(0);

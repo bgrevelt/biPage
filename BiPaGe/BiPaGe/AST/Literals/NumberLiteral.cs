@@ -7,7 +7,7 @@ namespace BiPaGe.AST.Literals
     {
         public String content { get;  }
 
-        public NumberLiteral(String content)
+        public NumberLiteral(SourceInfo sourceIfo, String content) : base(sourceIfo)
         {
             this.content = content;
         }
@@ -17,12 +17,12 @@ namespace BiPaGe.AST.Literals
             PrintIndented(String.Format("Number literal: {0}", content), indentLevel);
         }
 
-        public override bool CheckSemantics(IList<String> errors, IList<String> warnings)
+        public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
             Int64 dummy;
             if(!Int64.TryParse(content, out dummy))
             {
-                errors.Add(String.Format("Invalid number literal ({0})", content));
+                errors.Add(new SemanticAnalysis.Error(sourceInfo, String.Format("Invalid number literal ({0})", content)));
                 return false;
             }
 

@@ -8,7 +8,7 @@ namespace BiPaGe.AST
         public String Name { get; }
         public AST.FieldType Type { get; }
 
-        public Field(String name, AST.FieldType type)
+        public Field(SourceInfo sourceIfo, String name, AST.FieldType type) : base(sourceIfo)
         {
             this.Name = name;
             this.Type = type;
@@ -20,7 +20,7 @@ namespace BiPaGe.AST
             Type.Print(indentLevel + 1);
         }
 
-        public override bool CheckSemantics(IList<String> errors, IList<String> warnings)
+        public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
             return Type.CheckSemantics(errors, warnings);
         }

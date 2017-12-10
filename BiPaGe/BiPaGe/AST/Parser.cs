@@ -11,7 +11,7 @@ namespace BiPaGe.AST
             get;
         }
 
-        public Parser(String name, IEnumerable<AST.Object> objects)
+        public Parser(SourceInfo sourceInfo, String name, IEnumerable<AST.Object> objects) : base(sourceInfo)
         {
             this.Objects = objects;
             this.Name = name;
@@ -28,7 +28,7 @@ namespace BiPaGe.AST
             }
         }
 
-        public override bool CheckSemantics(IList<string> errors, IList<string> warnings)
+        public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
             bool valid = true;
             foreach (var o in Objects)

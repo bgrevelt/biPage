@@ -5,11 +5,11 @@ namespace BiPaGe.AST.FieldTypes
 {
     public class Boolean : AST.FieldType
     {
-        public Boolean()
+        public Boolean(SourceInfo sourceInfo) : base(sourceInfo)
         {
         }
 
-        public override bool CheckSemantics(IList<String> errors, IList<String> warnings)
+        public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
             // Nothing to check for boolean
             return true;
