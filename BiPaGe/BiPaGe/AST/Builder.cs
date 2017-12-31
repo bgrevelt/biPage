@@ -27,7 +27,7 @@ namespace BiPaGe.AST
         }
     }
 
-    class Builder : BiPaGeBaseVisitor<AST.IASTNode>
+    public class Builder : BiPaGeBaseVisitor<AST.IASTNode>
     {
         private IList<SemanticAnalysis.Error> errors;
         private IList<SemanticAnalysis.Warning> warnings;

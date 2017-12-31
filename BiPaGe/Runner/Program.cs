@@ -65,16 +65,16 @@ ObjectWithCollections
   collection_three : float64[embedded.field_three];
 }
 ";
-           
+
 
             var errors = new List<SemanticAnalysis.Error>();
             var warnings = new List<SemanticAnalysis.Warning>();
 
             var builder = new BiPaGe.AST.Builder(errors, warnings);
-            var AST = builder.Objects(invalid_input);
+            var AST = builder.Objects(input);
 
             bool valid = AST.CheckSemantics(errors, warnings);
-            foreach(var error in errors)
+            foreach (var error in errors)
             {
                 Console.WriteLine(error.ToString());
             }
@@ -82,7 +82,7 @@ ObjectWithCollections
             {
                 Console.WriteLine(warning.ToString());
             }
-            if(valid)
+            if (valid)
                 AST.Print(0);
         }
 

@@ -1,15 +1,9 @@
-﻿<Properties StartupConfiguration="{91345714-1A2C-4F26-9C41-C1385422A955}|Default">
+﻿<Properties StartupConfiguration="{A0EFAB72-C444-49DC-BAF0-490AA5959DA4}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="BiPaGe Status">
     <Files>
-      <File FileName="BiPaGe/AST/FieldTypes/Unsigned.cs" Line="18" Column="58" />
-      <File FileName="BiPaGe/SemanticAnalysis/Event.cs" Line="20" Column="1" />
-      <File FileName="BiPaGe/Program.cs" Line="2" Column="34" />
-      <File FileName="BiPaGe/packages.config" Line="1" Column="1" />
-      <File FileName="../BiPaGe.g4" Line="14" Column="8" />
+      <File FileName="Runner/Program.cs" Line="74" Column="39" />
+      <File FileName="BiPaGe/AST/Builder.cs" Line="30" Column="12" />
       <File FileName="BiPaGe/Test/NUnitTestClass.cs" Line="1" Column="1" />
-      <File FileName="BiPaGe/AST/Builder.cs" Line="38" Column="38" />
-      <File FileName="BiPaGe/AST/Parser.cs" Line="1" Column="1" />
-      <File FileName="BiPaGe/AST/ParsetreeWalker.cs" Line="20" Column="43" />
       <File FileName="BiPaGe Status" />
     </Files>
   </MonoDevelop.Ide.Workbench>
@@ -20,4 +14,5 @@
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.ItemProperties.BiPaGe PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.ItemProperties.Runner PreferredExecutionTarget="MonoDevelop.Default" />
 </Properties>
