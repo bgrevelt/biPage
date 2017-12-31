@@ -79,6 +79,8 @@
     <Compile Include="SemanticAnalysis\Error.cs" />
     <Compile Include="SemanticAnalysis\Warning.cs" />
     <Compile Include="SemanticAnalysis\Event.cs" />
+    <Compile Include="AST\Builder.cs" />
+    <Compile Include="AST\ParsetreeWalker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
