@@ -10,12 +10,12 @@ namespace BiPaGe.AST
             get;
         }
 
-        public IEnumerable<Field> fields
+        public IList<Field> fields
         {
             get;
         }
 
-        public Object(SourceInfo sourceInfo, String identifier, IEnumerable<Field> fields) : base(sourceInfo)
+        public Object(SourceInfo sourceInfo, String identifier, IList<Field> fields) : base(sourceInfo)
         {
             this.identifier = identifier;
             this.fields = fields;

@@ -74,7 +74,7 @@
     <Compile Include="AST\FieldTypes\Unsigned.cs" />
     <Compile Include="AST\FieldType.cs" />
     <Compile Include="AST\Object.cs" />
-    <Compile Include="Test\NUnitTestClass.cs" />
+    <Compile Include="Test\AST.cs" />
     <Compile Include="SemanticAnalysis\Error.cs" />
     <Compile Include="SemanticAnalysis\Warning.cs" />
     <Compile Include="SemanticAnalysis\Event.cs" />
