@@ -4,5 +4,5 @@ cd -- "$(dirname "$BASH_SOURCE")"
 java -jar /usr/local/lib/antlr-4.7-complete.jar -o generated_java/ BiPaGe.g4
 cd generated_java/
 javac BiPaGe*.java
-java org.antlr.v4.gui.TestRig BiPaGe file ../test_input -tokens
+java org.antlr.v4.gui.TestRig BiPaGe program ../test_input -tokens
 cd ..
