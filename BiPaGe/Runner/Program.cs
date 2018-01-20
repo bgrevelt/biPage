@@ -10,17 +10,17 @@ namespace BiPaGe
             var input =
 @"Object1 
 {
-field_one: int12;
+field_one: int12[5];
 field_two: u4;
 }
 
 Object2
 {
 field_three: uint18;
-field_four: s14;
+field_four: i14[5];
 field_five: float64;
 }
-
+/*
 Object3
 {
 field_six: f32;
@@ -34,7 +34,7 @@ ObjectWithCollections
   collection_one : int32[5]; // hard coded size
   collection_two : bool[size_field]; // sized from field
   collection_three : float64[embedded.field_three];
-}
+}*/
 ";
             var invalid_input =
 @"Object1 
@@ -71,7 +71,7 @@ ObjectWithCollections
             var warnings = new List<SemanticAnalysis.Warning>();
 
             var builder = new BiPaGe.AST.Builder(errors, warnings);
-            var AST = builder.Objects(input);
+            var AST = builder.Program(input);
 
             bool valid = AST.CheckSemantics(errors, warnings);
             foreach (var error in errors)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BiPaGe.AST.Identifiers;
 
 namespace BiPaGe.AST
 {
@@ -9,7 +10,7 @@ namespace BiPaGe.AST
         {
         }
 
-        public override AST.IASTNode VisitObjects(BiPaGeParser.ObjectsContext context)
+        public override IASTNode VisitProgram(BiPaGeParser.ProgramContext context)
         {
             List<AST.Object> objects = new List<AST.Object>();
             foreach (var obj in context.@object())
@@ -25,7 +26,8 @@ namespace BiPaGe.AST
             List<AST.Field> fields = new List<AST.Field>();
             foreach (var field in context.field())
             {
-                fields.Add((dynamic)field.Accept(this));
+                var a = field.Accept(this);
+                fields.Add((dynamic)a);
             }
 
             var objectName = context.Identifier().GetText();
@@ -33,70 +35,88 @@ namespace BiPaGe.AST
             return new AST.Object(GetSourceInfo(context.Start), objectName, fields);
         }
 
-        public override AST.IASTNode VisitField(BiPaGeParser.FieldContext context)
+        public override IASTNode VisitField(BiPaGeParser.FieldContext context)
         {
-            var fieldName = context.name.Text;
-            AST.FieldType type = (dynamic)context.fieldType().Accept(this);
-            return new AST.Field(GetSourceInfo(context.Start), fieldName, type);
+            String identifier = context.Identifier()?.GetText();
+            IASTNode type = context.field_type().Accept(this);
+            IASTNode collection_size = context.expression()?.Accept(this);
+            // TODO: initializer
+
+            return new Field(GetSourceInfo(context.Start), identifier, (dynamic)type, (dynamic)collection_size);
         }
 
-        public override AST.IASTNode VisitSingular(BiPaGeParser.SingularContext context)
+        public override IASTNode VisitField_type(BiPaGeParser.Field_typeContext context)
         {
-            if (context.Identifier() != null)
+            // (Type | Identifier | inline_enumeration | inline_object);
+            if(context.Type() != null)
             {
-                // this is a complex field (e.g. the type is another object)
-                return new AST.Identifiers.ObjectIdentifier(GetSourceInfo(context.Identifier()), context.Identifier().GetText());
+                return ParseType(context.Type().GetText(), GetSourceInfo(context.Start));
             }
-            else
+            else if(context.Identifier() != null)
             {
-                // TODO: assert basictype is valid
-                // The basictype identifier is of the form 
-                var type = context.BasicType().GetText();
-                var type_only = type.TrimEnd("0123456789".ToCharArray());
-                switch (type_only)
-                {
-                    case "int":
-                    case "s":
-                        return new AST.FieldTypes.Signed(GetSourceInfo(context.Start), type);
-                    case "uint":
-                    case "u":
-                        return new AST.FieldTypes.Unsigned(GetSourceInfo(context.Start), type);
-                    case "float":
-                    case "f":
-                        return new AST.FieldTypes.Float(GetSourceInfo(context.Start), type);
-                    case "bool":
-                        return new AST.FieldTypes.Boolean(GetSourceInfo(context.Start));
-                }
+                
+            }
+            else if(context.inline_enumeration() != null)
+            {
+                
+            }
+            else if(context.inline_enumeration() != null)
+            {
+                
             }
 
-            // TODO: solve better
-            throw new ArgumentException();
+            throw new NotImplementedException();
         }
 
-        public override AST.IASTNode VisitCollection(BiPaGeParser.CollectionContext context)
+        public override IASTNode VisitExpression(BiPaGeParser.ExpressionContext context)
         {
-            AST.FieldType type = (dynamic)context.singular().Accept(this);
-            AST.IMultiplier multiplier = (dynamic)context.multiplier().Accept(this);
-
-            return new AST.FieldTypes.Collection(GetSourceInfo(context.Start), type, multiplier);
-        }
-
-        public override AST.IASTNode VisitMultiplier(BiPaGeParser.MultiplierContext context)
-        {
-            if (context.NumberLiteral() != null)
-                return new AST.Literals.NumberLiteral(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
-            else
+            if(context.NumberLiteral() != null)
             {
-                String identifier = "";
-                foreach (var id in context.Identifier())
-                {
-                    identifier = identifier + id.GetText() + ".";
-                }
-                identifier.Remove(identifier.Length - 1);
-
-                return new AST.Identifiers.FieldIdentifier(GetSourceInfo(context.Start), identifier);
+                return new Literals.NumberLiteral(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
             }
+            /*
+             expression:
+             NumberLiteral
+            | This
+            | field_id
+            |'(' expression ')'
+            | expression '+' expression
+            | expression '-' expression
+            | expression '*' expression
+            | expression '/' expression;
+            */
+            throw new NotImplementedException();
         }
+
+        //public override IASTNode VisitNumber(BiPaGeParser.NumberContext context)
+        //{
+        //    return new AST.Literals.NumberLiteral(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
+        //}
+
+        //public override AST.IASTNode VisitCollection(BiPaGeParser.CollectionContext context)
+        //{
+        //    AST.FieldType type = (dynamic)context.singular().Accept(this);
+        //    AST.IMultiplier multiplier = (dynamic)context.multiplier().Accept(this);
+
+        //    return new AST.FieldTypes.Collection(GetSourceInfo(context.Start), type, multiplier);
+        //}
+
+        //public override AST.IASTNode VisitMultiplier(BiPaGeParser.MultiplierContext context)
+        //{
+        //    if (context.NumberLiteral() != null)
+        //        return new AST.Literals.NumberLiteral(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
+        //    else
+        //    {
+        //        String identifier = "";
+        //        foreach (var id in context.Identifier())
+        //        {
+        //            identifier = identifier + id.GetText() + ".";
+        //        }
+        //        identifier.Remove(identifier.Length - 1);
+
+        //        return new AST.Identifiers.FieldIdentifier(GetSourceInfo(context.Start), identifier);
+        //    }
+        //}
 
         private AST.SourceInfo GetSourceInfo(Antlr4.Runtime.Tree.ITerminalNode node)
         {
@@ -106,6 +126,30 @@ namespace BiPaGe.AST
         private AST.SourceInfo GetSourceInfo(Antlr4.Runtime.IToken token)
         {
             return new AST.SourceInfo(token.Line, token.Column);
+        }
+
+        private FieldType ParseType(String type, SourceInfo sourceInfo)
+        {
+            var type_only = type.TrimEnd("0123456789".ToCharArray());
+            switch (type_only)
+            {
+                case "int":
+                case "i":
+                    return new AST.FieldTypes.Signed(sourceInfo, type);
+                case "uint":
+                case "u":
+                    return new AST.FieldTypes.Unsigned(sourceInfo, type);
+                case "float":
+                case "f":
+                    return new AST.FieldTypes.Float(sourceInfo, type);
+                case "bool":
+                    return new AST.FieldTypes.Boolean(sourceInfo);
+                default:
+                    // TODO: solve better
+                    throw new ArgumentException();
+
+                // TODO: String types!
+            }
         }
     }
 }

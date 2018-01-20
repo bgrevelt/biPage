@@ -61,7 +61,6 @@
     <Compile Include="AST\Parser.cs" />
     <Compile Include="AST\Field.cs" />
     <Compile Include="AST\FieldTypes\Enum.cs" />
-    <Compile Include="AST\FieldTypes\Collection.cs" />
     <Compile Include="AST\IASTNode.cs" />
     <Compile Include="AST\Literals\NumberLiteral.cs" />
     <Compile Include="AST\Identifiers\FieldIdentifier.cs" />

@@ -1,3 +1,11 @@
+Object2
+{
+field_three: uint18;
+field_four: i14[5];
+field_five: float64;
+}
+
+
 Time
 {
     sec : uint32;
@@ -41,7 +49,7 @@ DepthMode : uint8
     medium = 2,
     deep = 3,
     very_deep = 4,
-    extra_deep = 5
+    extra_deep = 5,
     manual_verry_shallow = 100,
     manual_shallow = 101,
     manual_medium = 102,

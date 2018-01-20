@@ -1,5 +1,6 @@
 grammar BiPaGe;
 
+// Lexer rules
 Whitespace: [ \t\r\n\u000C]+ -> skip;
 MultiLineComment: '/*' .*? '*/' -> skip;
 SingleLineComment: '//' ~('\r' | '\n')* -> skip;
@@ -12,23 +13,28 @@ StringLiteral: '"' (~'"')* '"';
 BooleanLiteral: 'true' | 'false';
 Identifier: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
+// Parser rules
 program: (object | enumeration)*;
-enumeration: Identifier ':' Type '{' enumerator+ '}';
-enumerator: Identifier '=' NumberLiteral ','?;
-object: Identifier '{' (field | reserved_field)+ '}';
-reserved_field: field_type ';';
-field: (standard_field | fixed_field | inline_field ) ';';
+enumeration: Identifier ':' Type '{' (enumerator ',')* enumerator '}';
+enumerator: Identifier '=' NumberLiteral;
+object: Identifier '{' field+ '}';
+field:
+  (Identifier ':')?
+  field_type
+  ('[' expression ']')?
+  initializer?
+  ';';
 
-standard_field: simple_field | complex_field;
-simple_field: Identifier ':' field_type;
-complex_field: Identifier ':' Identifier;
+field_type: (Type | Identifier | inline_enumeration | inline_object);
 
-fixed_field: fixed_simple_field | fixed_complex_field | fixed_enum_field;
-fixed_simple_field: simple_field '=' initializer;
-fixed_enum_field: complex_field '=' Identifier;
-fixed_complex_field: complex_field '(' (field_id '=' initializer ','?)+ ')';
+inline_enumeration : Type '{' (enumerator ',')* enumerator '}';
+inline_object: '{' field+ '}';
 
-initializer:
+initializer: standard_initializer |complex_initializer;
+complex_initializer: '(' (field_id '=' initialization_value ','?)+ ')';
+standard_initializer: '=' initialization_value;
+
+initialization_value:
   NumberLiteral
   | FloatLiteral
   | StringLiteral
@@ -38,12 +44,8 @@ initializer:
   | '{' (FloatLiteral ',')* FloatLiteral'}'
   | '{' (BooleanLiteral ',')* BooleanLiteral'}';
 
-inline_field: inline_enumeration | inline_object;
-inline_enumeration : Identifier ':' Type '{' enumerator+ '}';
-inline_object: Identifier ':' '{' (field | reserved_field)+ '}';
-field_type: Type ('[' expression ']')?;
-field_id : Identifier ('.' Identifier)*;
-expression: NumberLiteral
+expression:
+    NumberLiteral
     | This
     | field_id
     |'(' expression ')'
@@ -51,3 +53,5 @@ expression: NumberLiteral
 		| expression '-' expression
 		| expression '*' expression
 		| expression '/' expression;
+
+field_id : Identifier ('.' Identifier)*;

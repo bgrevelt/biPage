@@ -38,7 +38,7 @@ namespace BiPaGe.AST
             this.warnings = warnings;
         }
 
-        public Parser Objects(String input)
+        public Parser Program(String input)
         {
             var inputStream = new AntlrInputStream(input);
             var lexer = new BiPaGeLexer(inputStream);
@@ -50,10 +50,10 @@ namespace BiPaGe.AST
             lexer.AddErrorListener(errorListener);
             parser.RemoveErrorListeners();
             parser.AddErrorListener(errorListener);
-            var objects = parser.objects();
+            var program = parser.program();
 
             var walker = new ParsetreeWalker();
-            return walker.Visit(objects) as Parser;
+            return walker.Visit(program) as Parser;
         }
     }
 }
