@@ -6,5 +6,7 @@ namespace BiPaGe.AST
         public IMultiplier(SourceInfo sourceInfo) : base(sourceInfo)
         {
         }
+
+        public abstract bool Equals(IMultiplier other);
     }
 }

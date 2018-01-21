@@ -29,5 +29,17 @@ namespace BiPaGe.AST.Literals
         {
             return true;
         }
+
+        public override bool Equals(IMultiplier other)
+        {
+            try
+            {
+                return ((NumberLiteral)other).Number == this.Number;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
+        }
     }
 }

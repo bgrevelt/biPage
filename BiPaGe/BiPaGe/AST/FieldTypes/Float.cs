@@ -5,7 +5,7 @@ namespace BiPaGe.AST.FieldTypes
 {
     public class Float : SizedType
     {
-        public Float(SourceInfo sourceInfo, String typeId) : base(sourceInfo, typeId)
+        public Float(SourceInfo sourceInfo, int size) : base(sourceInfo, size)
         {
         }
 
@@ -18,6 +18,18 @@ namespace BiPaGe.AST.FieldTypes
             }
 
             return true;
+        }
+
+        public override bool Equals(FieldType other)
+        {
+            try
+            {
+                return ((Float)other).Size == this.Size;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
         }
 
         public override void Print(int indentLevel)

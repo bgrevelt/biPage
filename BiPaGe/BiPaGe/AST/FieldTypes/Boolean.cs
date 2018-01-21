@@ -15,6 +15,11 @@ namespace BiPaGe.AST.FieldTypes
             return true;
         }
 
+        public override bool Equals(FieldType other)
+        {
+            return other.GetType() == typeof(Boolean);
+        }
+
         public override void Print(int indentLevel)
         {
             PrintIndented("Boolean", indentLevel);

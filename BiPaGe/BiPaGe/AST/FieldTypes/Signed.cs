@@ -5,9 +5,11 @@ namespace BiPaGe.AST.FieldTypes
 {
     public class Signed : SizedType
     {
-        public Signed(SourceInfo sourceInfo, String typeId) : base(sourceInfo, typeId)
+        public Signed(SourceInfo sourceInfo, int size) : base(sourceInfo, size)
         {
         }
+
+
 
         public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
@@ -19,6 +21,18 @@ namespace BiPaGe.AST.FieldTypes
                 return false;
             }
             return true;
+        }
+
+        public override bool Equals(FieldType other)
+        {
+            try
+            {
+                return ((Signed)other).Size == this.Size;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
         }
 
         public override void Print(int indentLevel)

@@ -17,6 +17,18 @@ namespace BiPaGe.AST.Identifiers
             return true;
         }
 
+        public override bool Equals(IMultiplier other)
+        {
+            try
+            {
+                return ((FieldIdentifier)other).id == this.id;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
+        }
+
         public override void Print(int indentLevel)
         {
             PrintIndented(String.Format("Field id: {0}", id), indentLevel);

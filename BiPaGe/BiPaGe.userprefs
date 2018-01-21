@@ -1,29 +1,48 @@
 ﻿<Properties StartupConfiguration="{A0EFAB72-C444-49DC-BAF0-490AA5959DA4}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="BiPaGe/AST/IASTNode.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BiPaGe/AST/FieldTypes/Utf8String.cs">
     <Files>
-      <File FileName="BiPaGe/AST/ParsetreeWalker.cs" Line="42" Column="75" />
-      <File FileName="Runner/Program.cs" Line="23" Column="3" />
+      <File FileName="BiPaGe/AST/ParsetreeWalker.cs" Line="148" Column="35" />
+      <File FileName="Runner/Program.cs" Line="88" Column="31" />
       <File FileName="../BiPaGe.g4" Line="1" Column="1" />
-      <File FileName="BiPaGe/Test/AST.cs" Line="27" Column="59" />
-      <File FileName="BiPaGe/AST/Object.cs" Line="40" Column="1" />
-      <File FileName="BiPaGe/AST/Parser.cs" Line="36" Column="1" />
+      <File FileName="BiPaGe/Test/AST.cs" Line="77" Column="13" />
+      <File FileName="BiPaGe/AST/Object.cs" Line="13" Column="24" />
+      <File FileName="BiPaGe/AST/Parser.cs" Line="22" Column="59" />
       <File FileName="../generated_csharp/BiPaGeParser.cs" Line="1" Column="1" />
       <File FileName="../generated_csharp/BiPaGeBaseVisitor.cs" Line="1" Column="1" />
-      <File FileName="BiPaGe/AST/Literals/NumberLiteral.cs" Line="12" Column="48" />
+      <File FileName="BiPaGe/AST/Literals/NumberLiteral.cs" Line="23" Column="9" />
       <File FileName="BiPaGe/AST/Identifiers/FieldIdentifier.cs" Line="6" Column="33" />
       <File FileName="BiPaGe/AST/Identifiers/ObjectIdentifier.cs" Line="9" Column="68" />
-      <File FileName="BiPaGe/AST/FieldTypes/Signed.cs" Line="1" Column="1" />
-      <File FileName="BiPaGe/AST/FieldTypes/SizedType.cs" Line="1" Column="1" />
-      <File FileName="BiPaGe/AST/FieldType.cs" Line="1" Column="1" />
-      <File FileName="BiPaGe/AST/FieldTypes/Unsigned.cs" Line="1" Column="1" />
-      <File FileName="BiPaGe/AST/FieldTypes/Float.cs" Line="29" Column="1" />
+      <File FileName="BiPaGe/AST/FieldTypes/Signed.cs" Line="11" Column="9" />
+      <File FileName="BiPaGe/AST/FieldTypes/SizedType.cs" Line="4" Column="52" />
+      <File FileName="BiPaGe/AST/FieldType.cs" Line="9" Column="6" />
+      <File FileName="BiPaGe/AST/FieldTypes/Unsigned.cs" Line="10" Column="10" />
+      <File FileName="BiPaGe/AST/FieldTypes/Float.cs" Line="8" Column="78" />
       <File FileName="BiPaGe/AST/FieldTypes/Boolean.cs" Line="1" Column="1" />
-      <File FileName="BiPaGe/AST/Field.cs" Line="23" Column="28" />
+      <File FileName="BiPaGe/AST/Field.cs" Line="6" Column="23" />
       <File FileName="BiPaGe/AST/FieldTypes/Enum.cs" Line="1" Column="1" />
       <File FileName="BiPaGe/AST/Builder.cs" Line="55" Column="45" />
-      <File FileName="BiPaGe/AST/IMultiplier.cs" Line="4" Column="44" />
-      <File FileName="BiPaGe/AST/IASTNode.cs" Line="18" Column="27" />
+      <File FileName="BiPaGe/AST/IMultiplier.cs" Line="8" Column="10" />
+      <File FileName="BiPaGe/AST/IASTNode.cs" Line="34" Column="33" />
+      <File FileName="BiPaGe/AST/FieldTypes/AsciiString.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe/AST/FieldTypes/Utf8String.cs" Line="1" Column="1" />
     </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="BiPaGe" expanded="True">
+            <Node name="BiPaGe" expanded="True">
+              <Node name="BiPaGe" expanded="True">
+                <Node name="Test" expanded="True">
+                  <Node name="AST" expanded="True" selected="True">
+                    <Node name="Building" expanded="True" />
+                  </Node>
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

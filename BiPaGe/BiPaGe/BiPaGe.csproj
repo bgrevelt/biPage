@@ -37,6 +37,7 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Extensions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="SemanticAnalysis\Event.cs" />
     <Compile Include="AST\Builder.cs" />
     <Compile Include="AST\ParsetreeWalker.cs" />
+    <Compile Include="AST\FieldTypes\AsciiString.cs" />
+    <Compile Include="AST\FieldTypes\Utf8String.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

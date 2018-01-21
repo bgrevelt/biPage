@@ -5,7 +5,7 @@ namespace BiPaGe.AST.FieldTypes
 {
     public class Unsigned : SizedType
     {
-        public Unsigned(SourceInfo sourceInfo, String typeId) : base(sourceInfo, typeId)
+        public Unsigned(SourceInfo sourceInfo, int size) : base(sourceInfo, size)
         {
         }
 
@@ -24,6 +24,18 @@ namespace BiPaGe.AST.FieldTypes
                 return false;
             }
             return true;
+        }
+
+        public override bool Equals(FieldType other)
+        {
+            try
+            {
+                return ((Unsigned)other).Size == this.Size;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
         }
 
         public override void Print(int indentLevel)

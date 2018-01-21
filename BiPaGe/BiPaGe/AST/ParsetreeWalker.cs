@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BiPaGe.AST.Identifiers;
-
+using System.Diagnostics;
 namespace BiPaGe.AST
 {
     public class ParsetreeWalker : BiPaGeBaseVisitor<AST.IASTNode>
@@ -131,24 +130,30 @@ namespace BiPaGe.AST
         private FieldType ParseType(String type, SourceInfo sourceInfo)
         {
             var type_only = type.TrimEnd("0123456789".ToCharArray());
+            int size = 0;
+            int.TryParse(type.TrimStart("abcdefghijklmnopqrstuvwxyz".ToCharArray()),out size);
+            Debug.Assert(new HashSet<String> { "int", "i", "uint", "u", "float", "f", "bool", "ascii_string", "utf8_string" }.Contains(type_only));
+
             switch (type_only)
             {
                 case "int":
                 case "i":
-                    return new AST.FieldTypes.Signed(sourceInfo, type);
+                    return new AST.FieldTypes.Signed(sourceInfo, size);
                 case "uint":
                 case "u":
-                    return new AST.FieldTypes.Unsigned(sourceInfo, type);
+                    return new AST.FieldTypes.Unsigned(sourceInfo, size);
                 case "float":
                 case "f":
-                    return new AST.FieldTypes.Float(sourceInfo, type);
+                    return new AST.FieldTypes.Float(sourceInfo, size);
                 case "bool":
                     return new AST.FieldTypes.Boolean(sourceInfo);
+                case "ascii_string":
+                    return new AST.FieldTypes.AsciiString(sourceInfo);
+                case "utf8_string":
+                    return new AST.FieldTypes.Utf8String(sourceInfo);
                 default:
                     // TODO: solve better
                     throw new ArgumentException();
-
-                // TODO: String types!
             }
         }
     }

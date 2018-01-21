@@ -7,7 +7,7 @@ namespace BiPaGe.AST
     { 
         public String Name { get; }
         public AST.FieldType Type { get; }
-        IMultiplier CollectionSize { get; }
+        public IMultiplier CollectionSize { get; }
 
         public Field(SourceInfo sourceIfo, String name, AST.FieldType type, IMultiplier collection_size) : base(sourceIfo)
         {
