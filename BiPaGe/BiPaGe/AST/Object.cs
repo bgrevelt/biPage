@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BiPaGe.AST
 {
-    public class Object : IASTNode
+    public class Object : Element
     {
         public String identifier
         {

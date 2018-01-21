@@ -20,6 +20,13 @@ field_four: i14[5];
 field_five: float64;
 }
 
+Enumeration : u8
+{
+    value0 = 0,
+    value1 = 1,
+    value2 = 2
+}
+
 /*
 {
 Object3
@@ -74,7 +81,7 @@ ObjectWithCollections
             var builder = new BiPaGe.AST.Builder(errors, warnings);
             var AST = builder.Program(input);
 
-            bool valid = AST.CheckSemantics(errors, warnings);
+            //bool valid = AST.CheckSemantics(errors, warnings);
             foreach (var error in errors)
             {
                 Console.WriteLine(error.ToString());
@@ -83,10 +90,10 @@ ObjectWithCollections
             {
                 Console.WriteLine(warning.ToString());
             }
-            if (valid)
-            {
+            //if (valid)
+            //{
                 AST.Print(0); 
-            }
+            //}
         }
         /*
         Name":"No name yet",

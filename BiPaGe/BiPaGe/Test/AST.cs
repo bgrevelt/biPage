@@ -38,8 +38,9 @@ Object1
 }";
             var AST = builder.Program(input);
             // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Objects.Count, 1);
-            var obj = AST.Objects[0];
+            Assert.AreEqual(AST.Elements.Count, 1);
+            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
+            var obj = (BiPaGe.AST.Object)AST.Elements[0];
             Assert.AreEqual(obj.identifier, "Object1");
             Assert.AreEqual(obj.fields.Count, 5);
 
@@ -67,8 +68,9 @@ Object1
 }";
             var AST = builder.Program(input);
             // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Objects.Count, 1);
-            var obj = AST.Objects[0];
+            Assert.AreEqual(AST.Elements.Count, 1);
+            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
+            var obj = (BiPaGe.AST.Object)AST.Elements[0];
             Assert.AreEqual(obj.identifier, "Object1");
             Assert.AreEqual(obj.fields.Count, 5);
 
@@ -94,8 +96,9 @@ Object1
 }";
             var AST = builder.Program(input);
             // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Objects.Count, 1);
-            var obj = AST.Objects[0];
+            Assert.AreEqual(AST.Elements.Count, 1);
+            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
+            var obj = (BiPaGe.AST.Object)AST.Elements[0];
             Assert.AreEqual(obj.identifier, "Object1");
             Assert.AreEqual(obj.fields.Count, 3);
 
@@ -118,8 +121,9 @@ Object1
 }";
             var AST = builder.Program(input);
             // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Objects.Count, 1);
-            var obj = AST.Objects[0];
+            Assert.AreEqual(AST.Elements.Count, 1);
+            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
+            var obj = (BiPaGe.AST.Object)AST.Elements[0];
             Assert.AreEqual(obj.identifier, "Object1");
             Assert.AreEqual(obj.fields.Count, 2);
 

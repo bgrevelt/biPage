@@ -14,7 +14,8 @@ BooleanLiteral: 'true' | 'false';
 Identifier: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
 // Parser rules
-program: (object | enumeration)*;
+program: element*;
+element: object | enumeration;
 enumeration: Identifier ':' Type '{' (enumerator ',')* enumerator '}';
 enumerator: Identifier '=' NumberLiteral;
 object: Identifier '{' field+ '}';

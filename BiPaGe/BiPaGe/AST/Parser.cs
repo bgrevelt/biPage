@@ -6,14 +6,14 @@ namespace BiPaGe.AST
     public class Parser : IASTNode
     {
         public String Name { get; }
-        public IList<AST.Object> Objects
+        public IList<AST.Element> Elements
         {
             get;
         }
 
-        public Parser(SourceInfo sourceInfo, String name, IList<AST.Object> objects) : base(sourceInfo)
+        public Parser(SourceInfo sourceInfo, String name, IList<AST.Element> elements) : base(sourceInfo)
         {
-            this.Objects = objects;
+            this.Elements = elements;
             this.Name = name;
         }
 
@@ -22,18 +22,18 @@ namespace BiPaGe.AST
             var content = String.Format("Parser {0}", Name);
             PrintIndented(content, indentLevel);
 
-            foreach(var o in Objects)
+            foreach(var element in Elements)
             {
-                o.Print(indentLevel + 1);
+                element.Print(indentLevel + 1);
             }
         }
 
         public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
             bool valid = true;
-            foreach (var o in Objects)
+            foreach (var element in Elements)
             {
-                if (!o.CheckSemantics(errors, warnings))
+                if (!element.CheckSemantics(errors, warnings))
                     valid = false;
             }
 

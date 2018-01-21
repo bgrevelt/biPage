@@ -11,13 +11,38 @@ namespace BiPaGe.AST
 
         public override IASTNode VisitProgram(BiPaGeParser.ProgramContext context)
         {
-            List<AST.Object> objects = new List<AST.Object>();
-            foreach (var obj in context.@object())
+            List<AST.Element> elements = new List<AST.Element>();
+            foreach (var element in context.element())
             {
-                objects.Add((dynamic)obj.Accept(this));
+                elements.Add((dynamic)element.Accept(this));
             }
 
-            return new AST.Parser(GetSourceInfo(context.Start), "No name yet", objects);
+
+            return new AST.Parser(GetSourceInfo(context.Start), "No name yet", elements);
+        }
+
+        public override IASTNode VisitElement(BiPaGeParser.ElementContext context)
+        {
+            Debug.Assert(context.@object() != null || context.enumeration() != null);
+            if (context.@object() != null)
+                return context.@object().Accept(this);
+            else 
+                return context.enumeration().Accept(this);
+        }
+
+        public override IASTNode VisitEnumeration(BiPaGeParser.EnumerationContext context)
+        {
+            var enumerators = new List<AST.Enumerator>();
+            foreach(var enumerator in context.enumerator())
+            {
+                enumerators.Add((dynamic)enumerator.Accept(this));
+            }
+            return new AST.Enumeration(GetSourceInfo(context.Start), context.Identifier().GetText(), enumerators);
+        }
+
+        public override IASTNode VisitEnumerator(BiPaGeParser.EnumeratorContext context)
+        {
+            return new Enumerator(GetSourceInfo(context.Start), context.Identifier().GetText(), context.NumberLiteral().GetText());
         }
 
         public override AST.IASTNode VisitObject(BiPaGeParser.ObjectContext context)

@@ -61,7 +61,6 @@
     </Compile>
     <Compile Include="AST\Parser.cs" />
     <Compile Include="AST\Field.cs" />
-    <Compile Include="AST\FieldTypes\Enum.cs" />
     <Compile Include="AST\IASTNode.cs" />
     <Compile Include="AST\Literals\NumberLiteral.cs" />
     <Compile Include="AST\Identifiers\FieldIdentifier.cs" />
@@ -82,6 +81,9 @@
     <Compile Include="AST\ParsetreeWalker.cs" />
     <Compile Include="AST\FieldTypes\AsciiString.cs" />
     <Compile Include="AST\FieldTypes\Utf8String.cs" />
+    <Compile Include="AST\Enumeration.cs" />
+    <Compile Include="AST\Enumerator.cs" />
+    <Compile Include="AST\Element.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
