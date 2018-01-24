@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using BiPaGe.AST.Identifiers;
+
 namespace BiPaGe.AST
 {
     public class ParsetreeWalker : BiPaGeBaseVisitor<AST.IASTNode>
@@ -78,7 +80,7 @@ namespace BiPaGe.AST
             }
             else if(context.Identifier() != null)
             {
-                
+                return new ObjectIdentifier(GetSourceInfo(context.Start), context.Identifier().GetText());
             }
             else if(context.inline_enumeration() != null)
             {
