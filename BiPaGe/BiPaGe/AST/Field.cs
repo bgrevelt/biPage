@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using BiPaGe.AST.Expressions;
 namespace BiPaGe.AST
 {
     public class Field : IASTNode
     { 
         public String Name { get; }
         public AST.FieldType Type { get; }
-        public IMultiplier CollectionSize { get; }
+        public Expression CollectionSize { get; }
 
-        public Field(SourceInfo sourceIfo, String name, AST.FieldType type, IMultiplier collection_size) : base(sourceIfo)
+        public Field(SourceInfo sourceIfo, String name, AST.FieldType type, Expression collection_size) : base(sourceIfo)
         {
             this.Name = name;
             this.Type = type;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using BiPaGe.AST.Identifiers;
-
+using BiPaGe.AST.Expressions;
 namespace BiPaGe.AST
 {
     public class ParsetreeWalker : BiPaGeBaseVisitor<AST.IASTNode>
@@ -94,13 +94,52 @@ namespace BiPaGe.AST
             throw new NotImplementedException();
         }
 
-        public override IASTNode VisitExpression(BiPaGeParser.ExpressionContext context)
+        public override IASTNode VisitNumber(BiPaGeParser.NumberContext context)
         {
-            if(context.NumberLiteral() != null)
+            return new Number(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
+        }
+
+        public override IASTNode VisitOffset(BiPaGeParser.OffsetContext context)
+        {
+            return new This(GetSourceInfo(context.Start));
+        }
+
+        public override IASTNode VisitFieldId(BiPaGeParser.FieldIdContext context)
+        {
+            String identifier = "";
+            foreach (var id in context.field_id().Identifier())
             {
-                return new Literals.NumberLiteral(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
+                identifier = identifier + id.GetText() + ".";
             }
-            /*
+            // Remove trailing dot
+            identifier = identifier.Remove(identifier.Length - 1);
+
+            return new FieldIdentifier(GetSourceInfo(context.Start), identifier);
+        }
+
+        public override IASTNode VisitBinaryOperation(BiPaGeParser.BinaryOperationContext context)
+        {
+            var lhs = context.left.Accept(this);
+            var rhs = context.right.Accept(this);
+            var sourceInfo = GetSourceInfo(context.Start);
+            switch(context.op.Text)
+            {
+                case "+": return new Addition(sourceInfo, (dynamic)lhs, (dynamic)rhs);
+                case "-": return new Subtraction(sourceInfo, (dynamic)lhs, (dynamic)rhs);
+                case "/": return new Division(sourceInfo, (dynamic)lhs, (dynamic)rhs);
+                case "*": return new Multiplication(sourceInfo, (dynamic)lhs, (dynamic)rhs);
+                default:
+                    // TODO: solve better
+                    throw new ArgumentException();
+            }
+        }
+
+        public override IASTNode VisitParentheses(BiPaGeParser.ParenthesesContext context)
+        {
+            return context.expression().Accept(this);
+        }
+
+        /*
              expression:
              NumberLiteral
             | This
@@ -111,8 +150,8 @@ namespace BiPaGe.AST
             | expression '*' expression
             | expression '/' expression;
             */
-            throw new NotImplementedException();
-        }
+
+    
 
         //public override IASTNode VisitNumber(BiPaGeParser.NumberContext context)
         //{

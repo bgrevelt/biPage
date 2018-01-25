@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using BiPaGe.AST.Expressions;
 
 namespace BiPaGe.AST.Identifiers
 {
-    public class FieldIdentifier : IMultiplier
+    public class FieldIdentifier : Expression
     {
         private String id;
         public FieldIdentifier(SourceInfo sourceIfo, String id) : base(sourceIfo)
@@ -17,7 +18,7 @@ namespace BiPaGe.AST.Identifiers
             return true;
         }
 
-        public override bool Equals(IMultiplier other)
+        public override bool Equals(Expression other)
         {
             try
             {

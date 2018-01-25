@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using BiPaGe.AST;
 using BiPaGe.AST.FieldTypes;
 using BiPaGe.AST.Identifiers;
+using BiPaGe.AST.Expressions;
 
 namespace BiPaGe.Test.AST
 {
     [TestFixture()]
     public class Building
     {
-        public void CheckField(BiPaGe.AST.Field field, String name, FieldType type, IMultiplier collection_size = null)
+        public void CheckField(BiPaGe.AST.Field field, String name, FieldType type, Expression collection_size = null)
         {
             Assert.AreEqual(field.Name, name);
             Assert.IsTrue(field.Type.Equals(type));
@@ -20,7 +21,7 @@ namespace BiPaGe.Test.AST
             }
         }
 
-        private void CheckObject(String name, (String, FieldType, IMultiplier)[] fields, BiPaGe.AST.Object obj)
+        private void CheckObject(String name, (String, FieldType, Expression)[] fields, BiPaGe.AST.Object obj)
         {
             Assert.AreEqual(name, obj.identifier);
             Assert.AreEqual(fields.Length, obj.fields.Count);
@@ -56,7 +57,7 @@ Object1
             Assert.AreEqual(AST.Elements.Count, 1);
             Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
 
-            CheckObject("Object1", new(String, FieldType, IMultiplier)[]
+            CheckObject("Object1", new(String, FieldType, Expression)[]
             {
                 ("field1", new Signed(null, 16), null),
                 ("field2", new Unsigned(null, 32), null),
@@ -83,7 +84,7 @@ Object1
             Assert.AreEqual(AST.Elements.Count, 1);
             Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
 
-            CheckObject("Object1", new(String, FieldType, IMultiplier)[]
+            CheckObject("Object1", new(String, FieldType, Expression)[]
             {
                 ("field1", new Signed(null, 2), null),
                 ("field2", new Unsigned(null, 6), null),
@@ -108,11 +109,11 @@ Object1
             Assert.AreEqual(AST.Elements.Count, 1);
             Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
 
-            CheckObject("Object1", new(String, FieldType, IMultiplier)[]
+            CheckObject("Object1", new(String, FieldType, Expression)[]
             {
-                ("field1", new Signed(null, 32), new BiPaGe.AST.Literals.NumberLiteral(null, "5")),
-                ("field2", new AsciiString(null), new BiPaGe.AST.Literals.NumberLiteral(null, "32")),
-                ("field3", new Utf8String(null), new BiPaGe.AST.Literals.NumberLiteral(null, "255"))
+                ("field1", new Signed(null, 32), new Number(null, "5")),
+                ("field2", new AsciiString(null), new Number(null, "32")),
+                ("field3", new Utf8String(null), new Number(null, "255"))
             }, (BiPaGe.AST.Object)AST.Elements[0]);
         }
 
@@ -130,9 +131,9 @@ Object1
             Assert.AreEqual(AST.Elements.Count, 1);
             Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
 
-            CheckObject("Object1", new(String, FieldType, IMultiplier)[]
+            CheckObject("Object1", new(String, FieldType, Expression)[]
             {
-                ("size", new Signed(null, 32), new BiPaGe.AST.Literals.NumberLiteral(null, "5")),
+                ("size", new Signed(null, 32), null),
                 ("field2", new AsciiString(null), new BiPaGe.AST.Identifiers.FieldIdentifier(null, "size"))
             }, (BiPaGe.AST.Object)AST.Elements[0]);
 
@@ -177,34 +178,5 @@ Object1
             Assert.AreEqual(obj.fields.Count, 1);
             CheckField(obj.fields[0], "enum_field", new ObjectIdentifier(null, "SomeEnumeration"), null);
         }
-
-//        [Test()]
-//        public void Enumeration()
-//        {
-//            var errors = new List<SemanticAnalysis.Error>();
-//            var warnings = new List<SemanticAnalysis.Warning>();
-//            var builder = new BiPaGe.AST.Builder(errors, warnings);
-//            var input = @"
-//SomeEnumeration
-//{
-//    value1 = 1,
-//    value2 = 2,
-//    value3 = 0
-//}
-
-//Object1
-//{
-//    enum_field : SomeEnumeration;
-//}";
-        //    var AST = builder.Program(input);
-        //    // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-        //    Assert.AreEqual(AST.Objects.Count, 2);
-        //    var obj = AST.Objects[0];
-        //    Assert.AreEqual(obj.identifier, "Object1");
-        //    Assert.AreEqual(obj.fields.Count, 2);
-
-        //    CheckField(obj.fields[0], "size", new Signed(null, 32), new BiPaGe.AST.Literals.NumberLiteral(null, "5"));
-        //    CheckField(obj.fields[1], "field2", new AsciiString(null), new BiPaGe.AST.Identifiers.FieldIdentifier(null, "size"));
-        //}
     }
 }

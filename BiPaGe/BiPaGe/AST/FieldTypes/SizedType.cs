@@ -5,7 +5,7 @@ namespace BiPaGe.AST.FieldTypes
     {
         public int Size { get; } // The size of the integer field in bits
 
-        public SizedType(SourceInfo sourceIfo, int size) : base(sourceIfo)
+        public SizedType(SourceInfo sourceInfo, int size) : base(sourceInfo)
         {
             this.Size = size;
         }

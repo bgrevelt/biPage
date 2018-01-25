@@ -66,10 +66,9 @@
     <Compile Include="AST\Parser.cs" />
     <Compile Include="AST\Field.cs" />
     <Compile Include="AST\IASTNode.cs" />
-    <Compile Include="AST\Literals\NumberLiteral.cs" />
+    <Compile Include="AST\Expressions\Number.cs" />
     <Compile Include="AST\Identifiers\FieldIdentifier.cs" />
     <Compile Include="AST\Identifiers\ObjectIdentifier.cs" />
-    <Compile Include="AST\IMultiplier.cs" />
     <Compile Include="AST\FieldTypes\Boolean.cs" />
     <Compile Include="AST\FieldTypes\Float.cs" />
     <Compile Include="AST\FieldTypes\Signed.cs" />
@@ -88,6 +87,12 @@
     <Compile Include="AST\Enumeration.cs" />
     <Compile Include="AST\Enumerator.cs" />
     <Compile Include="AST\Element.cs" />
+    <Compile Include="AST\Expressions\Expression.cs" />
+    <Compile Include="AST\Expressions\This.cs" />
+    <Compile Include="AST\Expressions\Addition.cs" />
+    <Compile Include="AST\Expressions\Subtraction.cs" />
+    <Compile Include="AST\Expressions\Multiplication.cs" />
+    <Compile Include="AST\Expressions\Division.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -98,7 +103,7 @@
   <ItemGroup>
     <Folder Include="AST\" />
     <Folder Include="AST\FieldTypes\" />
-    <Folder Include="AST\Literals\" />
+    <Folder Include="AST\Expressions\" />
     <Folder Include="AST\Identifiers\" />
     <Folder Include="Test\" />
     <Folder Include="SemanticAnalysis\" />

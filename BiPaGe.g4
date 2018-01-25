@@ -46,13 +46,13 @@ initialization_value:
   | '{' (BooleanLiteral ',')* BooleanLiteral'}';
 
 expression:
-    NumberLiteral
-    | This
-    | field_id
-    |'(' expression ')'
-		| expression '+' expression
-		| expression '-' expression
-		| expression '*' expression
-		| expression '/' expression;
+    NumberLiteral #Number
+    | This #Offset
+    | field_id #FieldId
+    |'(' expression ')' #Parentheses
+        | left=expression op='*' right=expression #BinaryOperation
+        | left=expression op='/' right=expression #BinaryOperation
+		| left=expression op='+' right=expression #BinaryOperation
+		| left=expression op='-' right=expression #BinaryOperation;
 
 field_id : Identifier ('.' Identifier)*;

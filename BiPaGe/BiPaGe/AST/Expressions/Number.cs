@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BiPaGe.AST.Literals
+namespace BiPaGe.AST.Expressions
 {
-    public class NumberLiteral : IMultiplier
+    public class Number : Expression
     {
-        public Int64 Number { get; }
+        public int value { get; }
 
-        public NumberLiteral(SourceInfo sourceIfo, String content) : base(sourceIfo)
+        public Number(SourceInfo sourceIfo, String content) : base(sourceIfo)
         {
-            this.Number = Int64.Parse(content);
+            this.value = int.Parse(content);
             /*
              *             Int64 dummy;
             if(!Int64.TryParse(content, out dummy))
@@ -22,7 +22,7 @@ namespace BiPaGe.AST.Literals
 
         public override void Print(int indentLevel)
         {
-            PrintIndented(String.Format("Number literal: {0}", Number), indentLevel);
+            PrintIndented(String.Format("Number literal: {0}", value), indentLevel);
         }
 
         public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
@@ -30,11 +30,11 @@ namespace BiPaGe.AST.Literals
             return true;
         }
 
-        public override bool Equals(IMultiplier other)
+        public override bool Equals(Expression other)
         {
             try
             {
-                return ((NumberLiteral)other).Number == this.Number;
+                return ((Number)other).value == this.value;
             }
             catch (InvalidCastException)
             {
