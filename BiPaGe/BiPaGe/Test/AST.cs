@@ -136,11 +136,73 @@ Object1
                 ("size", new Signed(null, 32), null),
                 ("field2", new AsciiString(null), new BiPaGe.AST.Identifiers.FieldIdentifier(null, "size"))
             }, (BiPaGe.AST.Object)AST.Elements[0]);
-
-
         }
 
-        // TODO: collection sized by expression
+        [Test()]
+        public void CollectionSizedByExpression()
+        {
+            var input = @"
+Object1
+{
+    size : int32;
+    field2 : u32[(size - this) / 4];
+}";
+            var AST = Build(input);
+            // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
+            Assert.AreEqual(AST.Elements.Count, 1);
+            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
+
+            var expected_size = new Division(
+                null,
+                new Subtraction(
+                    null,
+                    new FieldIdentifier(null, "size"),
+                    new This(null)
+                ),
+                new Number(null, "4"));
+
+            CheckObject("Object1", new(String, FieldType, Expression)[]
+            {
+                ("size", new Signed(null, 32), null),
+                ("field2", new Unsigned(null, 32), expected_size)
+            }, (BiPaGe.AST.Object)AST.Elements[0]);
+        }
+
+        [Test()]
+        public void CollectionSizedByExpression2()
+        {
+            var input = @"
+Object1
+{
+    size : int32;
+    size2 : int16;
+    collection : bool[size + size2 - 10 * 5];
+}";
+            var AST = Build(input);
+            // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
+            Assert.AreEqual(AST.Elements.Count, 1);
+            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
+
+            var expected_size = new Subtraction(
+                null,
+                new Addition(
+                    null,
+                    new FieldIdentifier(null, "size"),
+                    new FieldIdentifier(null, "size2")
+                ),
+                new Multiplication(
+                    null,
+                    new Number(null, "10"),
+                    new Number(null, "5")
+                ));
+
+            CheckObject("Object1", new(String, FieldType, Expression)[]
+            {
+                ("size", new Signed(null, 32), null),
+                ("size2", new Signed(null, 16), null),
+                ("collection", new BiPaGe.AST.FieldTypes.Boolean(null), expected_size)
+            }, (BiPaGe.AST.Object)AST.Elements[0]);
+        }
 
         [Test()]
         public void Enumeration()
