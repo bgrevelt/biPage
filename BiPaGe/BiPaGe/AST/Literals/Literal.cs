@@ -1,7 +1,7 @@
 ﻿using System;
 namespace BiPaGe.AST.Literals
 {
-    public abstract class Literal : IASTNode, Constants.Value
+    public abstract class Literal : ASTNode, Constants.Value
     {
         protected String value_as_string;
         public Literal(SourceInfo sourceInfo, String value) : base(sourceInfo)

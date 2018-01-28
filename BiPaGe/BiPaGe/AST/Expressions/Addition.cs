@@ -4,12 +4,12 @@ using BiPaGe.SemanticAnalysis;
 
 namespace BiPaGe.AST.Expressions
 {
-    public class Addition : Expression
+    public class Addition : ASTNode, IExpression
     {
-        public Expression left { get; }
-        public Expression right { get; }
+        public IExpression left { get; }
+        public IExpression right { get; }
 
-        public Addition(SourceInfo sourceInfo, Expression lhs, Expression rhs) : base(sourceInfo)
+        public Addition(SourceInfo sourceInfo, IExpression lhs, IExpression rhs) : base(sourceInfo)
         {
             left = lhs;
             right = rhs;
@@ -20,7 +20,7 @@ namespace BiPaGe.AST.Expressions
             throw new NotImplementedException();
         }
 
-        public override bool Equals(Expression other)
+        public bool Equals(IExpression other)
         {
             try
             {

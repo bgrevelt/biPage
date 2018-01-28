@@ -4,7 +4,7 @@ using BiPaGe.AST.Expressions;
 
 namespace BiPaGe.AST.Identifiers
 {
-    public class FieldIdentifier : Expression
+    public class FieldIdentifier : ASTNode, IExpression
     {
         private String id;
         public FieldIdentifier(SourceInfo sourceIfo, String id) : base(sourceIfo)
@@ -18,7 +18,7 @@ namespace BiPaGe.AST.Identifiers
             return true;
         }
 
-        public override bool Equals(Expression other)
+        public bool Equals(IExpression other)
         {
             try
             {

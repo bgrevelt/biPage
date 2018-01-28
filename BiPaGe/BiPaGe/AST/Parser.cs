@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BiPaGe.AST
 {
-    public class Parser : IASTNode
+    public class Parser : ASTNode
     {
         public String Name { get; }
         public IList<AST.Element> Elements

@@ -1,7 +1,7 @@
 ﻿using System;
 namespace BiPaGe.AST
 {
-    public abstract class FieldType : IASTNode
+    public abstract class FieldType : ASTNode
     {
         public FieldType(SourceInfo sourceInfo) : base(sourceInfo)
         {

@@ -15,9 +15,11 @@ field_two: u4;
 
 Object2
 {
-field_three: uint18;
-field_four: i14[5];
+field_three: uint18 = 50;
+field_four: ascii_string[10] = ""Test"";
 field_five: float64 = 1.23;
+field_whatevs: bool = true;
+field_bla: bool = false;
 collection_two : bool[(this + 5) / 3 ];
 }
 

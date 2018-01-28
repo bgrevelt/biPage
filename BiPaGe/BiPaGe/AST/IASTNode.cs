@@ -15,19 +15,12 @@ namespace BiPaGe.AST
         }
     }
 
-    public abstract class IASTNode
+    public abstract class ASTNode : IASTNode
     {
         public abstract void Print(int indentLevel);
         public abstract bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings);
 
-        public SourceInfo sourceInfo { get; }
-
-        public IASTNode(SourceInfo sourceInfo)
-        {
-            this.sourceInfo = sourceInfo;
-        }
-
-        protected void PrintIndented(String content, int indentLevel)
+        public void PrintIndented(string content, int indentLevel)
         {
             var toPrint = "";
             for (var i = 0; i < indentLevel; ++i)
@@ -35,5 +28,19 @@ namespace BiPaGe.AST
             toPrint += content;
             Console.WriteLine(toPrint);
         }
+
+        public SourceInfo sourceInfo { get; }
+
+        public ASTNode(SourceInfo sourceInfo)
+        {
+            this.sourceInfo = sourceInfo;
+        }
+    }
+
+    public interface IASTNode
+    {
+        void Print(int indentLevel);
+        bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings);
+        void PrintIndented(String content, int indentLevel);
     }
 }

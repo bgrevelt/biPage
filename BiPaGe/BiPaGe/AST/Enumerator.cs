@@ -4,7 +4,7 @@ using BiPaGe.SemanticAnalysis;
 
 namespace BiPaGe.AST
 {
-    public class Enumerator : IASTNode
+    public class Enumerator : ASTNode
     {
         public String Name { get; }
         public String Value { get; }

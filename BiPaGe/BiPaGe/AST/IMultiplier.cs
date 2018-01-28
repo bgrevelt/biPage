@@ -1,7 +1,7 @@
 ﻿using System;
 namespace BiPaGe.AST
 {
-    public abstract class IMultiplier : IASTNode
+    public abstract class IMultiplier : ASTNode
     {
         public IMultiplier(SourceInfo sourceInfo) : base(sourceInfo)
         {

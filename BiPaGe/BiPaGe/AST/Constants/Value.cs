@@ -1,7 +1,7 @@
 ﻿using System;
 namespace BiPaGe.AST.Constants
 {
-    public interface Value 
+    public interface Value : IASTNode
     {
         
     }

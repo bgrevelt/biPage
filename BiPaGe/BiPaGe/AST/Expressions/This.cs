@@ -4,7 +4,7 @@ using BiPaGe.SemanticAnalysis;
 
 namespace BiPaGe.AST.Expressions
 {
-    public class This : Expression
+    public class This : ASTNode, IExpression
     {
         public This(SourceInfo sourceInfo) : base(sourceInfo)
         {
@@ -15,7 +15,7 @@ namespace BiPaGe.AST.Expressions
             throw new NotImplementedException();
         }
 
-        public override bool Equals(Expression other)
+        public bool Equals(IExpression other)
         {
             return other.GetType() == typeof(This);
         }

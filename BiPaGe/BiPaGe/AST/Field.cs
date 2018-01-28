@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using BiPaGe.AST.Expressions;
 namespace BiPaGe.AST
 {
-    public class Field : IASTNode
+    public class Field : ASTNode
     {
         public String Name { get; }
         public AST.FieldType Type { get; }
-        public Expression CollectionSize { get; }
+        public IExpression CollectionSize { get; }
         public Constants.Fixer Fixer { get; }
 
-        public Field(SourceInfo sourceIfo, String name, AST.FieldType type, Expression collection_size, Constants.Fixer fixer) : base(sourceIfo)
+        public Field(SourceInfo sourceIfo, String name, AST.FieldType type, IExpression collection_size, Constants.Fixer fixer) : base(sourceIfo)
         {
             this.Name = name;
             this.Type = type;

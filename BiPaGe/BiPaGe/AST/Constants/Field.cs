@@ -15,7 +15,8 @@ namespace BiPaGe.AST.Constants
 
         public override void Print(int indentLevel)
         {
-            PrintIndented(String.Format("Field fixer: {0}", Value), indentLevel);
+            PrintIndented(String.Format("Field fixer"), indentLevel);
+            Value.Print(indentLevel+1);
         }
 
         public override bool CheckSemantics(IList<Error> errors, IList<Warning> warnings)

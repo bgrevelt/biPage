@@ -14,7 +14,7 @@ namespace BiPaGe.AST.Literals
             }
         }
 
-        public StringLiteral(SourceInfo sourceInfo, String value) : base(sourceInfo, value)
+        public StringLiteral(SourceInfo sourceInfo, String value) : base(sourceInfo, value.Trim(new char[] { '"' }))
         {
 
         }
