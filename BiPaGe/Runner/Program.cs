@@ -17,7 +17,7 @@ Object2
 {
 field_three: uint18;
 field_four: i14[5];
-field_five: float64;
+field_five: float64 = 1.23;
 collection_two : bool[(this + 5) / 3 ];
 }
 

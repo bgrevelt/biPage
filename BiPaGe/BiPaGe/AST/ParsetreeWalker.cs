@@ -66,9 +66,9 @@ namespace BiPaGe.AST
             String identifier = context.Identifier()?.GetText();
             IASTNode type = context.field_type().Accept(this);
             IASTNode collection_size = context.expression()?.Accept(this);
-            // TODO: initializer
+            IASTNode fixer = context.fixer()?.Accept(this);
 
-            return new Field(GetSourceInfo(context.Start), identifier, (dynamic)type, (dynamic)collection_size);
+            return new Field(GetSourceInfo(context.Start), identifier, (dynamic)type, (dynamic)collection_size, (dynamic)fixer);
         }
 
         public override IASTNode VisitField_type(BiPaGeParser.Field_typeContext context)
@@ -138,6 +138,38 @@ namespace BiPaGe.AST
         {
             return context.expression().Accept(this);
         }
+
+        public override IASTNode VisitFixer(BiPaGeParser.FixerContext context)
+        {
+            if(context.field_constant() != null)
+            {
+                return context.field_constant().Accept(this);
+            }
+            return base.VisitFixer(context);
+        }
+
+        public override IASTNode VisitField_constant(BiPaGeParser.Field_constantContext context)
+        {
+            var val = context.constant().Accept(this);
+            return new Constants.Field(GetSourceInfo(context.Start), (dynamic)val);
+        }
+
+        public override IASTNode VisitLiteralConstant(BiPaGeParser.LiteralConstantContext context)
+        {
+            return context.literal().Accept(this);
+        }
+
+        public override IASTNode VisitLiteral(BiPaGeParser.LiteralContext context)
+        {
+            if (context.NumberLiteral() != null)
+                return new Literals.Integer(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
+            else if (context.FloatLiteral() != null)
+                return new Literals.Float(GetSourceInfo(context.Start), context.FloatLiteral().GetText());
+
+            throw new ArgumentException();
+        }
+
+
 
         /*
              expression:

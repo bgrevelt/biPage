@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BiPaGe.AST.Identifiers
 {
-    public class ObjectIdentifier : AST.FieldType
+    public class ObjectIdentifier : AST.FieldType, Constants.Value
     {
         public String Id { get; }
         public ObjectIdentifier(SourceInfo sourceIfo, String id) : base(sourceIfo)

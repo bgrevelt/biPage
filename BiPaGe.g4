@@ -13,6 +13,7 @@ StringLiteral: '"' (~'"')* '"';
 BooleanLiteral: 'true' | 'false';
 Identifier: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
+
 // Parser rules
 program: element*;
 element: object | enumeration;
@@ -23,7 +24,7 @@ field:
   (Identifier ':')?
   field_type
   ('[' expression ']')?
-  initializer?
+  fixer?
   ';';
 
 field_type: (Type | Identifier | inline_enumeration | inline_object);
@@ -31,19 +32,29 @@ field_type: (Type | Identifier | inline_enumeration | inline_object);
 inline_enumeration : Type '{' (enumerator ',')* enumerator '}';
 inline_object: '{' field+ '}';
 
-initializer: standard_initializer |complex_initializer;
-complex_initializer: '(' (field_id '=' initialization_value ','?)+ ')';
-standard_initializer: '=' initialization_value;
+fixer: field_constant | object_constant;
+object_constant: '(' (field_id '=' constant ','?)+ ')';
+field_constant: '=' constant;
 
+/*
 initialization_value:
-  NumberLiteral
-  | FloatLiteral
-  | StringLiteral
-  | BooleanLiteral
-  | Identifier // enumerator
-  | '{' (NumberLiteral ',')* NumberLiteral'}'
-  | '{' (FloatLiteral ',')* FloatLiteral'}'
-  | '{' (BooleanLiteral ',')* BooleanLiteral'}';
+  NumberLiteral #NumberLiteral
+  | FloatLiteral #FloatLiteral
+  | StringLiteral #StringLiteral
+  | BooleanLiteral #BooleanLiteral
+  | Identifier #ObjectId
+  | '{' (NumberLiteral ',')* NumberLiteral'}' #NumberCollection
+  | '{' (FloatLiteral ',')* FloatLiteral'}' #FloatCollection
+  | '{' (BooleanLiteral ',')* BooleanLiteral'}' #BooleanCollection;
+*/
+
+
+literal: NumberLiteral | FloatLiteral | StringLiteral | BooleanLiteral;
+
+constant:
+  literal #LiteralConstant
+  | Identifier #ObjectId // enumerand
+  | '{' (literal ',')* literal'}' #NumberCollection;
 
 expression:
     NumberLiteral #Number

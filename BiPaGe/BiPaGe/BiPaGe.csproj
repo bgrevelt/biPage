@@ -93,6 +93,16 @@
     <Compile Include="AST\Expressions\Subtraction.cs" />
     <Compile Include="AST\Expressions\Multiplication.cs" />
     <Compile Include="AST\Expressions\Division.cs" />
+    <Compile Include="AST\Literals\Integer.cs" />
+    <Compile Include="AST\Literals\Float.cs" />
+    <Compile Include="AST\Literals\Boolean.cs" />
+    <Compile Include="AST\Literals\Literal.cs" />
+    <Compile Include="AST\Literals\StringLiteral.cs" />
+    <Compile Include="AST\Constants\Fixer.cs" />
+    <Compile Include="AST\Constants\Object.cs" />
+    <Compile Include="AST\Constants\Field.cs" />
+    <Compile Include="AST\Constants\Value.cs" />
+    <Compile Include="AST\Constants\ObjectField.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -107,6 +117,8 @@
     <Folder Include="AST\Identifiers\" />
     <Folder Include="Test\" />
     <Folder Include="SemanticAnalysis\" />
+    <Folder Include="AST\Literals\" />
+    <Folder Include="AST\Constants\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
