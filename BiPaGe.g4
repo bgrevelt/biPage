@@ -36,18 +36,6 @@ fixer: field_constant | object_constant;
 object_constant: '(' (field_id '=' constant ','?)+ ')';
 field_constant: '=' constant;
 
-/*
-initialization_value:
-  NumberLiteral #NumberLiteral
-  | FloatLiteral #FloatLiteral
-  | StringLiteral #StringLiteral
-  | BooleanLiteral #BooleanLiteral
-  | Identifier #ObjectId
-  | '{' (NumberLiteral ',')* NumberLiteral'}' #NumberCollection
-  | '{' (FloatLiteral ',')* FloatLiteral'}' #FloatCollection
-  | '{' (BooleanLiteral ',')* BooleanLiteral'}' #BooleanCollection;
-*/
-
 
 literal: NumberLiteral | FloatLiteral | StringLiteral | BooleanLiteral;
 

@@ -4,9 +4,9 @@ namespace BiPaGe.AST.Constants
     public class ObjectField
     {
         public String FieldId { get; }
-        public Value Value { get; }
+        public Constant Value { get; }
 
-        public ObjectField(String field_id, Value value)
+        public ObjectField(String field_id, Constant value)
         {
             this.FieldId = field_id;
             this.Value = value;

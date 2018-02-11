@@ -67,7 +67,7 @@
     <Compile Include="AST\Field.cs" />
     <Compile Include="AST\IASTNode.cs" />
     <Compile Include="AST\Identifiers\FieldIdentifier.cs" />
-    <Compile Include="AST\Identifiers\ObjectIdentifier.cs" />
+    <Compile Include="AST\Identifiers\Identifier.cs" />
     <Compile Include="AST\FieldTypes\Boolean.cs" />
     <Compile Include="AST\FieldTypes\Float.cs" />
     <Compile Include="AST\FieldTypes\Signed.cs" />
@@ -97,11 +97,11 @@
     <Compile Include="AST\Literals\Boolean.cs" />
     <Compile Include="AST\Literals\Literal.cs" />
     <Compile Include="AST\Literals\StringLiteral.cs" />
-    <Compile Include="AST\Constants\Fixer.cs" />
-    <Compile Include="AST\Constants\Object.cs" />
-    <Compile Include="AST\Constants\Field.cs" />
-    <Compile Include="AST\Constants\Value.cs" />
+    <Compile Include="AST\Constants\ObjectConstant.cs" />
+    <Compile Include="AST\Constants\Constant.cs" />
     <Compile Include="AST\Constants\ObjectField.cs" />
+    <Compile Include="AST\Constants\IFIxer.cs" />
+    <Compile Include="AST\Constants\LiteralCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

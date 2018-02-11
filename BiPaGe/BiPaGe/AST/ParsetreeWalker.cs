@@ -80,7 +80,7 @@ namespace BiPaGe.AST
             }
             else if(context.Identifier() != null)
             {
-                return new ObjectIdentifier(GetSourceInfo(context.Start), context.Identifier().GetText());
+                return new Identifier(GetSourceInfo(context.Start), context.Identifier().GetText());
             }
             else if(context.inline_enumeration() != null)
             {
@@ -150,8 +150,7 @@ namespace BiPaGe.AST
 
         public override ASTNode VisitField_constant(BiPaGeParser.Field_constantContext context)
         {
-            var val = context.constant().Accept(this);
-            return new Constants.Field(GetSourceInfo(context.Start), (dynamic)val);
+            return context.constant().Accept(this);
         }
 
         public override ASTNode VisitLiteralConstant(BiPaGeParser.LiteralConstantContext context)
@@ -171,6 +170,21 @@ namespace BiPaGe.AST
                 return new Literals.StringLiteral(GetSourceInfo(context.Start), context.StringLiteral().GetText());
 
             throw new ArgumentException();
+        }
+
+        public override ASTNode VisitNumberCollection(BiPaGeParser.NumberCollectionContext context)
+        {
+            List<Literals.Literal> literals = new List<Literals.Literal>();
+            foreach(var literal in context.literal())
+            {
+                literals.Add((dynamic)literal.Accept(this));
+            }
+            return new Constants.LiteralCollection(GetSourceInfo(context.Start), literals);
+        }
+
+        public override ASTNode VisitObjectId(BiPaGeParser.ObjectIdContext context)
+        {
+            return new Identifier(GetSourceInfo(context.Start), context.Identifier().GetText());
         }
 
 

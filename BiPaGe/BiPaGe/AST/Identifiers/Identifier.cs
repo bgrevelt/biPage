@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace BiPaGe.AST.Identifiers
 {
-    public class ObjectIdentifier : AST.FieldType, Constants.Value
+    public class Identifier : AST.FieldType, Constants.Constant
     {
         public String Id { get; }
-        public ObjectIdentifier(SourceInfo sourceIfo, String id) : base(sourceIfo)
+        public Identifier(SourceInfo sourceIfo, String id) : base(sourceIfo)
         {
             this.Id = id;
         }
@@ -26,7 +26,7 @@ namespace BiPaGe.AST.Identifiers
         {
             try
             {
-                return ((ObjectIdentifier)other).Id == this.Id;
+                return ((Identifier)other).Id == this.Id;
             }
             catch (InvalidCastException)
             {

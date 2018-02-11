@@ -238,7 +238,7 @@ Object1
             var obj = (BiPaGe.AST.Object)AST.Elements[1];
             Assert.AreEqual(obj.identifier, "Object1");
             Assert.AreEqual(obj.fields.Count, 1);
-            CheckField(obj.fields[0], "enum_field", new ObjectIdentifier(null, "SomeEnumeration"), null);
+            CheckField(obj.fields[0], "enum_field", new Identifier(null, "SomeEnumeration"), null);
         }
     }
 }

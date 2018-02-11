@@ -20,7 +20,8 @@ field_four: ascii_string[10] = ""Test"";
 field_five: float64 = 1.23;
 field_whatevs: bool = true;
 field_bla: bool = false;
-collection_two : bool[(this + 5) / 3 ];
+collection_two : bool[(this + 5) / 3 ] = {true, false, true};
+enum_field : Enumeration = value0;
 }
 
 Enumeration : u8
@@ -45,6 +46,7 @@ ObjectWithCollections
   collection_one : int32[5]; // hard coded size
   collection_two : bool[size_field]; // sized from field
   collection_three : float64[embedded.field_three];
+  
 }*/
 ";
             var invalid_input =

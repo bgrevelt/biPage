@@ -6,11 +6,11 @@ namespace BiPaGe.AST
     public class Field : ASTNode
     {
         public String Name { get; }
-        public AST.FieldType Type { get; }
+        public FieldType Type { get; }
         public IExpression CollectionSize { get; }
-        public Constants.Fixer Fixer { get; }
+        public Constants.IFixer Fixer { get; }
 
-        public Field(SourceInfo sourceIfo, String name, AST.FieldType type, IExpression collection_size, Constants.Fixer fixer) : base(sourceIfo)
+        public Field(SourceInfo sourceIfo, String name, AST.FieldType type, IExpression collection_size, Constants.IFixer fixer) : base(sourceIfo)
         {
             this.Name = name;
             this.Type = type;
