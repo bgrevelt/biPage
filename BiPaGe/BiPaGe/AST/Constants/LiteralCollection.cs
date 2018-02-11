@@ -24,5 +24,29 @@ namespace BiPaGe.AST.Constants
         {
             throw new NotImplementedException();
         }
+
+        public bool Equals(IFixer other)
+        {
+            try
+            {
+                var other_lc = other as LiteralCollection;
+                if (other_lc.Literals.Count != this.Literals.Count)
+                    return false;
+
+                for (int i = 0; i < this.Literals.Count; ++i)
+                {
+                    var this_literal = this.Literals[i];
+                    var other_literal = other_lc.Literals[i];
+                    if (!this_literal.Equals(other_literal))
+                        return false;
+                }
+
+                return true;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
+        }
     }
 }

@@ -23,5 +23,31 @@ namespace BiPaGe.AST.Constants
         {
             throw new NotImplementedException();
         }
+
+        public bool Equals(IFixer other)
+        {
+            try
+            {
+                var oc = other as ObjectConstant;
+                if (oc.FieldFixers.Count != this.FieldFixers.Count)
+                    return false;
+
+                for (int i = 0; i < this.FieldFixers.Count; ++i)
+                {
+                    var this_field = this.FieldFixers[i];
+                    var other_field = oc.FieldFixers[i];
+                    if(this_field.FieldId != other_field.FieldId)
+                        return false;
+                    if (!this_field.Value.Equals(other_field.Value))
+                        return false;
+                }
+
+                return true;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
+        }
     }
 }

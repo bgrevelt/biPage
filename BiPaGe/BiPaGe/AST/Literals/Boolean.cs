@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BiPaGe.AST.Constants;
 using BiPaGe.SemanticAnalysis;
 
 namespace BiPaGe.AST.Literals
@@ -46,6 +47,18 @@ namespace BiPaGe.AST.Literals
             catch (InvalidCastException)
             {
                 errors.Add(new Error(this.sourceInfo, String.Format("Unsupported value {0} for boolean type.", value_as_string)));
+                return false;
+            }
+        }
+
+        public override bool Equals(IFixer other)
+        {
+            try
+            {
+                return ((Boolean)other).value_as_string == value_as_string;
+            }
+            catch (InvalidCastException)
+            {
                 return false;
             }
         }

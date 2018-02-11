@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BiPaGe.AST.Constants;
 
 namespace BiPaGe.AST.Identifiers
 {
@@ -23,6 +24,18 @@ namespace BiPaGe.AST.Identifiers
         }
 
         public override bool Equals(FieldType other)
+        {
+            try
+            {
+                return ((Identifier)other).Id == this.Id;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
+        }
+
+        public bool Equals(IFixer other)
         {
             try
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BiPaGe.AST.Constants;
 using BiPaGe.SemanticAnalysis;
 
 namespace BiPaGe.AST.Literals
@@ -40,6 +41,18 @@ namespace BiPaGe.AST.Literals
         {
             // There is nothing to check here
             return true;
+        }
+
+        public override bool Equals(IFixer other)
+        {
+            try
+            {
+                return ((StringLiteral)other).value_as_string == value_as_string;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
         }
     }
 }

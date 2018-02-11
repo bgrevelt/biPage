@@ -1,32 +1,57 @@
 ﻿<Properties StartupConfiguration="{A0EFAB72-C444-49DC-BAF0-490AA5959DA4}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="BiPaGe/AST/FieldTypes/Boolean.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BiPaGe Status">
     <Files>
-      <File FileName="../BiPaGe.g4" Line="44" Column="15" />
-      <File FileName="BiPaGe/AST/Constants/ObjectConstant.cs" Line="7" Column="25" />
+      <File FileName="../BiPaGe.g4" Line="33" Column="31" />
+      <File FileName="BiPaGe/AST/Constants/ObjectConstant.cs" Line="1" Column="1" />
       <File FileName="BiPaGe/AST/Constants/ObjectField.cs" Line="12" Column="32" />
       <File FileName="BiPaGe/AST/Constants/Constant.cs" Line="9" Column="1" />
       <File FileName="BiPaGe/AST/IASTNode.cs" Line="18" Column="40" />
-      <File FileName="BiPaGe/Test/AST.cs" Line="14" Column="69" />
+      <File FileName="BiPaGe/Test/AST.cs" Line="1" Column="1" />
       <File FileName="BiPaGe/AST/FieldTypes/AsciiString.cs" Line="7" Column="39" />
       <File FileName="BiPaGe/AST/FieldType.cs" Line="4" Column="36" />
-      <File FileName="BiPaGe/AST/Constants/IFIxer.cs" Line="4" Column="26" />
-      <File FileName="Runner/Program.cs" Line="22" Column="25" />
-      <File FileName="BiPaGe/AST/ParsetreeWalker.cs" Line="153" Column="52" />
-      <File FileName="BiPaGe/AST/Field.cs" Line="13" Column="117" />
-      <File FileName="BiPaGe/AST/Identifiers/Identifier.cs" Line="6" Column="20" />
-      <File FileName="BiPaGe/AST/Constants/LiteralCollection.cs" Line="17" Column="10" />
-      <File FileName="BiPaGe/AST/FieldTypes/Boolean.cs" Line="25" Column="16" />
+      <File FileName="BiPaGe/AST/Constants/IFIxer.cs" Line="1" Column="1" />
+      <File FileName="Runner/Program.cs" Line="24" Column="35" />
+      <File FileName="BiPaGe/AST/ParsetreeWalker.cs" Line="187" Column="97" />
+      <File FileName="BiPaGe/AST/Field.cs" Line="26" Column="1" />
+      <File FileName="BiPaGe/AST/Identifiers/Identifier.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe/AST/Constants/LiteralCollection.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe/AST/FieldTypes/Boolean.cs" Line="25" Column="13" />
+      <File FileName="BiPaGe/AST/Literals/Literal.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe/AST/Literals/Boolean.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe/AST/Literals/Float.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe/AST/Literals/Integer.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe/AST/Literals/StringLiteral.cs" Line="1" Column="1" />
+      <File FileName="BiPaGe Status" />
     </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="BiPaGe" expanded="True" selected="True">
+            <Node name="BiPaGe" expanded="True">
+              <Node name="BiPaGe" expanded="True">
+                <Node name="Test" expanded="True">
+                  <Node name="AST" expanded="True">
+                    <Node name="Building" expanded="True" />
+                  </Node>
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/Bouke/Documents/Development/parser_generator/github/BiPaGe/BiPaGe/Test/AST.cs" relfile="BiPaGe/Test/AST.cs" line="134" column="1" />
-      <Breakpoint file="/Users/Bouke/Documents/Development/parser_generator/github/BiPaGe/BiPaGe/Test/AST.cs" relfile="BiPaGe/Test/AST.cs" line="199" column="1" />
-      <Breakpoint file="/Users/Bouke/Documents/Development/parser_generator/github/BiPaGe/BiPaGe/Test/AST.cs" relfile="BiPaGe/Test/AST.cs" line="20" column="1" />
+      <Breakpoint file="/Users/Bouke/Documents/Development/parser_generator/github/BiPaGe/BiPaGe/Test/AST.cs" relfile="BiPaGe/Test/AST.cs" line="139" column="1" />
+      <Breakpoint file="/Users/Bouke/Documents/Development/parser_generator/github/BiPaGe/BiPaGe/Test/AST.cs" relfile="BiPaGe/Test/AST.cs" line="204" column="1" />
+      <Breakpoint file="/Users/Bouke/Documents/Development/parser_generator/github/BiPaGe/BiPaGe/Test/AST.cs" relfile="BiPaGe/Test/AST.cs" line="21" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="BiPaGe/AST/Field.cs" line="8" offsetX="314" offsetY="105" expression="Name" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.ItemProperties.BiPaGe PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.ItemProperties.Runner PreferredExecutionTarget="MonoDevelop.Default" />

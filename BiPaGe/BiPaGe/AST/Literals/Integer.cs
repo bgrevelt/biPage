@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BiPaGe.AST.Constants;
 using BiPaGe.AST.Expressions;
 using BiPaGe.SemanticAnalysis;
 
@@ -55,6 +56,18 @@ namespace BiPaGe.AST.Literals
         // TODO: I think we should move towards an Equals(IASTNode) in IASTNode to 
         // remove this duplicate method
         public bool Equals(IExpression other)
+        {
+            try
+            {
+                return ((Integer)other).value_as_string == value_as_string;
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
+        }
+
+        public override bool Equals(IFixer other)
         {
             try
             {

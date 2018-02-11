@@ -1,4 +1,6 @@
 ﻿using System;
+using BiPaGe.AST.Constants;
+
 namespace BiPaGe.AST.Literals
 {
     public abstract class Literal : ASTNode, Constants.Constant
@@ -10,5 +12,7 @@ namespace BiPaGe.AST.Literals
         }
 
         public abstract bool Equals(Literal other);
+
+        public abstract bool Equals(IFixer other);
     }
 }
