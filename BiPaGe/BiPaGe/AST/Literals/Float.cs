@@ -39,19 +39,7 @@ namespace BiPaGe.AST.Literals
             }
         }
 
-        public override bool Equals(Literal other)
-        {
-            try
-            {
-                return ((Float)other).value_as_string == value_as_string;
-            }
-            catch (InvalidCastException)
-            {
-                return false;
-            }
-        }
-
-        public override bool Equals(IFixer other)
+        public override bool Equals(IASTNode other)
         {
             try
             {

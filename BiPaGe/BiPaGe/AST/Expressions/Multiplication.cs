@@ -20,7 +20,7 @@ namespace BiPaGe.AST.Expressions
             throw new NotImplementedException();
         }
 
-        public bool Equals(IExpression other)
+        public override bool Equals(IASTNode other)
         {
             try
             {

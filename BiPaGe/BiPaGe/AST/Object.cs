@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 namespace BiPaGe.AST
 {
     public class Object : Element
@@ -42,6 +42,23 @@ namespace BiPaGe.AST
             }
 
             return semantics_valid;
+        }
+
+        public override bool Equals(IASTNode other)
+        {
+            var other_object = other as Object;
+
+            if (this.identifier != other_object.identifier)
+                return false;
+
+            if (this.fields.Count != other_object.fields.Count)
+                return false;
+
+            if (this.fields.Zip(other_object.fields, (l, r) => l.Equals(r)).Any(v => v == false))
+                return false;
+
+            return true;
+
         }
     }
 }

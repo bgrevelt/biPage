@@ -6,6 +6,7 @@ using BiPaGe.AST.FieldTypes;
 using BiPaGe.AST.Identifiers;
 using BiPaGe.AST.Expressions;
 using BiPaGe.AST.Constants;
+using System.Linq;
 
 namespace BiPaGe.Test.AST
 {
@@ -26,13 +27,18 @@ namespace BiPaGe.Test.AST
             }
         }
 
-        private void CheckObject(String name, (String, FieldType, IExpression, IFixer)[] fields, BiPaGe.AST.Object obj)
+        private BiPaGe.AST.Object CreateObject(String name, (String, FieldType, IExpression, IFixer)[] fields)
         {
-            Assert.AreEqual(name, obj.identifier);
-            Assert.AreEqual(fields.Length, obj.fields.Count);
-            for (int i = 0; i < fields.Length; ++i)
-                CheckField(obj.fields[i], fields[i].Item1, fields[i].Item2, fields[i].Item3);
+            return new BiPaGe.AST.Object(null, name, fields.Select(f => new Field(null, f.Item1, f.Item2, f.Item3, f.Item4)).ToList());
         }
+
+        //private void CheckObject(String name, (String, FieldType, IExpression, IFixer)[] fields, BiPaGe.AST.Object obj)
+        //{
+        //    var expected_fields = new List<Field>();
+        //    foreach(var field in fields)
+        //        expected_fields.Add(new Field(null, field.Item1, field.Item2, field.Item3, field.Item4));
+        //    Assert.IsTrue(obj.Equals(new BiPaGe.AST.Object(null, name, expected_fields)));
+        //}
 
         private Parser Build(String input)
         {
@@ -62,14 +68,14 @@ Object1
             Assert.AreEqual(AST.Elements.Count, 1);
             Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
 
-            CheckObject("Object1", new(String, FieldType, IExpression, IFixer)[]
+            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
             {
                 ("field1", new Signed(null, 16), null, null),
                 ("field2", new Unsigned(null, 32), null, null),
                 ("field3", new Float(null, 32), null, null),
                 ("field4", new Float(null, 64), null, null),
                 ("field5", new BiPaGe.AST.FieldTypes.Boolean(null),null, null)
-            }, (BiPaGe.AST.Object)AST.Elements[0]);
+            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
         }
 
         [Test()]
@@ -89,14 +95,14 @@ Object1
             Assert.AreEqual(AST.Elements.Count, 1);
             Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
 
-            CheckObject("Object1", new(String, FieldType, IExpression, IFixer)[]
+            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
             {
                 ("field1", new Signed(null, 2), null, null),
                 ("field2", new Unsigned(null, 6), null, null),
                 ("field3", new Signed(null, 11), null, null),
                 ("field4", new Unsigned(null, 12), null, null),
                 ("field5", new BiPaGe.AST.FieldTypes.Boolean(null),null, null)
-            }, (BiPaGe.AST.Object)AST.Elements[0]);
+            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
         }
 
         [Test()]
@@ -114,12 +120,12 @@ Object1
             Assert.AreEqual(AST.Elements.Count, 1);
             Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
 
-            CheckObject("Object1", new(String, FieldType, IExpression, IFixer)[]
+            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
             {
                 ("field1", new Signed(null, 32), new BiPaGe.AST.Literals.Integer(null, "5"), null),
                 ("field2", new AsciiString(null), new BiPaGe.AST.Literals.Integer(null, "32"), null),
                 ("field3", new Utf8String(null), new BiPaGe.AST.Literals.Integer(null, "255"), null)
-            }, (BiPaGe.AST.Object)AST.Elements[0]);
+            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
         }
 
         [Test()]
@@ -136,11 +142,11 @@ Object1
             Assert.AreEqual(AST.Elements.Count, 1);
             Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
 
-            CheckObject("Object1", new(String, FieldType, IExpression, IFixer)[]
+            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
             {
                 ("size", new Signed(null, 32), null, null),
                 ("field2", new AsciiString(null), new BiPaGe.AST.Identifiers.FieldIdentifier(null, "size"), null)
-            }, (BiPaGe.AST.Object)AST.Elements[0]);
+            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
         }
 
         [Test()]
@@ -166,11 +172,11 @@ Object1
                 ),
                 new BiPaGe.AST.Literals.Integer(null, "4"));
 
-            CheckObject("Object1", new(String, FieldType, IExpression, IFixer)[]
+            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
             {
                 ("size", new Signed(null, 32), null, null),
                 ("field2", new Unsigned(null, 32), expected_size, null)
-            }, (BiPaGe.AST.Object)AST.Elements[0]);
+            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
         }
 
         [Test()]
@@ -201,12 +207,12 @@ Object1
                     new BiPaGe.AST.Literals.Integer(null, "5")
                 ));
 
-            CheckObject("Object1", new(String, FieldType, IExpression, IFixer)[]
+            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
             {
                 ("size", new Signed(null, 32), null, null),
                 ("size2", new Signed(null, 16), null, null),
                 ("collection", new BiPaGe.AST.FieldTypes.Boolean(null), expected_size, null)
-            }, (BiPaGe.AST.Object)AST.Elements[0]);
+            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
         }
 
         [Test()]

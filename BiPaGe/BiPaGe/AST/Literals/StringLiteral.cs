@@ -25,25 +25,13 @@ namespace BiPaGe.AST.Literals
             PrintIndented(String.Format("String literal: {0}", value_as_string), indentLevel);
         }
 
-        public override bool Equals(Literal other)
-        {
-            try
-            {
-                return ((StringLiteral)other).value_as_string == value_as_string;
-            }
-            catch (InvalidCastException)
-            {
-                return false;
-            }
-        }
-
         public override bool CheckSemantics(IList<Error> errors, IList<Warning> warnings)
         {
             // There is nothing to check here
             return true;
         }
 
-        public override bool Equals(IFixer other)
+        public override bool Equals(IASTNode other)
         {
             try
             {

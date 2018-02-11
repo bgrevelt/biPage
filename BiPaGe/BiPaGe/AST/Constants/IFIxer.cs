@@ -3,6 +3,6 @@ namespace BiPaGe.AST.Constants
 {
     public interface IFixer : IASTNode
     {
-        bool Equals(IFixer other);
+        //bool Equals(IFixer other);
     }
 }

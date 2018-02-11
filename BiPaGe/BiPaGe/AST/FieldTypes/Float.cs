@@ -20,7 +20,7 @@ namespace BiPaGe.AST.FieldTypes
             return true;
         }
 
-        public override bool Equals(FieldType other)
+        public override bool Equals(IASTNode other)
         {
             try
             {

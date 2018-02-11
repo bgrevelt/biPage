@@ -26,7 +26,7 @@ namespace BiPaGe.AST.Literals
             PrintIndented(String.Format("Integer literal: {0}", value_as_string), indentLevel);
         }
 
-        public override bool Equals(Literal other)
+        public override bool Equals(IASTNode other)
         {
             try
             {
@@ -48,33 +48,6 @@ namespace BiPaGe.AST.Literals
             catch (InvalidCastException)
             {
                 errors.Add(new Error(this.sourceInfo, String.Format("Unsupported value {0} for boolean type.", value_as_string)));
-                return false;
-            }
-        }
-
-
-        // TODO: I think we should move towards an Equals(IASTNode) in IASTNode to 
-        // remove this duplicate method
-        public bool Equals(IExpression other)
-        {
-            try
-            {
-                return ((Integer)other).value_as_string == value_as_string;
-            }
-            catch (InvalidCastException)
-            {
-                return false;
-            }
-        }
-
-        public override bool Equals(IFixer other)
-        {
-            try
-            {
-                return ((Integer)other).value_as_string == value_as_string;
-            }
-            catch (InvalidCastException)
-            {
                 return false;
             }
         }

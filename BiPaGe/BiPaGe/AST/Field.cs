@@ -30,5 +30,24 @@ namespace BiPaGe.AST
         {
             return Type.CheckSemantics(errors, warnings);
         }
+
+        public override bool Equals(IASTNode other)
+        {
+            var other_field = other as Field;
+
+            if (this.Name != other_field.Name)
+                return false;
+
+            if (!this.Type.Equals(other_field.Type))
+                return false;
+
+            if (this.CollectionSize?.Equals(other_field.CollectionSize) == false)
+                return false;
+
+            if (this.Fixer?.Equals(other_field.Fixer) == false)
+                return false;
+
+            return true;
+        }
     }
 }

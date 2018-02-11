@@ -23,5 +23,10 @@ namespace BiPaGe.AST
         {
             throw new NotImplementedException();
         }
+
+        public override bool Equals(IASTNode other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

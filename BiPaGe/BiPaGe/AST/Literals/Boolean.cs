@@ -25,7 +25,7 @@ namespace BiPaGe.AST.Literals
             PrintIndented(String.Format("Bolean literal: {0}", value_as_string), indentLevel);
         }
 
-        public override bool Equals(Literal other)
+        public override bool Equals(IASTNode other)
         {
             try
             {
@@ -47,18 +47,6 @@ namespace BiPaGe.AST.Literals
             catch (InvalidCastException)
             {
                 errors.Add(new Error(this.sourceInfo, String.Format("Unsupported value {0} for boolean type.", value_as_string)));
-                return false;
-            }
-        }
-
-        public override bool Equals(IFixer other)
-        {
-            try
-            {
-                return ((Boolean)other).value_as_string == value_as_string;
-            }
-            catch (InvalidCastException)
-            {
                 return false;
             }
         }

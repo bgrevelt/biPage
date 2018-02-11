@@ -95,42 +95,8 @@ ObjectWithCollections
             {
                 Console.WriteLine(warning.ToString());
             }
-            //if (valid)
-            //{
-                AST.Print(0); 
-            //}
+
         }
-        /*
-        Name":"No name yet",
-        "Objects":
-        [
-            {
-                "identifier":"Object1",
-                "fields":
-                [
-                    {
-                        "Name":"field_one",
-                        "Type":
-                        {
-                            "Size":12,
-                            "sourceInfo":{"line":3,"column":11}
-                        },
-                        "sourceInfo":{"line":3,"column":0}
-                     },
-                     {
-                        "Name":"field_two",
-                        "Type":
-                        {
-                            "Size":4,
-                            "sourceInfo":{"line":4,"column":11}
-                        },
-                        "sourceInfo":{"line":4,"column":0}
-                     }
 
-                ],
-                "sourceInfo":{"line":1,"column":0}
-              },{"identifier":"Object2","fields":[{"Name":"field_three","Type":{"Size":18,"sourceInfo":{"line":9,"column":13}},"sourceInfo":{"line":9,"column":0}},{"Name":"field_four","Type":{"Size":14,"sourceInfo":{"line":10,"column":12}},"sourceInfo":{"line":10,"column":0}},{"Name":"field_five","Type":{"Size":64,"sourceInfo":{"line":11,"column":12}},"sourceInfo":{"line":11,"column":0}}],"sourceInfo":{"line":7,"column":0}}],"sourceInfo":{"line":1,"column":0}}
-
-        */
     }
 }

@@ -6,7 +6,5 @@ namespace BiPaGe.AST
         public FieldType(SourceInfo sourceInfo) : base(sourceInfo)
         {
         }
-
-        public abstract bool Equals(FieldType other);
     }
 }

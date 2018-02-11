@@ -28,5 +28,10 @@ namespace BiPaGe.AST
                 enumerator.Print(indentLevel + 1);
             }
         }
+
+        public override bool Equals(IASTNode other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

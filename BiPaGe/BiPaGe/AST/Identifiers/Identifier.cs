@@ -23,19 +23,7 @@ namespace BiPaGe.AST.Identifiers
             return true;
         }
 
-        public override bool Equals(FieldType other)
-        {
-            try
-            {
-                return ((Identifier)other).Id == this.Id;
-            }
-            catch (InvalidCastException)
-            {
-                return false;
-            }
-        }
-
-        public bool Equals(IFixer other)
+        public override bool Equals(IASTNode other)
         {
             try
             {

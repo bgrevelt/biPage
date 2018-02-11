@@ -10,9 +10,5 @@ namespace BiPaGe.AST.Literals
         {
             value_as_string = value;
         }
-
-        public abstract bool Equals(Literal other);
-
-        public abstract bool Equals(IFixer other);
     }
 }

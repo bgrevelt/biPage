@@ -39,5 +39,10 @@ namespace BiPaGe.AST
 
             return valid;
         }
+
+        public override bool Equals(IASTNode other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

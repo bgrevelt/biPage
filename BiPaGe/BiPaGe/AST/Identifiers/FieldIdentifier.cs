@@ -18,7 +18,7 @@ namespace BiPaGe.AST.Identifiers
             return true;
         }
 
-        public bool Equals(IExpression other)
+        public override bool Equals(IASTNode other)
         {
             try
             {

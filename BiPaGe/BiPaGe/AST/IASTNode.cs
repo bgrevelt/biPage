@@ -29,6 +29,8 @@ namespace BiPaGe.AST
             Console.WriteLine(toPrint);
         }
 
+        public abstract bool Equals(IASTNode other);
+
         public SourceInfo sourceInfo { get; }
 
         public ASTNode(SourceInfo sourceInfo)
@@ -42,5 +44,6 @@ namespace BiPaGe.AST
         void Print(int indentLevel);
         bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings);
         void PrintIndented(String content, int indentLevel);
+        bool Equals(IASTNode other);
     }
 }

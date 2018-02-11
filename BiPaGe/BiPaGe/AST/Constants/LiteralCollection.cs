@@ -25,7 +25,7 @@ namespace BiPaGe.AST.Constants
             throw new NotImplementedException();
         }
 
-        public bool Equals(IFixer other)
+        public override bool Equals(IASTNode other)
         {
             try
             {
