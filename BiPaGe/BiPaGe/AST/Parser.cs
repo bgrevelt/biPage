@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BiPaGe.AST
 {
@@ -42,7 +43,16 @@ namespace BiPaGe.AST
 
         public override bool Equals(IASTNode other)
         {
-            throw new NotImplementedException();
+            var other_parser = other as Parser;
+            if (other_parser.Name != this.Name)
+                return false;
+            if (other_parser.Elements.Count != this.Elements.Count)
+                return false;
+
+            if (this.Elements.Zip(other_parser.Elements, (l, r) => l.Equals(r)).Any(v => v == false))
+                return false;
+
+            return true;
         }
     }
 }

@@ -26,7 +26,9 @@ namespace BiPaGe.AST
 
         public override bool Equals(IASTNode other)
         {
-            throw new NotImplementedException();
+            var other_enumerator = other as Enumerator;
+
+            return (other_enumerator.Name == this.Name && other_enumerator.Value == this.Value);
         }
     }
 }
