@@ -1,0 +1,11 @@
+parsetree.bat
+build.bat
+BiPaGe/.vs/
+BiPaGe/BiPaGe/bin/
+BiPaGe/BiPaGe/obj/
+BiPaGe/packages/
+BiPaGe/Runner/bin/
+BiPaGe/Runner/obj/
+generated_csharp/
+generated_java/
+WindowsOnly/
