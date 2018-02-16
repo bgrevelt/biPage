@@ -39,7 +39,10 @@ namespace BiPaGe.AST
             {
                 enumerators.Add((dynamic)enumerator.Accept(this));
             }
-            return new AST.Enumeration(GetSourceInfo(context.Start), context.Identifier().GetText(), enumerators);
+            var type = ParseType(context.Type().GetText(), GetSourceInfo(context.Start));
+
+
+            return new AST.Enumeration(GetSourceInfo(context.Start), context.Identifier().GetText(), type, enumerators);
         }
 
         public override ASTNode VisitEnumerator(BiPaGeParser.EnumeratorContext context)
