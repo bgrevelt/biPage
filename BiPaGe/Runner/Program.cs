@@ -96,6 +96,8 @@ ObjectWithCollections
                 Console.WriteLine(warning.ToString());
             }
 
+            AST.Print(0);
+
         }
 
     }
