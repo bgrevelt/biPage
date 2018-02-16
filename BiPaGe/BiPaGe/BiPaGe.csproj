@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -29,10 +29,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Antlr4.Runtime.Standard">
-      <HintPath>..\packages\Antlr4.Runtime.Standard.4.7.1\lib\net35\Antlr4.Runtime.Standard.dll</HintPath>
+    <Reference Include="Antlr4.Runtime.Standard, Version=4.7.1.0, Culture=neutral, PublicKeyToken=e78b2c5abd1fcb3f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr4.Runtime.Standard.4.7.1.1\lib\net35\Antlr4.Runtime.Standard.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
@@ -109,15 +109,6 @@
       <Link>BiPaGe.g4</Link>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AST\" />
-    <Folder Include="AST\FieldTypes\" />
-    <Folder Include="AST\Expressions\" />
-    <Folder Include="AST\Identifiers\" />
-    <Folder Include="Test\" />
-    <Folder Include="SemanticAnalysis\" />
-    <Folder Include="AST\Literals\" />
-    <Folder Include="AST\Constants\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
