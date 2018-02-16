@@ -10,36 +10,63 @@ using System.Linq;
 
 namespace BiPaGe.Test.AST
 {
+    namespace Fakes
+    {
+        public class Enumeration
+        {
+            public String Name;
+            public FieldType Type;
+            public List<(String, int)> Enumerators = new List<(string, int)>();
+        }
+
+        public class Object
+        {
+            public String Name;
+            public List<(String, FieldType, IExpression, IFixer)> Fields = new List<(string, FieldType, IExpression, IFixer)>();
+        }
+
+        public class ProgramBuilder
+        {
+            private List<Enumeration> Enumerations = new List<Enumeration>();
+            private List<Object> Objects = new List<Object>();
+
+            public Enumeration AddEnumeration()
+            {
+                var new_enum = new Enumeration();
+                Enumerations.Add(new_enum);
+                return new_enum;
+            }
+
+            public Object AddObject()
+            {
+                var new_object = new Object();
+                Objects.Add(new_object);
+                return new_object;
+            }
+
+            public void Validate(IASTNode program)
+            {
+                Assert.IsTrue(ToAst().Equals(program));
+            }
+
+            private IASTNode ToAst()
+            {
+                List<BiPaGe.AST.Element> elements = new List<Element>();
+                foreach (var e in this.Enumerations)
+                    elements.Add(new BiPaGe.AST.Enumeration(null, e.Name, e.Type, e.Enumerators.Select(f => new BiPaGe.AST.Enumerator(null, f.Item1, f.Item2.ToString())).ToList()));
+                foreach (var o in this.Objects)
+                    elements.Add(new BiPaGe.AST.Object(null, o.Name, o.Fields.Select(f => new Field(null, f.Item1, f.Item2, f.Item3, f.Item4)).ToList()));
+
+                return new BiPaGe.AST.Parser(null, "No name yet", elements);
+            }
+
+        }
+    }
+
+
     [TestFixture()]
     public class Building
     {
-        public void CheckField(BiPaGe.AST.Field field, String name, FieldType type, IExpression collection_size = null, IFixer fixer = null)
-        {
-            Assert.AreEqual(field.Name, name);
-            Assert.IsTrue(field.Type.Equals(type));
-            if (collection_size != null)
-            {
-                Assert.IsTrue(field.CollectionSize.Equals(collection_size));
-            }
-            if(fixer != null)
-            {
-                //Assert.
-            }
-        }
-
-        private BiPaGe.AST.Object CreateObject(String name, (String, FieldType, IExpression, IFixer)[] fields)
-        {
-            return new BiPaGe.AST.Object(null, name, fields.Select(f => new Field(null, f.Item1, f.Item2, f.Item3, f.Item4)).ToList());
-        }
-
-        //private void CheckObject(String name, (String, FieldType, IExpression, IFixer)[] fields, BiPaGe.AST.Object obj)
-        //{
-        //    var expected_fields = new List<Field>();
-        //    foreach(var field in fields)
-        //        expected_fields.Add(new Field(null, field.Item1, field.Item2, field.Item3, field.Item4));
-        //    Assert.IsTrue(obj.Equals(new BiPaGe.AST.Object(null, name, expected_fields)));
-        //}
-
         private Parser Build(String input)
         {
             var errors = new List<SemanticAnalysis.Error>();
@@ -62,20 +89,15 @@ Object1
     field4 : f64;
     field5 : bool;
 }";
-            
-            var AST = Build(input);
-            // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Elements.Count, 1);
-            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
-
-            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
-            {
-                ("field1", new Signed(null, 16), null, null),
-                ("field2", new Unsigned(null, 32), null, null),
-                ("field3", new Float(null, 32), null, null),
-                ("field4", new Float(null, 64), null, null),
-                ("field5", new BiPaGe.AST.FieldTypes.Boolean(null),null, null)
-            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
+            var expected = new Fakes.ProgramBuilder();
+            var object1 = expected.AddObject();
+            object1.Name = "Object1";
+            object1.Fields.Add(("field1", new Signed(null, 16), null, null));
+            object1.Fields.Add(("field2", new Unsigned(null, 32), null, null));
+            object1.Fields.Add(("field3", new Float(null, 32), null, null));
+            object1.Fields.Add(("field4", new Float(null, 64), null, null));
+            object1.Fields.Add(("field5", new BiPaGe.AST.FieldTypes.Boolean(null), null, null));
+            expected.Validate(Build(input));
         }
 
         [Test()]
@@ -90,19 +112,16 @@ Object1
     field4 : u12;
     field5 : bool;
 }";
-            var AST = Build(input);
-            // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Elements.Count, 1);
-            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
-
-            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
-            {
-                ("field1", new Signed(null, 2), null, null),
-                ("field2", new Unsigned(null, 6), null, null),
-                ("field3", new Signed(null, 11), null, null),
-                ("field4", new Unsigned(null, 12), null, null),
-                ("field5", new BiPaGe.AST.FieldTypes.Boolean(null),null, null)
-            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
+            var expected = new Fakes.ProgramBuilder();
+            var object1 = expected.AddObject();
+            object1.Name = "Object1";
+            object1.Fields.Add(("field1", new Signed(null, 2), null, null));
+            object1.Fields.Add(("field2", new Unsigned(null, 6), null, null));
+            object1.Fields.Add(("field3", new Signed(null, 11), null, null));
+            object1.Fields.Add(("field4", new Unsigned(null, 12), null, null));
+            object1.Fields.Add(("field5", new BiPaGe.AST.FieldTypes.Boolean(null), null, null));
+            expected.Validate(Build(input));
+            var AST = Build(input);            
         }
 
         [Test()]
@@ -115,17 +134,13 @@ Object1
     field2 : ascii_string[32];
     field3 : utf8_string[255];
 }";
-            var AST = Build(input);
-            // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Elements.Count, 1);
-            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
-
-            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
-            {
-                ("field1", new Signed(null, 32), new BiPaGe.AST.Literals.Integer(null, "5"), null),
-                ("field2", new AsciiString(null), new BiPaGe.AST.Literals.Integer(null, "32"), null),
-                ("field3", new Utf8String(null), new BiPaGe.AST.Literals.Integer(null, "255"), null)
-            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
+            var expected = new Fakes.ProgramBuilder();
+            var object1 = expected.AddObject();
+            object1.Name = "Object1";
+            object1.Fields.Add(("field1", new Signed(null, 32), new BiPaGe.AST.Literals.Integer(null, "5"), null));
+            object1.Fields.Add(("field2", new AsciiString(null), new BiPaGe.AST.Literals.Integer(null, "32"), null));
+            object1.Fields.Add(("field3", new Utf8String(null), new BiPaGe.AST.Literals.Integer(null, "255"), null));
+            expected.Validate(Build(input));
         }
 
         [Test()]
@@ -137,16 +152,12 @@ Object1
     size : int32;
     field2 : ascii_string[size];
 }";
-            var AST = Build(input);
-            // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Elements.Count, 1);
-            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
-
-            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
-            {
-                ("size", new Signed(null, 32), null, null),
-                ("field2", new AsciiString(null), new BiPaGe.AST.Identifiers.FieldIdentifier(null, "size"), null)
-            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
+            var expected = new Fakes.ProgramBuilder();
+            var object1 = expected.AddObject();
+            object1.Name = "Object1";
+            object1.Fields.Add(("size", new Signed(null, 32), null, null));
+            object1.Fields.Add(("field2", new AsciiString(null), new BiPaGe.AST.Identifiers.FieldIdentifier(null, "size"), null));
+            expected.Validate(Build(input));
         }
 
         [Test()]
@@ -158,12 +169,11 @@ Object1
     size : int32;
     field2 : u32[(size - this) / 4];
 }";
-            var AST = Build(input);
-            // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Elements.Count, 1);
-            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
-
-            var expected_size = new Division(
+            var expected = new Fakes.ProgramBuilder();
+            var object1 = expected.AddObject();
+            object1.Name = "Object1";
+            object1.Fields.Add(("size", new Signed(null, 32), null, null));
+            var field2_size = new Division(
                 null,
                 new Subtraction(
                     null,
@@ -171,12 +181,8 @@ Object1
                     new This(null)
                 ),
                 new BiPaGe.AST.Literals.Integer(null, "4"));
-
-            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
-            {
-                ("size", new Signed(null, 32), null, null),
-                ("field2", new Unsigned(null, 32), expected_size, null)
-            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
+            object1.Fields.Add(("field2", new Unsigned(null, 32), field2_size, null));
+            expected.Validate(Build(input));
         }
 
         [Test()]
@@ -189,12 +195,13 @@ Object1
     size2 : int16;
     collection : bool[size + size2 - 10 * 5];
 }";
-            var AST = Build(input);
-            // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Elements.Count, 1);
-            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Object));
 
-            var expected_size = new Subtraction(
+            var expected = new Fakes.ProgramBuilder();
+            var object1= expected.AddObject();
+            object1.Name = "Object1";
+            object1.Fields.Add(("size", new Signed(null, 32), null, null));
+            object1.Fields.Add(("size2", new Signed(null, 16), null, null));
+            var field3_size = new Subtraction(
                 null,
                 new Addition(
                     null,
@@ -206,13 +213,8 @@ Object1
                     new BiPaGe.AST.Literals.Integer(null, "10"),
                     new BiPaGe.AST.Literals.Integer(null, "5")
                 ));
-
-            Assert.IsTrue(CreateObject("Object1", new(String, FieldType, IExpression, IFixer)[]
-            {
-                ("size", new Signed(null, 32), null, null),
-                ("size2", new Signed(null, 16), null, null),
-                ("collection", new BiPaGe.AST.FieldTypes.Boolean(null), expected_size, null)
-            }).Equals((BiPaGe.AST.Object)AST.Elements[0]));
+            object1.Fields.Add(("collection", new BiPaGe.AST.FieldTypes.Boolean(null), field3_size, null));
+            expected.Validate(Build(input));
         }
 
         [Test()]
@@ -230,26 +232,23 @@ Object1
     enum_field : SomeEnumeration;
 }";
             var AST = Build(input);
-            // Assert.AreEqual(AST.Name, ""); TODO: the program should have a name. Maybe the file name. Otherwise add a field?
-            Assert.AreEqual(AST.Elements.Count, 2);
-            Assert.IsTrue(AST.Elements[0].GetType() == typeof(BiPaGe.AST.Enumeration));
-            Assert.IsTrue(AST.Elements[1].GetType() == typeof(BiPaGe.AST.Object));
-            var enumeration = (Enumeration)AST.Elements[0];
-            Assert.AreEqual(3, enumeration.Enumerators.Count);
 
-            Assert.AreEqual("value1", enumeration.Enumerators[0].Name);
-            Assert.AreEqual("1", enumeration.Enumerators[0].Value);
+            var expected = new Fakes.ProgramBuilder();
 
-            Assert.AreEqual("value2", enumeration.Enumerators[1].Name);
-            Assert.AreEqual("2", enumeration.Enumerators[1].Value);
+            var enum1 = expected.AddEnumeration();
+            enum1.Name = "SomeEnumeration";
+            enum1.Type = new Unsigned(null, 8);
+            enum1.Enumerators.Add(("value1", 1));
+            enum1.Enumerators.Add(("value2", 2));
+            enum1.Enumerators.Add(("value3", 0));
 
-            Assert.AreEqual("value3", enumeration.Enumerators[2].Name);
-            Assert.AreEqual("0", enumeration.Enumerators[2].Value);
+            var object1 = expected.AddObject();
+            object1.Name = "Object1";
+            object1.Fields.Add(("enum_field", new Identifier(null, "SomeEnumeration"), null, null));
 
-            var obj = (BiPaGe.AST.Object)AST.Elements[1];
-            Assert.AreEqual(obj.identifier, "Object1");
-            Assert.AreEqual(obj.fields.Count, 1);
-            CheckField(obj.fields[0], "enum_field", new Identifier(null, "SomeEnumeration"), null);
+            expected.Validate(AST);
+
+      
         }
     }
 }
