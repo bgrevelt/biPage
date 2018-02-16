@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BiPaGe.SemanticAnalysis;
+using NUnit.Framework;
 
 namespace BiPaGe.AST.Expressions
 {
@@ -20,16 +21,12 @@ namespace BiPaGe.AST.Expressions
             throw new NotImplementedException();
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            try
-            {
-                return left.Equals(((Addition)other).left) && right.Equals(((Addition)other).right);
-            }
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            Assert.IsInstanceOf<Addition>(expected);
+            left.Validate(((Addition)expected).left);
+            right.Validate(((Addition)expected).right);
+
         }
 
         public override void Print(int indentLevel)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BiPaGe.SemanticAnalysis;
+using NUnit.Framework;
 
 namespace BiPaGe.AST.Constants
 {
@@ -24,29 +25,18 @@ namespace BiPaGe.AST.Constants
             throw new NotImplementedException();
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            try
-            {
-                var oc = other as ObjectConstant;
-                if (oc.FieldFixers.Count != this.FieldFixers.Count)
-                    return false;
+            Assert.IsInstanceOf<ObjectConstant>(expected);
+            var expected_oc = expected as ObjectConstant;
+            Assert.AreEqual(expected_oc.FieldFixers.Count, this.FieldFixers.Count);
 
-                for (int i = 0; i < this.FieldFixers.Count; ++i)
-                {
-                    var this_field = this.FieldFixers[i];
-                    var other_field = oc.FieldFixers[i];
-                    if(this_field.FieldId != other_field.FieldId)
-                        return false;
-                    if (!this_field.Value.Equals(other_field.Value))
-                        return false;
-                }
-
-                return true;
-            }
-            catch (InvalidCastException)
+            for (int i = 0; i < this.FieldFixers.Count; ++i)
             {
-                return false;
+                var this_field = this.FieldFixers[i];
+                var expected_field = expected_oc.FieldFixers[i];
+                Assert.AreSame(expected_field.FieldId, this_field.FieldId);
+                this_field.Value.Validate(expected_field.Value);
             }
         }
     }

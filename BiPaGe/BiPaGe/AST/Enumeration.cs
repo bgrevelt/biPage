@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BiPaGe.SemanticAnalysis;
 using System.Linq;
+using NUnit.Framework;
 
 namespace BiPaGe.AST
 {
@@ -32,23 +33,16 @@ namespace BiPaGe.AST
             }
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            var other_enum = other as Enumeration;
+            Assert.IsInstanceOf<Enumeration>(expected);
+            var expected_enum = expected as Enumeration;
 
-            if (other_enum.Identifier != this.Identifier)
-                return false;
-
-            if (!other_enum.Type.Equals(this.Type))
-                return false;
-
-            if (other_enum.Enumerators.Count != this.Enumerators.Count)
-                return false;
-
-            if (this.Enumerators.Zip(other_enum.Enumerators, (l, r) => l.Equals(r)).Any(v => v == false))
-                return false;
-
-            return true;
+            Assert.AreEqual(expected_enum.Identifier, this.Identifier);
+            this.Type.Validate(expected_enum.Type);
+            Assert.AreEqual(expected_enum.Enumerators.Count, this.Enumerators.Count());
+            for (int i = 0; i < this.Enumerators.Count; ++i)
+                this.Enumerators[i].Validate(expected_enum.Enumerators[i]);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BiPaGe.SemanticAnalysis;
+using NUnit.Framework;
 
 namespace BiPaGe.AST.Constants
 {
@@ -25,28 +27,13 @@ namespace BiPaGe.AST.Constants
             throw new NotImplementedException();
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            try
-            {
-                var other_lc = other as LiteralCollection;
-                if (other_lc.Literals.Count != this.Literals.Count)
-                    return false;
-
-                for (int i = 0; i < this.Literals.Count; ++i)
-                {
-                    var this_literal = this.Literals[i];
-                    var other_literal = other_lc.Literals[i];
-                    if (!this_literal.Equals(other_literal))
-                        return false;
-                }
-
-                return true;
-            }
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            Assert.IsInstanceOf<LiteralCollection>(expected);
+            var expected_lc = expected as LiteralCollection;
+            Assert.AreEqual(expected_lc.Literals.Count, this.Literals.Count);
+            for (int i = 0; i < this.Literals.Count; ++i)
+                this.Literals[i].Validate(expected_lc.Literals[i]);
         }
     }
 }

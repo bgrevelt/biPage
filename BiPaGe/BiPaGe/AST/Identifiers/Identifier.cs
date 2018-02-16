@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BiPaGe.AST.Constants;
+using NUnit.Framework;
 
 namespace BiPaGe.AST.Identifiers
 {
@@ -23,16 +24,10 @@ namespace BiPaGe.AST.Identifiers
             return true;
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            try
-            {
-                return ((Identifier)other).Id == this.Id;
-            }
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            Assert.IsInstanceOf<Identifier>(expected);
+            Assert.AreEqual(((Identifier)expected).Id, this.Id);
         }
     }
 }

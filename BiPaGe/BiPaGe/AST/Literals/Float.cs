@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BiPaGe.AST.Constants;
 using BiPaGe.SemanticAnalysis;
+using NUnit.Framework;
 
 namespace BiPaGe.AST.Literals
 {
@@ -39,16 +40,10 @@ namespace BiPaGe.AST.Literals
             }
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            try
-            {
-                return ((Float)other).value_as_string == value_as_string;
-            }
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            Assert.IsInstanceOf<Float>(expected);
+            Assert.AreEqual(((Float)expected).value_as_string, this.value_as_string);
         }
     }
 }

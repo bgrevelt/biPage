@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace BiPaGe.AST.FieldTypes
 {
@@ -15,9 +16,9 @@ namespace BiPaGe.AST.FieldTypes
             return true;
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            return other.GetType() == typeof(Boolean);
+            Assert.IsInstanceOf<Boolean>(expected);
         }
 
         public override void Print(int indentLevel)

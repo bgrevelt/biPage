@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 
 namespace BiPaGe.AST
 {
@@ -41,18 +42,14 @@ namespace BiPaGe.AST
             return valid;
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            var other_parser = other as Parser;
-            if (other_parser.Name != this.Name)
-                return false;
-            if (other_parser.Elements.Count != this.Elements.Count)
-                return false;
-
-            if (this.Elements.Zip(other_parser.Elements, (l, r) => l.Equals(r)).Any(v => v == false))
-                return false;
-
-            return true;
+            Assert.IsInstanceOf<Parser>(expected);
+            var expected_parser = expected as Parser;
+            Assert.AreEqual(expected_parser.Name, this.Name);
+            Assert.AreEqual(expected_parser.Elements.Count , this.Elements.Count);
+            for (int i = 0; i < this.Elements.Count; ++i)
+                this.Elements[i].Validate(expected_parser.Elements[i]);
         }
     }
 }

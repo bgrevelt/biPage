@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BiPaGe.SemanticAnalysis;
+using NUnit.Framework;
 
 namespace BiPaGe.AST.FieldTypes
 {
@@ -15,9 +16,9 @@ namespace BiPaGe.AST.FieldTypes
             throw new NotImplementedException();
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            return other.GetType() == typeof(AsciiString);
+            Assert.IsInstanceOf<AsciiString>(expected);
         }
 
         public override void Print(int indentLevel)

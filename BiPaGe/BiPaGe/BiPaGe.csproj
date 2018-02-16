@@ -75,7 +75,7 @@
     <Compile Include="AST\FieldTypes\Unsigned.cs" />
     <Compile Include="AST\FieldType.cs" />
     <Compile Include="AST\Object.cs" />
-    <Compile Include="Test\AST.cs" />
+    <Compile Include="Test\BasicTypes.cs" />
     <Compile Include="SemanticAnalysis\Error.cs" />
     <Compile Include="SemanticAnalysis\Warning.cs" />
     <Compile Include="SemanticAnalysis\Event.cs" />
@@ -102,6 +102,10 @@
     <Compile Include="AST\Constants\ObjectField.cs" />
     <Compile Include="AST\Constants\IFIxer.cs" />
     <Compile Include="AST\Constants\LiteralCollection.cs" />
+    <Compile Include="Test\FixedFields.cs" />
+    <Compile Include="Test\Helpers.cs" />
+    <Compile Include="Test\Collections.cs" />
+    <Compile Include="Test\Enumeration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

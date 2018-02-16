@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using BiPaGe.AST.Expressions;
+using NUnit.Framework;
+
 namespace BiPaGe.AST
 {
     public class Field : ASTNode
@@ -31,23 +33,15 @@ namespace BiPaGe.AST
             return Type.CheckSemantics(errors, warnings);
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            var other_field = other as Field;
+            Assert.IsInstanceOf<Field>(expected);
+            var expected_field = expected as Field;
+            Assert.AreEqual(expected_field.Name, this.Name);
 
-            if (this.Name != other_field.Name)
-                return false;
-
-            if (!this.Type.Equals(other_field.Type))
-                return false;
-
-            if (this.CollectionSize?.Equals(other_field.CollectionSize) == false)
-                return false;
-
-            if (this.Fixer?.Equals(other_field.Fixer) == false)
-                return false;
-
-            return true;
+            this.Type.Validate(expected_field.Type);
+            this.CollectionSize?.Validate(expected_field.CollectionSize);
+            this.Fixer?.Validate(expected_field.Fixer);
         }
     }
 }

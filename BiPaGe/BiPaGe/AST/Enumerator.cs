@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BiPaGe.SemanticAnalysis;
+using NUnit.Framework;
 
 namespace BiPaGe.AST
 {
@@ -24,11 +25,12 @@ namespace BiPaGe.AST
             throw new NotImplementedException();
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            var other_enumerator = other as Enumerator;
-
-            return (other_enumerator.Name == this.Name && other_enumerator.Value == this.Value);
+            Assert.IsInstanceOf<Enumerator>(expected);
+            var expected_enumerator = expected as Enumerator;
+            Assert.AreEqual(expected_enumerator.Name, this.Name);
+            Assert.AreEqual(expected_enumerator.Value, this.Value);
         }
     }
 }

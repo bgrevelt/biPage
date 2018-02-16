@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BiPaGe.AST.Expressions;
+using NUnit.Framework;
 
 namespace BiPaGe.AST.Identifiers
 {
@@ -18,16 +19,10 @@ namespace BiPaGe.AST.Identifiers
             return true;
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            try
-            {
-                return ((FieldIdentifier)other).id == this.id;
-            }
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            Assert.IsInstanceOf<FieldIdentifier>(expected);
+            Assert.AreEqual(((FieldIdentifier)expected).id, this.id);
         }
 
         public override void Print(int indentLevel)

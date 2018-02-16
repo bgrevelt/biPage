@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
+
 namespace BiPaGe.AST
 {
     public class Object : Element
@@ -44,21 +46,14 @@ namespace BiPaGe.AST
             return semantics_valid;
         }
 
-        public override bool Equals(IASTNode other)
+        public override void Validate(IASTNode expected)
         {
-            var other_object = other as Object;
-
-            if (this.identifier != other_object.identifier)
-                return false;
-
-            if (this.fields.Count != other_object.fields.Count)
-                return false;
-
-            if (this.fields.Zip(other_object.fields, (l, r) => l.Equals(r)).Any(v => v == false))
-                return false;
-
-            return true;
-
+            Assert.IsInstanceOf<Object>(expected);
+            var expected_object = expected as Object;
+            Assert.AreEqual(expected_object.identifier, this.identifier);
+            Assert.AreEqual(expected_object.fields.Count(), this.fields.Count());
+            for (int i = 0; i < this.fields.Count; ++i)
+                this.fields[i].Validate(expected_object.fields[i]);
         }
     }
 }
