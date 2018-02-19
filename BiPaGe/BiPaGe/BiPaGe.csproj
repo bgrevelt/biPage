@@ -102,10 +102,14 @@
     <Compile Include="AST\Constants\ObjectField.cs" />
     <Compile Include="AST\Constants\IFIxer.cs" />
     <Compile Include="AST\Constants\LiteralCollection.cs" />
-    <Compile Include="Test\FixedFields.cs" />
     <Compile Include="Test\Helpers.cs" />
     <Compile Include="Test\Collections.cs" />
     <Compile Include="Test\Enumeration.cs" />
+    <Compile Include="Test\InlineEnumerations.cs" />
+    <Compile Include="Test\InlineObjects.cs" />
+    <Compile Include="AST\FieldTypes\InlineObject.cs" />
+    <Compile Include="AST\FieldTypes\InlineEnumeration.cs" />
+    <Compile Include="Test\Reserved.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

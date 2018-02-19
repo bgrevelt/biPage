@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace BiPaGe.AST
+namespace BiPaGe.AST.FieldTypes
 {
     public class InlineObject : FieldType
     {

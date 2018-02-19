@@ -59,6 +59,29 @@ Object1
             object1.Fields.Add(("field5", new BiPaGe.AST.FieldTypes.Boolean(null), null, null));
             expected.Validate(SimpleBuilder.Build(input));   
         }
+
+        [Test()]
+        public void Reserved()
+        {
+            var input = @"
+Object1
+{
+    int2;
+    u6;
+    i11;
+    u12;
+    bool;
+}";
+            var expected = new ProgramBuilder();
+            var object1 = expected.AddObject();
+            object1.Name = "Object1";
+            object1.Fields.Add((null, new Signed(null, 2), null, null));
+            object1.Fields.Add((null, new Unsigned(null, 6), null, null));
+            object1.Fields.Add((null, new Signed(null, 11), null, null));
+            object1.Fields.Add((null, new Unsigned(null, 12), null, null));
+            object1.Fields.Add((null, new BiPaGe.AST.FieldTypes.Boolean(null), null, null));
+            expected.Validate(SimpleBuilder.Build(input));
+        }
     }
 
     [TestFixture()]

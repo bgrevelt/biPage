@@ -199,7 +199,7 @@ namespace BiPaGe.AST
                 fields.Add((dynamic)a);
             }
 
-            return new InlineObject(GetSourceInfo(context.Start), fields);
+            return new FieldTypes.InlineObject(GetSourceInfo(context.Start), fields);
         }
 
         public override ASTNode VisitInline_enumeration(BiPaGeParser.Inline_enumerationContext context)
@@ -212,7 +212,7 @@ namespace BiPaGe.AST
             var type = ParseType(context.Type().GetText(), GetSourceInfo(context.Start));
 
 
-            return new InlineEnumeration(GetSourceInfo(context.Start), type, enumerators);
+            return new FieldTypes.InlineEnumeration(GetSourceInfo(context.Start), type, enumerators);
         }
 
 

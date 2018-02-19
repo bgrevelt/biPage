@@ -4,7 +4,7 @@ using BiPaGe.SemanticAnalysis;
 using System.Linq;
 using NUnit.Framework;
 
-namespace BiPaGe.AST
+namespace BiPaGe.AST.FieldTypes
 {
     public class InlineEnumeration : FieldType
     {
@@ -33,8 +33,8 @@ namespace BiPaGe.AST
 
         public override void Validate(IASTNode expected)
         {
-            Assert.IsInstanceOf<Enumeration>(expected);
-            var expected_enum = expected as Enumeration;
+            Assert.IsInstanceOf<InlineEnumeration>(expected);
+            var expected_enum = expected as InlineEnumeration;
 
             this.Type.Validate(expected_enum.Type);
             Assert.AreEqual(expected_enum.Enumerators.Count, this.Enumerators.Count());
