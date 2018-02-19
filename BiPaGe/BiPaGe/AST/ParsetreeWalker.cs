@@ -87,11 +87,11 @@ namespace BiPaGe.AST
             }
             else if(context.inline_enumeration() != null)
             {
-                
+                return context.inline_enumeration().Accept(this);
             }
-            else if(context.inline_enumeration() != null)
+            else if(context.inline_object() != null)
             {
-                
+                return context.inline_object().Accept(this);
             }
 
             throw new NotImplementedException();
@@ -190,6 +190,30 @@ namespace BiPaGe.AST
             return new Identifier(GetSourceInfo(context.Start), context.Identifier().GetText());
         }
 
+        public override ASTNode VisitInline_object(BiPaGeParser.Inline_objectContext context)
+        {
+            List<Field> fields = new List<Field>();
+            foreach (var field in context.field())
+            {
+                var a = field.Accept(this);
+                fields.Add((dynamic)a);
+            }
+
+            return new InlineObject(GetSourceInfo(context.Start), fields);
+        }
+
+        public override ASTNode VisitInline_enumeration(BiPaGeParser.Inline_enumerationContext context)
+        {
+            var enumerators = new List<Enumerator>();
+            foreach (var enumerator in context.enumerator())
+            {
+                enumerators.Add((dynamic)enumerator.Accept(this));
+            }
+            var type = ParseType(context.Type().GetText(), GetSourceInfo(context.Start));
+
+
+            return new InlineEnumeration(GetSourceInfo(context.Start), type, enumerators);
+        }
 
 
         /*
