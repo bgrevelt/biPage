@@ -18,7 +18,7 @@ Identifier: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 program: element*;
 element: object | enumeration;
 enumeration: Identifier ':' Type '{' (enumerator ',')* enumerator '}';
-enumerator: Identifier '=' NumberLiteral;
+enumerator: Identifier '=' negative? NumberLiteral;
 object: Identifier '{' field+ '}';
 field:
   (Identifier ':')?

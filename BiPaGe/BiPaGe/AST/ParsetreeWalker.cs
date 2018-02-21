@@ -47,7 +47,8 @@ namespace BiPaGe.AST
 
         public override ASTNode VisitEnumerator(BiPaGeParser.EnumeratorContext context)
         {
-            return new Enumerator(GetSourceInfo(context.Start), context.Identifier().GetText(), context.NumberLiteral().GetText());
+            string sign = context.negative() != null ? "-" : "";
+            return new Enumerator(GetSourceInfo(context.Start), sign + context.Identifier().GetText(), context.NumberLiteral().GetText());
         }
 
         public override AST.ASTNode VisitObject(BiPaGeParser.ObjectContext context)
