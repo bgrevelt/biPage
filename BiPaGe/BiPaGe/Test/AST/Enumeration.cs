@@ -45,5 +45,7 @@ Object1
         }
 
 
+        // TODO add a test for a signed integer enum type. Values may be negative there
+
     }
 }

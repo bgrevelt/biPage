@@ -1,0 +1,1 @@
+﻿/* Use this file to test that proper ASTs still get created if there are comments in the input */

@@ -75,7 +75,8 @@
     <Compile Include="AST\FieldTypes\Unsigned.cs" />
     <Compile Include="AST\FieldType.cs" />
     <Compile Include="AST\Object.cs" />
-    <Compile Include="Test\BasicTypes.cs" />
+    <Compile Include="SemanticAnalysis\DontKnowTheNameYet.cs" />
+    <Compile Include="Test\AST\BasicTypes.cs" />
     <Compile Include="SemanticAnalysis\Error.cs" />
     <Compile Include="SemanticAnalysis\Warning.cs" />
     <Compile Include="SemanticAnalysis\Event.cs" />
@@ -102,14 +103,15 @@
     <Compile Include="AST\Constants\ObjectField.cs" />
     <Compile Include="AST\Constants\IFIxer.cs" />
     <Compile Include="AST\Constants\LiteralCollection.cs" />
+    <Compile Include="Test\AST\Comments.cs" />
     <Compile Include="Test\Helpers.cs" />
-    <Compile Include="Test\Collections.cs" />
-    <Compile Include="Test\Enumeration.cs" />
-    <Compile Include="Test\InlineEnumerations.cs" />
-    <Compile Include="Test\InlineObjects.cs" />
+    <Compile Include="Test\AST\Collections.cs" />
+    <Compile Include="Test\AST\Enumeration.cs" />
+    <Compile Include="Test\AST\InlineEnumerations.cs" />
+    <Compile Include="Test\AST\InlineObjects.cs" />
     <Compile Include="AST\FieldTypes\InlineObject.cs" />
     <Compile Include="AST\FieldTypes\InlineEnumeration.cs" />
-    <Compile Include="Test\Reserved.cs" />
+    <Compile Include="Test\SemanticAnalysis\Enumerations.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
