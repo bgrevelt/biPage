@@ -1,12 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using BiPaGe.AST;
-using BiPaGe.AST.FieldTypes;
-using BiPaGe.AST.Identifiers;
-using BiPaGe.AST.Expressions;
-using BiPaGe.AST.Constants;
-using System.Linq;
 using Helpers;
 
 namespace BiPaGe.Test.SemanticAnalysis.Enumerations
@@ -25,13 +17,7 @@ Enumeration1 : u8
     label2 = 3,
     label3 = 4
 }";
-
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(1, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);            
+            TestRunner.Run(input, 0, 1);         
         }
 
         [Test()]
@@ -46,12 +32,7 @@ Enumeration1 : u8
     label4 = 3
 }";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(1, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);
+            TestRunner.Run(input, 0, 1);
         }
     }
 
@@ -70,12 +51,7 @@ Enumeration1 : ascii_string
     label4 = ""4""
 }";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(1, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);
+            TestRunner.Run(input, 0, 1);
         }
 
         [Test()]
@@ -90,12 +66,7 @@ Enumeration1 : utf8_string
     label4 = ""4""
 }";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(1, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);
+            TestRunner.Run(input, 0, 1);
         }
 
         [Test()]
@@ -110,12 +81,7 @@ Enumeration1 : f64
     label4 = 4.0
 }";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(1, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);
+            TestRunner.Run(input, 0, 1);
         }
 
         [Test()]
@@ -128,12 +94,7 @@ Enumeration1 : bool
     label2 = false
 }";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(1, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);
+            TestRunner.Run(input, 0, 1);
         }
     }
 
@@ -152,11 +113,7 @@ Enumeration1 : u8
 }
 ";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(0, events.Count);
+            TestRunner.Run(input, 0, 0);
         }
 
         [Test()]
@@ -171,11 +128,7 @@ Enumeration1 : i8
     label4 = -4
 }";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(0, events.Count);
+            TestRunner.Run(input, 0, 0);
         }
 
         [Test()]
@@ -190,15 +143,7 @@ Enumeration1 : u8
     label4 = -4
 }";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(4, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[1]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[2]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[3]);
+            TestRunner.Run(input, 0, 4);
         }
 
         [Test()]
@@ -230,11 +175,7 @@ Enumu8 : u64
 }
 ";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(0, events.Count);
+            TestRunner.Run(input, 0, 0);
         }
 
         [Test()]
@@ -266,11 +207,7 @@ Enumu8 : i64
 }
 ";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(0, events.Count);
+            TestRunner.Run(input, 0, 0);
         }
 
         [Test()]
@@ -302,11 +239,7 @@ Enumu8 : u22
 }
 ";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(0, events.Count);
+            TestRunner.Run(input, 0, 0);
         }
 
         [Test()]
@@ -338,11 +271,7 @@ Enumu8 : i22
 }
 ";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(0, events.Count);
+            TestRunner.Run(input, 0, 0);
         }
 
         [Test()]
@@ -373,19 +302,7 @@ Enumu8 : i64
     label2 = 9223372036854775808,
 }
 ";
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(8, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[1]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[2]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[3]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[4]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[5]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[6]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[7]);
+            TestRunner.Run(input, 0, 8);
         }
 
         [Test()]
@@ -416,15 +333,7 @@ Enumu8 : u64
     label2 = 18446744073709551616,
 }
 ";
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(4, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[1]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[2]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[3]);
+            TestRunner.Run(input, 0, 4);
         }
 
         [Test()]
@@ -456,11 +365,7 @@ Enumu8 : i22
 }
 ";
 
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
-
-            Assert.AreEqual(0, events.Count);
+            TestRunner.Run(input, 0, 0);
         }
 
         [Test()]
@@ -491,17 +396,76 @@ Enumu8 : u22
     label2 = 4194304,
 }
 ";
-            var AST = SimpleBuilder.Build(input);
-            BiPaGe.SemanticAnalysis.SemanticAnalyzer analyzer = new BiPaGe.SemanticAnalysis.SemanticAnalyzer();
-            var events = analyzer.CheckSemantics(AST);
+            TestRunner.Run(input, 0, 4);
+        }
+    }
 
-            Assert.AreEqual(4, events.Count);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[0]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[1]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[2]);
-            Assert.IsInstanceOf<BiPaGe.SemanticAnalysis.Error>(events[3]);
+    public class Fixed
+    {
+        [Test()]
+        public void ValidFixer()
+        {
+            var input = @"
+Enumeration1 : u8
+{
+    label1 = 1,
+    label2 = 2,
+    label3 = 3
+}
+
+Object1
+{
+    enum_field : Enumeration1 = label2;
+}
+";
+            TestRunner.Run(input, 0, 0);
+        }
+
+        [Test()]
+        public void UndefinedFixer()
+        {
+            var input = @"
+Enumeration1 : u8
+{
+    label1 = 1,
+    label2 = 2,
+    label3 = 3
+}
+
+Object1
+{
+    enum_field : Enumeration1 = doesNotExist;
+}
+";
+            TestRunner.Run(input, 0, 1);
+        }
+
+        [Test()]
+        public void WrongEnumFixer()
+        {
+            var input = @"
+Enumeration1 : u8
+{
+    label1 = 1,
+    label2 = 2,
+    label3 = 3
+}
+
+Enumeration2 : u8
+{
+    value1 = 1,
+    value2 = 2,
+    value3 = 3
+}
+
+Object1
+{
+    enum_field : Enumeration1 = value1;
+}
+";
+            TestRunner.Run(input, 0, 1);
         }
     }
 
 
-    }
+}

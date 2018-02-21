@@ -31,6 +31,24 @@ namespace BiPaGe.SemanticAnalysis
     -- Check that values match type 
     -- Check type (e.g. SomeEnum : f64 or SomeEnume : ascii_string
 
+    - Complex types
+    There's all sorts of things to check here. Basically all the fixer things should be checked again.
+    Also there's nested things to think about:
+    SuperNested
+    { 
+        field1 : int32;
+        field2 : float64;
+    }
+    Nested
+    {
+        complex : SuperNested;
+        someOtherField : bool[8];
+    }
+    Root
+    {
+        field1 : Nested(complex.field1 = 5)
+    }
+
     */
 
     public class SemanticAnalyzer

@@ -112,6 +112,8 @@
     <Compile Include="AST\FieldTypes\InlineObject.cs" />
     <Compile Include="AST\FieldTypes\InlineEnumeration.cs" />
     <Compile Include="Test\SemanticAnalysis\Enumerations.cs" />
+    <Compile Include="Test\SemanticAnalysis\Identifiers.cs" />
+    <Compile Include="Test\SemanticAnalysis\TestRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
