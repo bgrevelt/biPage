@@ -36,8 +36,8 @@ fixer: field_constant | object_constant;
 object_constant: '(' (field_id '=' constant ','?)+ ')';
 field_constant: '=' constant;
 
-
-literal: NumberLiteral | FloatLiteral | StringLiteral | BooleanLiteral;
+literal:  (negative? NumberLiteral) | (negative? FloatLiteral) | StringLiteral | BooleanLiteral;
+negative: '-';
 
 constant:
   literal #LiteralConstant

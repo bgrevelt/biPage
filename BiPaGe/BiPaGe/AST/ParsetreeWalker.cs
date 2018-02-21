@@ -163,10 +163,12 @@ namespace BiPaGe.AST
 
         public override ASTNode VisitLiteral(BiPaGeParser.LiteralContext context)
         {
+            string sign = context.negative()  != null ? "-" : "";
+
             if (context.NumberLiteral() != null)
-                return new Literals.Integer(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
+                return new Literals.Integer(GetSourceInfo(context.Start), sign + context.NumberLiteral().GetText());
             else if (context.FloatLiteral() != null)
-                return new Literals.Float(GetSourceInfo(context.Start), context.FloatLiteral().GetText());
+                return new Literals.Float(GetSourceInfo(context.Start), sign + context.FloatLiteral().GetText());
             else if (context.BooleanLiteral() != null)
                 return new Literals.Boolean(GetSourceInfo(context.Start), context.BooleanLiteral().GetText());
             else if (context.StringLiteral() != null)
