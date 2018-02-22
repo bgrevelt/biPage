@@ -1,244 +1,28 @@
-Object2
+MessageType : u8
 {
-field_three: uint18;
-field_four: i14[5];
-field_five: float64;
+    Message1 = 1,
+    Message2 = 2,
+    Message3 = 3
 }
 
-
-Time
+Header
 {
-    sec : uint32;
-    nanosec : uint32;
+    start_of_message : ascii_string[5] = "START";
+    message_type : MessageType;
+    message_length: uint32;
 }
 
-MessageHeader
+Footer
 {
-    numBytesDgm : uint32;
-    dgmType : uint8[4];
-    dgmVersion : uint8;
-    systemID : uint8;
-    echoSounderID : uint16;
-    time : Time;
+    end_of_message : u8[6] = { 1,8,7,23,76,90};
 }
 
-EMdgmMpartition_def
+Message1
 {
-    numOfDgms : uint16;
-    dgmNum : uint16;
-}
-
-EMdgmMbody_def
-{
-    numBytesCmnPart : uin16;
-    pingCnt : uint16;
-    rxFansPerPing : uint8;
-    rxFanIndex : uint8;
-    swathsPerPing : uint8;
-    swathAlongPosition : uint8;
-    txTransducerInd : uint8;
-    rxTransducerInd : uint8;
-    numRxTransducers : uint8;
-    algorithmType : uint8;  // Currently only one supported, will probably we an enumeration in future iteration of the protocol
-}
-
-DepthMode : uint8
-{
-    verry_shallow = 0,
-    shallow = 1,
-    medium = 2,
-    deep = 3,
-    very_deep = 4,
-    extra_deep = 5,
-    manual_verry_shallow = 100,
-    manual_shallow = 101,
-    manual_medium = 102,
-    manual_deep = 103,
-    manual_very_deep = 104,
-    manual_extra_deep = 105
-}
-
-// This is an interesting one. It is just one bit, so the typical way would be to define it as a boolean. But that doesn't really feel right as
-// this is not a yes/no thing. It is an optionA/optionB thing, which means it is a boolean. Fortunately there is nothing in the language to prevent
-// us from defining a single bit enumeration
-SwathAlongPosition : uint1
-{
-    fixed = 0,
-    dynamic = 1
-}
-
-EMdgmMRZ_pingInfo_def
-{
-    numBytesInfoData : uint16;
-    uint16;  // padding0
-    pingRate_Hz : float32;
-    beamSpacing : uint8;
-    depthMode : DepthMode;
-    subDepthMode : uint8; // Appears not to be used. Only valid value is zero?
-    distanceBtwSwath : uint8;
-    detectionMode : uint8{ normal = 0, waterway = 1, tracking = 2, minimum_depth = 3 };
-    pulseForm : uint8 { cw = 0, mix = 1, fm = 2 };
-    uint16;  // padding1
-
-    frequencyMode_Hz : float32;
-    freqRangeLowLim_Hz : float32;
-    freqRangeHighLim_Hz : float32;
-    maxTotalTxPulseLength_sec : float32;
-    maxEffTxPulseLength_sec : float32;
-    maxEffTxBandWidth_Hz : float32;
-    absCoeff_dBPerkm : float32;
-    portSectorEdge_deg : float32;
-    starbSectorEdge_deg : float32;
-    portMeanCov_deg : float32;
-    starbMeanCov_deg : float32;
-    portMeanCov_m : int16;
-    starbMeanCov_m : int16;
-    modeAndStabilisation :
-	{
-    	pitch_stabilization : bool;
-   	 	yaw_stabilization : bool;
-    	sonar_mode : bool;
-    	angular_coverage_mode : bool;
-    	sector_mode : bool;
-    	swath_along_position : SwathAlongPosition;
-    	int2; // two bits not used
-	};
-    runtimeFilter1 :
-	{
-    	slope_filter : bool;
-    	aeration_filter : bool;
-    	sector_filter : bool;
-    	interference_filter : bool;
-    	special_amplitude_detect: bool;
-    	int3;
-	};
-    runtimeFilter2 :
-	{
-    	range_gate_size : u4{ small = 0, normal = 1, large = 2 };
-    	splike_filter_strength : u4 { off = 0, weak = 1, medium = 2, strong = 3 };
-    	penetration_filter : u4 { off = 0, weak = 1, medium = 2, strong = 3 };
-    	phase_ramp : u4 { short = 0, normal = 1, long = 2 };
-	};
-    pipeTrackingStatus : uint32; // Currently one '1' is a valid value
-    transmitArraySizeUsed_deg : float32;
-    receiveArraySizeUsed_deg : float32;
-    transmitPower_dB : float32;
-    SLrampUpTimeRemaining : uint16;
-    uint16; // padding2
-    yawAngle_deg : float32;
-    numTxSectors : uint16;
-    numBytesPerTxSector : uint16;
-    headingVessel_deg : float32;
-    soundSpeedAtTxDepth_mPerSec : float32;
-    txTransducerDepth_m : float32;
-    z_waterLevelReRefPoint_m : float32;
-    x_txTransducerArm_SCS_m : float32;
-    y_txTransducerArm_SCS_m : float32;
-    latLongInfo : u8 { last_position_received = 0, interpolated = 1, processed = 2 };
-    posSensorStatus : u8 { valid_data = 0, invalid_data = 1, reduced_performance = 2 };
-    attitudeSensorStatus : u8 { valid_data = 0, invalid_data = 1, reduced_performance = 2 };
-    uint8; // padding3
-    latitude_deg : float64;
-    longitude_deg : float64;
-    ellipsoidHeightReRefPoint_m : float32;
-};
-
-
-EMdgmMRZ_txSectorInfo_def
-{
-    txSectorNumb : uint8;
-    txArrNumber : uint8;
-    txSubArray : uint8;
-    uint8; // padding0
-    sectorTransmitDelay_sec : float32;
-    tiltAngleReTx_deg : float32;
-    txNominalSourceLevel_dB : float32;
-    txFocusRange_m : float32;
-    centreFreq_Hz : float32;
-    signalBandWidth_Hz : float32;
-    totalSignalLength_sec : float32;
-    pulseShading : uint8;
-    signalWaveForm : u8 { cw = 0, fm_upsweep = 1, fm_downsweep = 2 };
-    uint16; // padding1
-}
-
-EMdgmMRZ_rxInfo_def
-{
-    numBytesRxInfo : uint16;
-    numSoundingsMaxMain : uint16;
-    numSoundingsValidMain : uint16;
-    numBytesPerSounding : uint16;
-    WCSampleRate : float32;
-    seabedImageSampleRate : float32;
-    BSnormal_dB : float32;
-    BSoblique_dB : float32;
-    extraDetectionAlarmFlag : uint16;
-    numExtraDetections : uint16;
-    numExtraDetectionClasses : uint16;
-    numBytesPerClass : uint16;
-}
-
-EMdgmMRZ_extraDetClassInfo_def
-{
-    numExtraDetInClass : uint16;
-    int8; // padding;
-    alarmFlag : uint8;
-}
-
-EMdgmMRZ_sounding_def
-{
-
-    soundingIndex : uint16;
-    txSectorNumb : uint8;
-    detectionType : u8{ normal = 0, extra_detection = 1, rejected = 2 };
-    detectionMethod : u8{ no_valid_detection = 0, amplitude_detection = 1, phase_detection = 2};
-    rejectionInfo1 : uint8;
-    rejectionInfo2 : uint8;
-    postProcessingInfo : uint8;
-    detectionClass : uint8;
-    detectionConfidenceLevel : uint8;
-    uint16; //padding
-    rangeFactor : float32;
-    qualityFactor : float32;
-    detectionUncertaintyVer_m : float32;
-    detectionUncertaintyHor_m : float32;
-    detectionWindowLength_sec : float32;
-    echoLength_sec : float32;
-    WCBeamNumb : uint16;
-    WCrange_samples : uint16;
-    WCNomBeamAngleAcross_deg : float32;
-    meanAbsCoeff_dBPerkm : float32;
-    reflectivity1_dB : float32;
-    reflectivity2_dB : float32;
-    receiverSensitivityApplied_dB : float32;
-    sourceLevelApplied_dB : float32;
-    BScalibration_dB : float32;
-    TVG_dB : float32;
-    beamAngleReRx_deg : float32;
-    beamAngleCorrection_deg : float32;
-    twoWayTravelTime_sec : float32;
-    twoWayTravelTimeCorrection_sec : float32;
-    deltaLatitude_deg : float32;
-    deltaLongitude_deg : float32;
-    z_reRefPoint_m : float32;
-    y_reRefPoint_m : float32;
-    x_reRefPoint_m : float32;
-    beamIncAngleAdj_deg : float32;
-    realTimeCleanInfo : uint16;
-    SIstartRange_samples : uint16;
-    SIcentreSample : uint16;
-    SInumSamples : uint16;
-}
-
-EMdgmMRZ_def
-{
-    header : EMdgmHeader_def;
-    partition : EMdgmMpartition_def;
-    cmnPart : EMdgmMbody_def;
-    pingInfo : EMdgmMRZ_pingInfo_def;
-    sectorInfo : EMdgmMRZ_txSectorInfo_def[pingInfo.numTxSectors ];
-    rxInfo : EMdgmMRZ_rxInfo_def;
-    extraDetClassInfo : EMdgmMRZ_extraDetClassInfo_def[rxInfo.numExtraDetectionClasses ];
-    sounding : EMdgmMRZ_sounding_def[rxInfo.numSoundingsMaxMain + rxInfo.numExtraDetectionClasses ];
-    SIsample_desidB : int16[(header.numBytesDgm - this) / 2];
+    header : Header(message_type = Message2);
+    sample_type : u6 { normal = 0, special = 1 };
+    valid : bool;
+    bool;
+    samples : { sample_value1 : i32; sample_value2 : f64; sample_value3 : f32; } [(header.length - this) / 16];
+    footer : Footer;
 }

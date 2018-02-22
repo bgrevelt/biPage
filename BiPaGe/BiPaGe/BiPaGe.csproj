@@ -103,7 +103,9 @@
     <Compile Include="AST\Constants\ObjectField.cs" />
     <Compile Include="AST\Constants\IFIxer.cs" />
     <Compile Include="AST\Constants\LiteralCollection.cs" />
+    <Compile Include="Test\AST\Whitespace.cs" />
     <Compile Include="Test\AST\Comments.cs" />
+    <Compile Include="Test\AST\ComplexTypes.cs" />
     <Compile Include="Test\Helpers.cs" />
     <Compile Include="Test\AST\Collections.cs" />
     <Compile Include="Test\AST\Enumeration.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="AST\FieldTypes\InlineObject.cs" />
     <Compile Include="AST\FieldTypes\InlineEnumeration.cs" />
     <Compile Include="Test\SemanticAnalysis\Enumerations.cs" />
+    <Compile Include="Test\SemanticAnalysis\Fixers.cs" />
     <Compile Include="Test\SemanticAnalysis\Identifiers.cs" />
     <Compile Include="Test\SemanticAnalysis\TestRunner.cs" />
   </ItemGroup>

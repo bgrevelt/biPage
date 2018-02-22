@@ -109,6 +109,62 @@ Object2
         }
     }
 
+    [TestFixture()]    
+    public class Uniqueness
+    {
+        [Test()]
+        // All fields in an object should be unique
+        public void FieldNameRepeated()
+        {
+            var input = @"
+Object1
+{
+    field1 : u8;
+    field1 : f64
+}";
+
+            TestRunner.Run(input, 0, 1);
+        }
+
+        [Test()]
+        // Different objects may have fields with the same name
+        public void DifferentOjectsSameFieldName()
+        {
+            var input = @"
+Object1
+{
+    field1 : u8;
+    field2 : f64
+}
+
+Object2
+{
+    field1: ascii_string[15];
+    field2: bool;
+}";
+            TestRunner.Run(input, 0, 0);
+        }
+
+        [Test()]
+        // Different objects may not have the same name
+        public void UniqueOBjectNames()
+        {
+            var input = @"
+Object1
+{
+    field1 : u8;
+    field2 : f64
+}
+
+Object1
+{
+    field1: ascii_string[15];
+    field2: bool;
+}";
+            TestRunner.Run(input, 0, 1);
+        }
+    }
+
     public class CyclicDependency
     {
         /* Object cannot have itself as a field */
