@@ -19,30 +19,36 @@ namespace BiPaGe.AST
         public override ASTNode VisitProgram(BiPaGeParser.ProgramContext context)
         {
             List<AST.Element> elements = new List<AST.Element>();
-            foreach (var element in context.element())
+            if (context.element() != null)
             {
-                elements.Add((dynamic)element.Accept(this));
+                foreach (var element in context.element())
+                {
+                    elements.Add((dynamic)element.Accept(this));
+                }
             }
-
 
             return new AST.Parser(GetSourceInfo(context.Start), "No name yet", elements);
         }
 
         public override ASTNode VisitElement(BiPaGeParser.ElementContext context)
         {
-            Debug.Assert(context.@object() != null || context.enumeration() != null);
             if (context.@object() != null)
                 return context.@object().Accept(this);
-            else 
+            else if (context.enumeration() != null)
                 return context.enumeration().Accept(this);
+            else
+                return null;
         }
 
         public override ASTNode VisitEnumeration(BiPaGeParser.EnumerationContext context)
         {
             var enumerators = new List<AST.Enumerator>();
-            foreach(var enumerator in context.enumerator())
+            if (context.enumerator() != null)
             {
-                enumerators.Add((dynamic)enumerator.Accept(this));
+                foreach (var enumerator in context.enumerator())
+                {
+                    enumerators.Add((dynamic)enumerator.Accept(this));
+                }
             }
             var type = ParseType(context.Type().GetText(), GetSourceInfo(context.Start));
 
@@ -52,17 +58,26 @@ namespace BiPaGe.AST
 
         public override ASTNode VisitEnumerator(BiPaGeParser.EnumeratorContext context)
         {
+            if (context.Identifier() == null | context.NumberLiteral() == null)
+                return null;
+
             string sign = context.negative() != null ? "-" : "";
             return new Enumerator(GetSourceInfo(context.Start), sign + context.Identifier().GetText(), context.NumberLiteral().GetText());
         }
 
         public override AST.ASTNode VisitObject(BiPaGeParser.ObjectContext context)
         {
+            if (context.Identifier() == null)
+                return null;
+
             List<AST.Field> fields = new List<AST.Field>();
-            foreach (var field in context.field())
+            if (context.field() != null)
             {
-                var a = field.Accept(this);
-                fields.Add((dynamic)a);
+                foreach (var field in context.field())
+                {
+                    var a = field.Accept(this);
+                    fields.Add((dynamic)a);
+                }
             }
 
             var objectName = context.Identifier().GetText();
@@ -73,7 +88,7 @@ namespace BiPaGe.AST
         public override ASTNode VisitField(BiPaGeParser.FieldContext context)
         {
             String identifier = context.Identifier()?.GetText();
-            ASTNode type = context.field_type().Accept(this);
+            ASTNode type = context.field_type()?.Accept(this);
             ASTNode collection_size = context.expression()?.Accept(this);
             ASTNode fixer = context.fixer()?.Accept(this);
 
@@ -82,7 +97,6 @@ namespace BiPaGe.AST
 
         public override ASTNode VisitField_type(BiPaGeParser.Field_typeContext context)
         {
-            // (Type | Identifier | inline_enumeration | inline_object);
             if(context.Type() != null)
             {
                 return ParseType(context.Type().GetText(), GetSourceInfo(context.Start));
@@ -100,12 +114,12 @@ namespace BiPaGe.AST
                 return context.inline_object().Accept(this);
             }
 
-            throw new NotImplementedException();
+            return null; 
         }
 
         public override ASTNode VisitNumber(BiPaGeParser.NumberContext context)
-        {
-            return new Literals.Integer(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
+        {            
+            return new Literals.Integer(GetSourceInfo(context.Start), context.NumberLiteral()?.GetText());
         }
 
         public override ASTNode VisitOffset(BiPaGeParser.OffsetContext context)
@@ -116,36 +130,43 @@ namespace BiPaGe.AST
         public override ASTNode VisitFieldId(BiPaGeParser.FieldIdContext context)
         {
             String identifier = "";
-            foreach (var id in context.field_id().Identifier())
+            if (context.field_id() != null)
             {
-                identifier = identifier + id.GetText() + ".";
+                foreach (var id in context.field_id().Identifier())
+                {
+                    identifier = identifier + id.GetText() + ".";
+                }
             }
-            // Remove trailing dot
-            identifier = identifier.Remove(identifier.Length - 1);
+            if (identifier.Length > 0)
+            {
+                // Remove trailing dot
+                identifier = identifier.Remove(identifier.Length - 1);
+            }
 
             return new FieldIdentifier(GetSourceInfo(context.Start), identifier);
         }
 
         public override ASTNode VisitBinaryOperation(BiPaGeParser.BinaryOperationContext context)
         {
-            var lhs = context.left.Accept(this);
-            var rhs = context.right.Accept(this);
+            var lhs = context.left?.Accept(this);
+            var rhs = context.right?.Accept(this);
             var sourceInfo = GetSourceInfo(context.Start);
-            switch(context.op.Text)
+
+            switch (context?.op.Text)
             {
                 case "+": return new Addition(sourceInfo, (dynamic)lhs, (dynamic)rhs);
                 case "-": return new Subtraction(sourceInfo, (dynamic)lhs, (dynamic)rhs);
                 case "/": return new Division(sourceInfo, (dynamic)lhs, (dynamic)rhs);
                 case "*": return new Multiplication(sourceInfo, (dynamic)lhs, (dynamic)rhs);
                 default:
-                    // TODO: solve better
-                    throw new ArgumentException();
+                    return null;
             }
+
         }
 
         public override ASTNode VisitParentheses(BiPaGeParser.ParenthesesContext context)
         {
-            return context.expression().Accept(this);
+            return context.expression()?.Accept(this);
         }
 
         public override ASTNode VisitFixer(BiPaGeParser.FixerContext context)
@@ -159,16 +180,16 @@ namespace BiPaGe.AST
 
         public override ASTNode VisitField_constant(BiPaGeParser.Field_constantContext context)
         {
-            return context.constant().Accept(this);
+            return context.constant()?.Accept(this);
         }
 
         public override ASTNode VisitLiteralConstant(BiPaGeParser.LiteralConstantContext context)
         {
-            return context.literal().Accept(this);
+            return context.literal()?.Accept(this);
         }
 
         public override ASTNode VisitLiteral(BiPaGeParser.LiteralContext context)
-        {
+        {          
             string sign = context.negative()  != null ? "-" : "";
 
             if (context.NumberLiteral() != null)
@@ -186,87 +207,53 @@ namespace BiPaGe.AST
         public override ASTNode VisitNumberCollection(BiPaGeParser.NumberCollectionContext context)
         {
             List<Literals.Literal> literals = new List<Literals.Literal>();
-            foreach(var literal in context.literal())
+            if (context.literal() != null)
             {
-                literals.Add((dynamic)literal.Accept(this));
+                foreach (var literal in context.literal())
+                {
+                    literals.Add((dynamic)literal.Accept(this));
+                }
             }
             return new Constants.LiteralCollection(GetSourceInfo(context.Start), literals);
         }
 
         public override ASTNode VisitObjectId(BiPaGeParser.ObjectIdContext context)
         {
-            return new Identifier(GetSourceInfo(context.Start), context.Identifier().GetText());
+            return new Identifier(GetSourceInfo(context.Start), context.Identifier()?.GetText());
         }
 
         public override ASTNode VisitInline_object(BiPaGeParser.Inline_objectContext context)
         {
             List<Field> fields = new List<Field>();
-            foreach (var field in context.field())
+            if (context.field() != null)
             {
-                var a = field.Accept(this);
-                fields.Add((dynamic)a);
+                foreach (var field in context.field())
+                {
+                    var a = field.Accept(this);
+                    fields.Add((dynamic)a);
+                }
             }
-
             return new FieldTypes.InlineObject(GetSourceInfo(context.Start), fields);
         }
 
         public override ASTNode VisitInline_enumeration(BiPaGeParser.Inline_enumerationContext context)
         {
             var enumerators = new List<Enumerator>();
-            foreach (var enumerator in context.enumerator())
+            if (context.enumerator() != null)
             {
-                enumerators.Add((dynamic)enumerator.Accept(this));
+                foreach (var enumerator in context.enumerator())
+                {
+                    enumerators.Add((dynamic)enumerator.Accept(this));
+                }
             }
-            var type = ParseType(context.Type().GetText(), GetSourceInfo(context.Start));
-
+            FieldType type = null;
+            if (context.Type() != null)
+            {
+                type = ParseType(context.Type().GetText(), GetSourceInfo(context.Start));
+            }
 
             return new FieldTypes.InlineEnumeration(GetSourceInfo(context.Start), type, enumerators);
         }
-
-
-        /*
-             expression:
-             NumberLiteral
-            | This
-            | field_id
-            |'(' expression ')'
-            | expression '+' expression
-            | expression '-' expression
-            | expression '*' expression
-            | expression '/' expression;
-            */
-
-    
-
-        //public override ASTNode VisitNumber(BiPaGeParser.NumberContext context)
-        //{
-        //    return new AST.Literals.NumberLiteral(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
-        //}
-
-        //public override AST.ASTNode VisitCollection(BiPaGeParser.CollectionContext context)
-        //{
-        //    AST.FieldType type = (dynamic)context.singular().Accept(this);
-        //    AST.IMultiplier multiplier = (dynamic)context.multiplier().Accept(this);
-
-        //    return new AST.FieldTypes.Collection(GetSourceInfo(context.Start), type, multiplier);
-        //}
-
-        //public override AST.ASTNode VisitMultiplier(BiPaGeParser.MultiplierContext context)
-        //{
-        //    if (context.NumberLiteral() != null)
-        //        return new AST.Literals.NumberLiteral(GetSourceInfo(context.Start), context.NumberLiteral().GetText());
-        //    else
-        //    {
-        //        String identifier = "";
-        //        foreach (var id in context.Identifier())
-        //        {
-        //            identifier = identifier + id.GetText() + ".";
-        //        }
-        //        identifier.Remove(identifier.Length - 1);
-
-        //        return new AST.Identifiers.FieldIdentifier(GetSourceInfo(context.Start), identifier);
-        //    }
-        //}
 
         private AST.SourceInfo GetSourceInfo(Antlr4.Runtime.Tree.ITerminalNode node)
         {
