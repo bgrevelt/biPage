@@ -4,10 +4,6 @@ using System.Diagnostics;
 using BiPaGe.AST.Identifiers;
 using BiPaGe.AST.Expressions;
 
-// TODO: Parsetree walker should be able to handle errors in the input better. Right now we get all sorts of exceptions if there are real problems with the input because members of context
-// can be null in that case. We can simply catch the exceptyion and return an empty program object, but since invalid input is not an exceptional situation for a compiler, I think we
-// should just properly handle these situations. I think that means checking all required member of the context for being null before we handle them and returning an default node if they are.
-
 namespace BiPaGe.AST
 {
     public class ParsetreeWalker : BiPaGeBaseVisitor<AST.ASTNode>

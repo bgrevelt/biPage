@@ -201,5 +201,33 @@ Object2
 
             TestRunner.Run(input, 0, 1);
         }
+
+        /* Object cannot have a fieldtype that a field that has itself as a field */
+        [Test()]
+        public void Indirect2()
+        {
+            var input = @"
+Object1
+{
+    field1 : u16;
+    field2 : Object2;
+}
+
+Object2
+{
+    field1 : bool[5];
+    field2 : Object3;
+}
+
+Object3
+{
+    field1 : ascii_string[32];
+    field2 : Object1;
+}";
+
+            TestRunner.Run(input, 0, 1);
+        }
+
+        /* Ok, we could go on and on here, but let's assume that if these three tests pass, we have a valid cyclic dependency detection */
     }
 }
