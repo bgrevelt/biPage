@@ -6,7 +6,7 @@ namespace BiPaGe.AST.FieldTypes
 {
     public class Float : SizedType
     {
-        public Float(SourceInfo sourceInfo, int size) : base(sourceInfo, size)
+        public Float(SourceInfo sourceInfo, uint size) : base(sourceInfo, size)
         {
         }
 

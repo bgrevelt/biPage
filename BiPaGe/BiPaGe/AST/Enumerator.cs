@@ -22,6 +22,7 @@ namespace BiPaGe.AST
 
         public override bool CheckSemantics(IList<Error> errors, IList<Warning> warnings)
         {
+            // TODO: check if the we can convert value to an integer
             throw new NotImplementedException();
         }
 

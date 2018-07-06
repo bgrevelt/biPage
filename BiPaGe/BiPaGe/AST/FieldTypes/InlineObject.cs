@@ -39,5 +39,11 @@ namespace BiPaGe.AST.FieldTypes
             for (int i = 0; i < this.Fields.Count; ++i)
                 this.Fields[i].Validate(expected_object.Fields[i]);
         }
+
+        public override uint SizeInBits()
+        {
+            // TODO: what to put here?
+            throw new NotImplementedException();
+        }
     }
 }

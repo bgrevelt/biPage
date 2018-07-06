@@ -25,5 +25,10 @@ namespace BiPaGe.AST.FieldTypes
         {
             PrintIndented("Boolean", indentLevel);
         }
+
+        public override uint SizeInBits()
+        {
+            return 1; // A boolean field is a single bit wide.
+        }
     }
 }

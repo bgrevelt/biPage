@@ -29,5 +29,11 @@ namespace BiPaGe.AST.Identifiers
             Assert.IsInstanceOf<Identifier>(expected);
             Assert.AreEqual(((Identifier)expected).Id, this.Id);
         }
+
+        public override uint SizeInBits()
+        {
+            // TODO: well this makes no sense at all....
+            throw new NotImplementedException();
+        }
     }
 }

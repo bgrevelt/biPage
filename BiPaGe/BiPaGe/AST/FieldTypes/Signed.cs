@@ -6,7 +6,7 @@ namespace BiPaGe.AST.FieldTypes
 {
     public class Signed : SizedType
     {
-        public Signed(SourceInfo sourceInfo, int size) : base(sourceInfo, size)
+        public Signed(SourceInfo sourceInfo, uint size) : base(sourceInfo, size)
         {
         }
 

@@ -11,6 +11,8 @@ using Helpers;
 
 namespace BiPaGe.Test.AST.Enumeration
 {
+    // TODO: we don't allow enumerators without explicit values. Should we test for that?
+
     [TestFixture()]
     public class Creation
     {

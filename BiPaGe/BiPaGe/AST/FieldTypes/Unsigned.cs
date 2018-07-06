@@ -6,7 +6,7 @@ namespace BiPaGe.AST.FieldTypes
 {
     public class Unsigned : SizedType
     {
-        public Unsigned(SourceInfo sourceInfo, int size) : base(sourceInfo, size)
+        public Unsigned(SourceInfo sourceInfo, uint size) : base(sourceInfo, size)
         {
         }
 

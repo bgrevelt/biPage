@@ -41,5 +41,10 @@ namespace BiPaGe.AST.FieldTypes
             for (int i = 0; i < this.Enumerators.Count; ++i)
                 this.Enumerators[i].Validate(expected_enum.Enumerators[i]);
         }
+
+        public override uint SizeInBits()
+        {
+            return this.Type.SizeInBits();
+        }
     }
 }
