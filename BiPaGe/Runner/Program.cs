@@ -130,9 +130,10 @@ Tree
             }
 
             //AST.Print(0);
-            ModelBuilder model_builder = new ModelBuilder();
-            var model = model_builder.Build(AST);
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model, Formatting.Indented,  new JsonSerializerSettings() { ContractResolver = new MyContractResolver() }));
+            var model_builder = new Model.Builder();
+            model_builder.Build(AST);
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.enumerations, Formatting.Indented,  new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.structures, Formatting.Indented, new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
         }
     }
 

@@ -8,13 +8,13 @@ namespace BiPaGe.Model
 {
     public class Enumeration
     {
-        private Scope scope; // The scope in which the enumeration was defined. Empty string indicates global scope. A namei indicates that the enumeration is scoped in a type
-        private String name;
+        public String name { get; }
+        private FieldType type { get; }
         private List<Enumerator> enumerators = new List<Enumerator>();
-        public Enumeration(String name, Scope scope)
+        public Enumeration(String name, FieldType type)
         {
-            this.scope = scope.Clone();
             this.name = name;
+            this.type = type;
         }
         public void AddEnumerator(Enumerator enumerator)
         {

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BiPaGe.Model
 {
-    public class Model
+    class DataModel
     {
-        public List<Enumeration> enumerations = new List<Enumeration>();
-        public List<Object> objects = new List<Object>();
+        public List<DataElement> elements;
     }
 }
