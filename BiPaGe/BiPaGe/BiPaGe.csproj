@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\Visitor.cs" />
+    <Compile Include="FrontEnd\CPP\CodeGenerator.cs" />
     <Compile Include="Model\Builder.cs" />
     <Compile Include="Model\DataElement.cs" />
     <Compile Include="Model\Enumeration.cs" />
@@ -64,9 +65,11 @@
     <Compile Include="Model\FieldTypes\AsciiString.cs" />
     <Compile Include="Model\FieldTypes\Boolean.cs" />
     <Compile Include="Model\FieldTypes\Collection.cs" />
+    <Compile Include="Model\FieldTypes\DynamicField.cs" />
     <Compile Include="Model\FieldTypes\FloatingPoint.cs" />
     <Compile Include="Model\FieldTypes\Integral.cs" />
     <Compile Include="Model\FieldTypes\Reference.cs" />
+    <Compile Include="Model\FieldTypes\StaticField.cs" />
     <Compile Include="Model\FieldTypes\UnsignedIntegral.cs" />
     <Compile Include="Model\Structure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

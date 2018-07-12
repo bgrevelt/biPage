@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BiPaGe.Model.FieldTypes
 {
-    public abstract class Integral : FieldType
+    public abstract class Integral : StaticField
     {
         public Integral(uint size)
         {

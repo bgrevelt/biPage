@@ -8,8 +8,8 @@ namespace BiPaGe.Model
 {
     public class Enumerator 
     {
-        private String Name { get; }
-        private int Value { get; }
+        public String Name { get; }
+        public int Value { get; }
 
         public Enumerator(String name, int value)
         {

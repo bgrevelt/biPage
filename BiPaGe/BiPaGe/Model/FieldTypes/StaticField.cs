@@ -5,11 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BiPaGe.Model.FieldTypes
-{    
-    public class Boolean : StaticField
+{
+    public abstract class StaticField : FieldType
     {
-        public Boolean()
-        {
-        }
     }
 }

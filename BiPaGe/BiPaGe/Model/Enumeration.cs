@@ -9,16 +9,17 @@ namespace BiPaGe.Model
     public class Enumeration
     {
         public String Name { get; }
-        private FieldType Type { get; }
-        private List<Enumerator> enumerators = new List<Enumerator>();
+        public FieldType Type { get; }
+        public List<Enumerator> Enumerators { get; }
         public Enumeration(String name, FieldType type)
         {
+            Enumerators = new List<Enumerator>();
             this.Name = name;
             this.Type = type;
         }
         public void AddEnumerator(Enumerator enumerator)
         {
-            enumerators.Add(enumerator);
+            Enumerators.Add(enumerator);
         }
         
     }

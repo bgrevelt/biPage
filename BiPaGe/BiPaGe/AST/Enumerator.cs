@@ -8,16 +8,20 @@ namespace BiPaGe.AST
     public class Enumerator : ASTNode
     {
         public String Name { get; }
-        public String Value { get; }
+        public int Value
+        {
+            get { return int.Parse(this.Original_value); }
+        }
+        private String Original_value;
         public Enumerator(SourceInfo sourceinfo, String name, String value) : base(sourceinfo)
         {
             this.Name = name;
-            this.Value = value;
+            this.Original_value = value;
         }
 
         public override void Print(int indentLevel)
         {
-            PrintIndented(String.Format("Enumerator {0} = {1}", Name, Value), indentLevel);
+            PrintIndented(String.Format("Enumerator {0} = {1}", Name, Original_value), indentLevel);
         }
 
         public override bool CheckSemantics(IList<Error> errors, IList<Warning> warnings)
@@ -31,7 +35,7 @@ namespace BiPaGe.AST
             Assert.IsInstanceOf<Enumerator>(expected);
             var expected_enumerator = expected as Enumerator;
             Assert.AreEqual(expected_enumerator.Name, this.Name);
-            Assert.AreEqual(expected_enumerator.Value, this.Value);
+            Assert.AreEqual(expected_enumerator.Original_value, this.Original_value);
         }
     }
 }

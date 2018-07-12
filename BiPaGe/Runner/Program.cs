@@ -54,6 +54,47 @@ ObjectWithCollections
   
 }*/
 ";
+            var static_input =
+@"Object1 
+{
+field_one: int12;
+field_two: u4;
+}
+
+Object2
+{
+field_three: uint18 = 50;
+field_five: float64 = 1.23;
+field_whatevs: bool = true;
+field_bla: bool = false;
+enum_field : Enumeration = value0;
+}
+
+Enumeration : u8
+{
+    value0 = 0,
+    value1 = 1,
+    value2 = 2
+}
+
+/*
+{
+Object3
+{
+field_six: f32;
+field_seven: bool;
+}
+
+ObjectWithCollections
+{
+  size_field : uint16;
+  embedded : Object2;
+  collection_one : int32[5]; // hard coded size
+  collection_two : bool[size_field]; // sized from field
+  collection_three : float64[embedded.field_three];
+  
+}*/
+";
             var invalid_input =
 @"Object1 
 {
@@ -117,7 +158,7 @@ Tree
             var warnings = new List<SemanticAnalysis.Warning>();
 
             var builder = new BiPaGe.AST.Builder(errors, warnings);
-            var AST = builder.Program(input);
+            var AST = builder.Program(static_input);
 
             //bool valid = AST.CheckSemantics(errors, warnings);
             foreach (var error in errors)
@@ -132,8 +173,13 @@ Tree
             //AST.Print(0);
             var model_builder = new Model.Builder();
             model_builder.Build(AST);
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.Enumerations, Formatting.Indented,  new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.Structures, Formatting.Indented, new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
+            //Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.Enumerations, Formatting.Indented,  new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
+            //Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.Structures, Formatting.Indented, new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
+
+            var sw = new System.IO.StreamWriter(Console.OpenStandardOutput());
+            sw.AutoFlush = true;
+            BiPaGe.FrontEnd.CPP.CodeGenerator cg = new FrontEnd.CPP.CodeGenerator(model_builder.Enumerations, model_builder.Structures, sw);
+            cg.Generate();
         }
     }
 

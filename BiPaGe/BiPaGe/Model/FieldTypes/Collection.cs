@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BiPaGe.Model.FieldTypes
 {
-    public class Collection : FieldType
+    public class Collection : DynamicField
     {
         public Collection(FieldType type, Expressions.Expression size)
         {

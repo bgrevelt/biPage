@@ -201,7 +201,7 @@ namespace BiPaGe.Model
         {
             // The parse can throw, but we should have checked for that in SA
             // TODO: we need to determine if we want to do the parsing in the AST object or here and be consistent about it. For example AST.Literals.Integer parses on its own.
-            enum_stack.Peek().AddEnumerator(new Model.Enumerator(e.Name, int.Parse(e.Value)));
+            enum_stack.Peek().AddEnumerator(new Model.Enumerator(e.Name, e.Value));
         }
 
         // Visit expressions
