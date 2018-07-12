@@ -25,10 +25,5 @@ namespace BiPaGe.AST.FieldTypes
         {
             PrintIndented("ASCII string", indentLevel);
         }
-
-        public override uint SizeInBits()
-        {
-            return 8; // size of a single ascii character
-        }
     }
 }

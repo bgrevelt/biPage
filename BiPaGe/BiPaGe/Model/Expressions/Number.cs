@@ -8,10 +8,10 @@ namespace BiPaGe.Model.Expressions
 {
     public class Number : Expression
     {
-        int value { get; }
+        int Value { get; }
         public Number(int value)
         {
-            this.value = value;
+            this.Value = value;
         }
     }
 }

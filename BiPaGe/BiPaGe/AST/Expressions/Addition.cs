@@ -7,13 +7,13 @@ namespace BiPaGe.AST.Expressions
 {
     public class Addition : ASTNode, IExpression
     {
-        public IExpression left { get; }
-        public IExpression right { get; }
+        public IExpression Left { get; }
+        public IExpression Right { get; }
 
         public Addition(SourceInfo sourceInfo, IExpression lhs, IExpression rhs) : base(sourceInfo)
         {
-            left = lhs;
-            right = rhs;
+            this.Left = lhs;
+            this.Right = rhs;
         }
 
         public override bool CheckSemantics(IList<Error> errors, IList<Warning> warnings)
@@ -24,16 +24,16 @@ namespace BiPaGe.AST.Expressions
         public override void Validate(IASTNode expected)
         {
             Assert.IsInstanceOf<Addition>(expected);
-            left.Validate(((Addition)expected).left);
-            right.Validate(((Addition)expected).right);
+            this.Left.Validate(((Addition)expected).Left);
+            this.Right.Validate(((Addition)expected).Right);
 
         }
 
         public override void Print(int indentLevel)
         {
             PrintIndented(String.Format("Addition"), indentLevel);
-            left.Print(indentLevel+1);
-            right.Print(indentLevel+1);
+            this.Left.Print(indentLevel+1);
+            this.Right.Print(indentLevel+1);
         }
     }
 }

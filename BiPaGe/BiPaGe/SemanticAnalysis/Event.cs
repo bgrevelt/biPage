@@ -13,7 +13,7 @@ namespace BiPaGe.SemanticAnalysis
 
         protected String ToString(String prefix)
         {
-            return String.Format("SomeFile.bla({2}:{3}): {0}: {1} ", prefix, this.message, sourceInfo.line, sourceInfo.column);
+            return String.Format("SomeFile.bla({2}:{3}): {0}: {1} ", prefix, this.message, sourceInfo.Line, sourceInfo.Column);
         }
     }
 }

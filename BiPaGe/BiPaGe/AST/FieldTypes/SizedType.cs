@@ -9,10 +9,5 @@ namespace BiPaGe.AST.FieldTypes
         {
             this.Size = size;
         }
-
-        public override uint SizeInBits()
-        {
-            return this.Size;
-        }
     }
 }

@@ -25,14 +25,5 @@ namespace BiPaGe.AST.FieldTypes
         {
             PrintIndented("UTF-8 string", indentLevel);;
         }
-
-        public override uint SizeInBits()
-        {
-            /* TODO:
-             * Uhm, maybe it wasn't such a good idea to include this type. I don't think we ever need it and what does
-             * utf8_string[12] mean? 12 UTF-8 characters (e.g somewhere between 12 and 48 bytes), or 12 bytes containing anywhere between 3 and 12 symbols?
-             * */
-            throw new NotImplementedException();
-        }
     }
 }

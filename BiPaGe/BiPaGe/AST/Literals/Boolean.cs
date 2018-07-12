@@ -8,7 +8,7 @@ namespace BiPaGe.AST.Literals
 {
     public class Boolean : Literal
     {
-        public bool value
+        public bool Value
         {
             get
             {
@@ -41,7 +41,7 @@ namespace BiPaGe.AST.Literals
             }
             catch (InvalidCastException)
             {
-                errors.Add(new Error(this.sourceInfo, String.Format("Unsupported value {0} for boolean type.", value_as_string)));
+                errors.Add(new Error(this.SourceInfo, String.Format("Unsupported value {0} for boolean type.", value_as_string)));
                 return false;
             }
         }

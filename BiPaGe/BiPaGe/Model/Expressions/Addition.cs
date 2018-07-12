@@ -7,13 +7,13 @@ namespace BiPaGe.Model.Expressions
 {
     public class Addition : Expression
     {
-        public Expression left { get; }
-        public Expression right { get; }
+        public Expression Left { get; }
+        public Expression Right { get; }
 
         public Addition(Expression lhs, Expression rhs) 
         {
-            left = lhs;
-            right = rhs;
+            this.Left = lhs;
+            this.Right = rhs;
         }
     }
 }

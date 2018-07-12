@@ -264,8 +264,7 @@ namespace BiPaGe.AST
         private FieldType ParseType(String type, SourceInfo sourceInfo)
         {
             var type_only = type.TrimEnd("0123456789".ToCharArray());
-            uint size = 0;
-            uint.TryParse(type.TrimStart("abcdefghijklmnopqrstuvwxyz".ToCharArray()),out size);
+            uint.TryParse(type.TrimStart("abcdefghijklmnopqrstuvwxyz".ToCharArray()), out uint size);
             Debug.Assert(new HashSet<String> { "int", "i", "uint", "u", "float", "f", "bool", "ascii_string", "utf8_string" }.Contains(type_only));
 
             switch (type_only)

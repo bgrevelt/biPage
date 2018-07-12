@@ -7,27 +7,27 @@ namespace BiPaGe.AST
 {
     public class Object : Element
     {
-        public String identifier
+        public String Identifier
         {
             get;
         }
 
-        public IList<Field> fields
+        public IList<Field> Fields
         {
             get;
         }
 
         public Object(SourceInfo sourceInfo, String identifier, IList<Field> fields) : base(sourceInfo)
         {
-            this.identifier = identifier;
-            this.fields = fields;
+            this.Identifier = identifier;
+            this.Fields = fields;
         }
 
         public override void Print(int indentLevel)
         {
-            PrintIndented(String.Format("Object {0}: ", identifier), indentLevel);
+            PrintIndented(String.Format("Object {0}: ", Identifier), indentLevel);
 
-            foreach (var field in fields)
+            foreach (var field in Fields)
             {
                 field.Print(indentLevel + 1);
             }
@@ -37,7 +37,7 @@ namespace BiPaGe.AST
         {
             bool semantics_valid = true;
 
-            foreach (var field in fields)
+            foreach (var field in Fields)
             {
                 if (!field.CheckSemantics(errors, warnings))
                     semantics_valid = false;
@@ -50,10 +50,10 @@ namespace BiPaGe.AST
         {
             Assert.IsInstanceOf<Object>(expected);
             var expected_object = expected as Object;
-            Assert.AreEqual(expected_object.identifier, this.identifier);
-            Assert.AreEqual(expected_object.fields.Count(), this.fields.Count());
-            for (int i = 0; i < this.fields.Count; ++i)
-                this.fields[i].Validate(expected_object.fields[i]);
+            Assert.AreEqual(expected_object.Identifier, this.Identifier);
+            Assert.AreEqual(expected_object.Fields.Count(), this.Fields.Count());
+            for (int i = 0; i < this.Fields.Count; ++i)
+                this.Fields[i].Validate(expected_object.Fields[i]);
         }
     }
 }

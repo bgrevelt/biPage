@@ -10,10 +10,10 @@ namespace BiPaGe.Model.FieldTypes
     // 'VariableSizeField' or something like that which contains all the size stuff.
     public class AsciiString : FieldType
     {
-        public Expressions.Expression size { get; }
+        public Expressions.Expression Size { get; }
         public AsciiString(Expressions.Expression size)
         {
-            this.size = size;
+            this.Size = size;
         }    
         
     }

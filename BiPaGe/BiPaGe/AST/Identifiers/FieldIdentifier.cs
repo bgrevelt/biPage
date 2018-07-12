@@ -7,10 +7,10 @@ namespace BiPaGe.AST.Identifiers
 {
     public class FieldIdentifier : ASTNode, IExpression
     {
-        public  String id { get; }
+        public  String Id { get; }
         public FieldIdentifier(SourceInfo sourceIfo, String id) : base(sourceIfo)
         {
-            this.id = id;
+            this.Id = id;
         }
 
         public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
@@ -22,12 +22,12 @@ namespace BiPaGe.AST.Identifiers
         public override void Validate(IASTNode expected)
         {
             Assert.IsInstanceOf<FieldIdentifier>(expected);
-            Assert.AreEqual(((FieldIdentifier)expected).id, this.id);
+            Assert.AreEqual(((FieldIdentifier)expected).Id, this.Id);
         }
 
         public override void Print(int indentLevel)
         {
-            PrintIndented(String.Format("Field id: {0}", id), indentLevel);
+            PrintIndented(String.Format("Field id: {0}", Id), indentLevel);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace BiPaGe.AST.FieldTypes
             // programming languages do not support integers that long
             if(Size > 64 || Size < 2)
             {
-                errors.Add(new SemanticAnalysis.Error(sourceInfo, String.Format("Unsupported signed integer width ({0}). Signed integers widths in the range [2,64] are supported.", Size)));
+                errors.Add(new SemanticAnalysis.Error(SourceInfo, String.Format("Unsupported signed integer width ({0}). Signed integers widths in the range [2,64] are supported.", Size)));
                 return false;
             }
             return true;

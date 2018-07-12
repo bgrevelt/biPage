@@ -1,7 +1,7 @@
 ﻿using System;
 namespace BiPaGe.AST.Constants
 {
-    public interface Constant : IFixer
+    public interface IConstant : IFixer
     {
         
     }

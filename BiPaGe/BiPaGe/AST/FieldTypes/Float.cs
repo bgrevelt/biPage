@@ -14,7 +14,7 @@ namespace BiPaGe.AST.FieldTypes
         {
             if(Size != 32 && Size != 64)
             {
-                errors.Add(new SemanticAnalysis.Error(sourceInfo, String.Format("Size {0} not supported for floating point type. Only float32 and float64 are supported", Size)));
+                errors.Add(new SemanticAnalysis.Error(SourceInfo, String.Format("Size {0} not supported for floating point type. Only float32 and float64 are supported", Size)));
                 return false;
             }
 

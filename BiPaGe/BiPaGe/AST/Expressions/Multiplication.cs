@@ -7,13 +7,13 @@ namespace BiPaGe.AST.Expressions
 {
     public class Multiplication : ASTNode, IExpression
     {
-        public IExpression left { get; }
-        public IExpression right { get; }
+        public IExpression Left { get; }
+        public IExpression Right { get; }
 
         public Multiplication(SourceInfo sourceInfo, IExpression lhs, IExpression rhs) : base(sourceInfo)
         {
-            left = lhs;
-            right = rhs;
+            this.Left = lhs;
+            this.Right = rhs;
         }
 
         public override bool CheckSemantics(IList<Error> errors, IList<Warning> warnings)
@@ -24,15 +24,15 @@ namespace BiPaGe.AST.Expressions
         public override void Validate(IASTNode expected)
         {
             Assert.IsInstanceOf<Multiplication>(expected);
-            left.Validate(((Multiplication)expected).left);
-            right.Validate(((Multiplication)expected).right);
+            this.Left.Validate(((Multiplication)expected).Left);
+            this.Right.Validate(((Multiplication)expected).Right);
         }
 
         public override void Print(int indentLevel)
         {
             PrintIndented(String.Format("Multiplication"), indentLevel);
-            left.Print(indentLevel + 1);
-            right.Print(indentLevel + 1);
+            this.Left.Print(indentLevel + 1);
+            this.Right.Print(indentLevel + 1);
         }
     }
 }

@@ -5,13 +5,13 @@ namespace BiPaGe.AST
 {
     public class SourceInfo
     {
-        public int line { get; }
-        public int column { get; }
+        public int Line { get; }
+        public int Column { get; }
 
         public SourceInfo(int line, int column)
         {
-            this.line = line;
-            this.column = column;
+            this.Line = line;
+            this.Column = column;
         }
     }
 
@@ -31,11 +31,11 @@ namespace BiPaGe.AST
 
         public abstract void Validate(IASTNode expected);
 
-        public SourceInfo sourceInfo { get; }
+        public SourceInfo SourceInfo { get; }
 
         public ASTNode(SourceInfo sourceInfo)
         {
-            this.sourceInfo = sourceInfo;
+            this.SourceInfo = sourceInfo;
         }
     }
 

@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace BiPaGe.AST.Identifiers
 {
-    public class Identifier : AST.FieldType, Constants.Constant
+    public class Identifier : AST.FieldType, Constants.IConstant
     {
         public String Id { get; }
         public Identifier(SourceInfo sourceIfo, String id) : base(sourceIfo)
@@ -28,12 +28,6 @@ namespace BiPaGe.AST.Identifiers
         {
             Assert.IsInstanceOf<Identifier>(expected);
             Assert.AreEqual(((Identifier)expected).Id, this.Id);
-        }
-
-        public override uint SizeInBits()
-        {
-            // TODO: well this makes no sense at all....
-            throw new NotImplementedException();
         }
     }
 }

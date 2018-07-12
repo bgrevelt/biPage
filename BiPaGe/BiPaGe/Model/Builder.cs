@@ -35,8 +35,8 @@ namespace BiPaGe.Model
     public class Builder
     {
 
-        public List<Structure> structures { get; }
-        public List<Enumeration> enumerations { get; }
+        public List<Structure> Structures { get; }
+        public List<Enumeration> Enumerations { get; }
 
         private Stack<Structure> structure_stack = new Stack<Structure>();
         private Stack<Enumeration> enum_stack = new Stack<Enumeration>();
@@ -45,8 +45,8 @@ namespace BiPaGe.Model
         // TODO: eventually we want to make structures and enumerations private and wrap them in a Model class that also includes the parse rules.
         public Builder()
         {
-            structures = new List<Structure>();
-            enumerations = new List<Enumeration>();
+            this.Structures = new List<Structure>();
+            this.Enumerations = new List<Enumeration>();
         }
         public void Build(AST.Parser AST)
         {
@@ -84,12 +84,12 @@ namespace BiPaGe.Model
 
         private void VisitElement(AST.Object o)
         {
-            structure_stack.Push(new Structure(o.identifier));
-            foreach (var field in o.fields)
+            structure_stack.Push(new Structure(o.Identifier));
+            foreach (var field in o.Fields)
             {
                 VisitField(field);
             }
-            structures.Add(structure_stack.Pop());
+            Structures.Add(structure_stack.Pop());
         }
 
         private void VisitElement(AST.Enumeration e)
@@ -99,7 +99,7 @@ namespace BiPaGe.Model
             {
                 VisitEnumerator(enumerator);
             }
-            enumerations.Add(enum_stack.Pop());
+            Enumerations.Add(enum_stack.Pop());
         }
 
         private void VisitField(AST.Field f)
@@ -153,7 +153,7 @@ namespace BiPaGe.Model
             {
                 VisitEnumerator(enumerator);
             }
-            enumerations.Add(enum_stack.Pop());
+            Enumerations.Add(enum_stack.Pop());
             // (3)
             return CheckIfCOllection(new FieldTypes.Reference(name), collection_size);
         }
@@ -172,7 +172,7 @@ namespace BiPaGe.Model
             {
                 VisitField(field);
             }
-            structures.Add(structure_stack.Pop());
+            Structures.Add(structure_stack.Pop());
             // (3)
             return CheckIfCOllection(new FieldTypes.Reference(name), collection_size);
         }
@@ -207,19 +207,19 @@ namespace BiPaGe.Model
         // Visit expressions
         private Expressions.Expression VisitExpression(AST.Expressions.Addition a)
         {
-            return new Expressions.Addition(VisitExpression((dynamic)a.left), VisitExpression((dynamic)a.right));
+            return new Expressions.Addition(VisitExpression((dynamic)a.Left), VisitExpression((dynamic)a.Right));
         }
         private Expressions.Expression VisitExpression(AST.Expressions.Subtraction s)
         {
-            return new Expressions.Subtraction(VisitExpression((dynamic)s.left), VisitExpression((dynamic)s.right));
+            return new Expressions.Subtraction(VisitExpression((dynamic)s.Left), VisitExpression((dynamic)s.Right));
         }
         private Expressions.Expression VisitExpression(AST.Expressions.Multiplication m)
         {
-            return new Expressions.Multiplication(VisitExpression((dynamic)m.left), VisitExpression((dynamic)m.right));
+            return new Expressions.Multiplication(VisitExpression((dynamic)m.Left), VisitExpression((dynamic)m.Right));
         }
         private Expressions.Expression VisitExpression(AST.Expressions.Division d)
         {
-            return new Expressions.Division(VisitExpression((dynamic)d.left), VisitExpression((dynamic)d.right));
+            return new Expressions.Division(VisitExpression((dynamic)d.Left), VisitExpression((dynamic)d.Right));
         }
         private Expressions.Expression VisitExpression(AST.Expressions.This t)
         {
@@ -228,12 +228,12 @@ namespace BiPaGe.Model
 
         private Expressions.Expression VisitExpression(AST.Identifiers.FieldIdentifier f)
         {
-            return new Expressions.FieldIdentifier(f.id);
+            return new Expressions.FieldIdentifier(f.Id);
         }
 
         private Expressions.Expression VisitExpression(AST.Literals.Integer i)
         {
-            return new Expressions.Number(i.value);
+            return new Expressions.Number(i.Value);
         }
     }
 }

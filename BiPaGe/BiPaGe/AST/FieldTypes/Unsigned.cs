@@ -16,12 +16,12 @@ namespace BiPaGe.AST.FieldTypes
             // programming languages do not support integers that long
             if (Size == 1)
             {
-                warnings.Add(new SemanticAnalysis.Warning(sourceInfo, "Consider using a boolean field instead of a one bit integer field."));
+                warnings.Add(new SemanticAnalysis.Warning(SourceInfo, "Consider using a boolean field instead of a one bit integer field."));
                 return false;
             }
             if (Size > 64 || Size < 1)
             {
-                errors.Add(new SemanticAnalysis.Error(sourceInfo, String.Format("Unsupported unsigned integer width ({0}). Singed integers widths in the range [1,64] are supported.", Size)));
+                errors.Add(new SemanticAnalysis.Error(SourceInfo, String.Format("Unsupported unsigned integer width ({0}). Singed integers widths in the range [1,64] are supported.", Size)));
                 return false;
             }
             return true;

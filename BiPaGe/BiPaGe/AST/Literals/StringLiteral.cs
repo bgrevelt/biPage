@@ -8,7 +8,7 @@ namespace BiPaGe.AST.Literals
 {
     public class StringLiteral : Literal
     {
-        public String value
+        public String Value
         {
             get
             {

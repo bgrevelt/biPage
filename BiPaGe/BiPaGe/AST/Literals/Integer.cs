@@ -9,7 +9,7 @@ namespace BiPaGe.AST.Literals
 {
     public class Integer : Literal, Expressions.IExpression
     {
-        public int value
+        public int Value
         {
             get
             {
@@ -42,7 +42,7 @@ namespace BiPaGe.AST.Literals
             }
             catch (InvalidCastException)
             {
-                errors.Add(new Error(this.sourceInfo, String.Format("Unsupported value {0} for boolean type.", value_as_string)));
+                errors.Add(new Error(this.SourceInfo, String.Format("Unsupported value {0} for boolean type.", value_as_string)));
                 return false;
             }
         }

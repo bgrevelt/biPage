@@ -10,10 +10,10 @@ namespace BiPaGe.Model.FieldTypes
     {
         public Collection(FieldType type, Expressions.Expression size)
         {
-            this.type = type;
-            this.size = size;
+            this.Type = type;
+            this.Size = size;
         }
-        public FieldType type { get; }
-        public Expressions.Expression size { get; }
+        public FieldType Type { get; }
+        public Expressions.Expression Size { get; }
     }
 }

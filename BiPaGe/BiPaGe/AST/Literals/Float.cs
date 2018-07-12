@@ -8,7 +8,7 @@ namespace BiPaGe.AST.Literals
 {
     public class Float : Literal
     {
-        public Double value 
+        public Double Value 
         { 
             get
             {
@@ -35,7 +35,7 @@ namespace BiPaGe.AST.Literals
             }
             catch(InvalidCastException)
             {
-                errors.Add(new Error(this.sourceInfo, String.Format("Unsupported value {0} for floating point type.", value_as_string)));
+                errors.Add(new Error(this.SourceInfo, String.Format("Unsupported value {0} for floating point type.", value_as_string)));
                 return false;
             }
         }

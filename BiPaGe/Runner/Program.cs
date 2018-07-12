@@ -132,8 +132,8 @@ Tree
             //AST.Print(0);
             var model_builder = new Model.Builder();
             model_builder.Build(AST);
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.enumerations, Formatting.Indented,  new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.structures, Formatting.Indented, new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.Enumerations, Formatting.Indented,  new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model_builder.Structures, Formatting.Indented, new JsonSerializerSettings() { ContractResolver = new MyContractResolver(), TypeNameHandling = TypeNameHandling.All }));
         }
     }
 

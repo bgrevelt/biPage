@@ -50,7 +50,6 @@
     <Compile Include="Model\DataElement.cs" />
     <Compile Include="Model\Enumeration.cs" />
     <Compile Include="Model\Enumerator.cs" />
-    <Compile Include="Model\DataModel.cs" />
     <Compile Include="Model\Expressions\Addition.cs" />
     <Compile Include="Model\Expressions\Division.cs" />
     <Compile Include="Model\Expressions\Expression.cs" />
