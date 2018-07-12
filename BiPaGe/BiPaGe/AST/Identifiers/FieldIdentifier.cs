@@ -7,7 +7,7 @@ namespace BiPaGe.AST.Identifiers
 {
     public class FieldIdentifier : ASTNode, IExpression
     {
-        private String id;
+        public  String id { get; }
         public FieldIdentifier(SourceInfo sourceIfo, String id) : base(sourceIfo)
         {
             this.id = id;

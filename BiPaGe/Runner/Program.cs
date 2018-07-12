@@ -117,7 +117,7 @@ Tree
             var warnings = new List<SemanticAnalysis.Warning>();
 
             var builder = new BiPaGe.AST.Builder(errors, warnings);
-            var AST = builder.Program(lots_of_enums);
+            var AST = builder.Program(input);
 
             //bool valid = AST.CheckSemantics(errors, warnings);
             foreach (var error in errors)

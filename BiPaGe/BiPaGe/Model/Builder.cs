@@ -51,7 +51,7 @@ namespace BiPaGe.Model
         public void Build(AST.Parser AST)
         {
             foreach (var element in AST.Elements)
-                Visit((dynamic)element);
+                VisitElement((dynamic)element);
         }
 
         private void Visit(AST.Constants.LiteralCollection lc)
@@ -64,29 +64,6 @@ namespace BiPaGe.Model
         void Visit(AST.Constants.ObjectField of)
         {
         }
-
-        private void Visit(AST.Expressions.Addition a)
-        {
-        }
-        private void Visit(AST.Expressions.Subtraction s)
-        {
-        }
-        private void Visit(AST.Expressions.Multiplication m)
-        {
-        }
-        private void Visit(AST.Expressions.Division d)
-        {
-        }
-        private void Visit(AST.Expressions.This t)
-        {
-        }
-
-       
-
-        private void Visit(AST.Identifiers.FieldIdentifier f)
-        {
-        }
-
 
         private void Visit(AST.Literals.Boolean b)
         {
@@ -105,48 +82,63 @@ namespace BiPaGe.Model
 
         // VISITIING OF ELEMENTS
 
-        private void Visit(AST.Object o)
+        private void VisitElement(AST.Object o)
         {
             structure_stack.Push(new Structure(o.identifier));
             foreach (var field in o.fields)
             {
-                Visit(field);
+                VisitField(field);
             }
             structures.Add(structure_stack.Pop());
         }
 
-        private void Visit(AST.Enumeration e)
+        private void VisitElement(AST.Enumeration e)
         {
-            enum_stack.Push(new Enumeration(e.Identifier, Visit((dynamic)e.Type)));
+            enum_stack.Push(new Enumeration(e.Identifier, VisitFieldType((dynamic)e.Type, null)));
             foreach (var enumerator in e.Enumerators)
             {
-                Visit((dynamic)enumerator);
+                VisitEnumerator(enumerator);
             }
             enumerations.Add(enum_stack.Pop());
         }
 
-        private void Visit(AST.Field f)
+        private void VisitField(AST.Field f)
         {
             field_name_stack.Push(f.Name);
-            FieldType type = Visit((dynamic)f.Type);
+            FieldType type = VisitFieldType((dynamic)f.Type, f.CollectionSize);           
+
             structure_stack.Peek().AddField(new Field(f.Name, type));
             field_name_stack.Pop();
         }
 
         // Visiting of field types
-        private FieldType Visit(AST.Identifiers.Identifier i)
-        {
-            return new FieldTypes.Reference(i.Id);        }
         
-        private FieldType Visit(AST.FieldTypes.Boolean b)
+        // Helper function used by the field type visitors to determine if the field type is a colleciton. We need this because we treat colllection different in the model than in the AST
+        // in the AST each field has a type and an optional collection size. If the collection size is there, the type is a collection. In the model we want to use a dedicated type for a collection
+        private FieldType CheckIfCOllection(FieldType fieldtype, AST.Expressions.IExpression collection_size)
         {
-            return new FieldTypes.Boolean();
+            if (collection_size == null)
+                return fieldtype;
+
+            return new FieldTypes.Collection(fieldtype, VisitExpression((dynamic)collection_size));
         }
-        private FieldType Visit(AST.FieldTypes.Float f)
+
+
+
+        private FieldType VisitFieldType(AST.Identifiers.Identifier i, AST.Expressions.IExpression collection_size)
         {
-            return new FieldTypes.FloatingPoint(f.Size);
+            return CheckIfCOllection(new FieldTypes.Reference(i.Id), collection_size);
         }
-        private FieldType Visit(AST.FieldTypes.InlineEnumeration ie)
+        
+        private FieldType VisitFieldType(AST.FieldTypes.Boolean b, AST.Expressions.IExpression collection_size)
+        {
+            return CheckIfCOllection(new FieldTypes.Boolean(), collection_size);
+        }
+        private FieldType VisitFieldType(AST.FieldTypes.Float f, AST.Expressions.IExpression collection_size)
+        {
+            return CheckIfCOllection(new FieldTypes.FloatingPoint(f.Size), collection_size);
+        }
+        private FieldType VisitFieldType(AST.FieldTypes.InlineEnumeration ie, AST.Expressions.IExpression collection_size)
         {
             // Here's where it gets interesting. We want to do two things here
             // (1) Invent a name for this anonimous enumeration
@@ -156,16 +148,16 @@ namespace BiPaGe.Model
             // (1) For now we just use the field name directly. TODO: this can lead to problems. Do better
             var name = field_name_stack.Peek();
             // (2)
-            enum_stack.Push(new Enumeration(name, Visit((dynamic)ie.Type)));
+            enum_stack.Push(new Enumeration(name, VisitFieldType((dynamic)ie.Type, null)));
             foreach(var enumerator in ie.Enumerators)
             {
-                Visit((dynamic)enumerator);
+                VisitEnumerator(enumerator);
             }
             enumerations.Add(enum_stack.Pop());
             // (3)
-            return new FieldTypes.Reference(name);
+            return CheckIfCOllection(new FieldTypes.Reference(name), collection_size);
         }
-        private FieldType Visit(AST.FieldTypes.InlineObject io)
+        private FieldType VisitFieldType(AST.FieldTypes.InlineObject io, AST.Expressions.IExpression collection_size)
         {
             // Similar to the enumeration
             // (1) Invent a name for this anonimous structure
@@ -178,38 +170,70 @@ namespace BiPaGe.Model
             structure_stack.Push(new Structure(name));            
             foreach (var field in io.Fields)
             {
-                Visit((dynamic)field);
+                VisitField(field);
             }
             structures.Add(structure_stack.Pop());
             // (3)
-            return new FieldTypes.Reference(name);
-        }
-        private FieldType Visit(AST.FieldTypes.Signed s)
-        {
-            return new FieldTypes.Integral(true, s.Size);
-        }
-        private FieldType Visit(AST.FieldTypes.Unsigned u)
-        {
-            // TODO: we should really do the 'signedness' with inheritance rather than a boolean...
-            return new FieldTypes.Integral(false, u.Size);
+            return CheckIfCOllection(new FieldTypes.Reference(name), collection_size);
         }
 
-        private FieldType Visit(AST.FieldTypes.AsciiString s)
+        private FieldType VisitFieldType(AST.FieldTypes.Signed s, AST.Expressions.IExpression collection_size)
         {
-            // I'm not really sure how to handle this yet
-            throw new NotImplementedException();
+            return CheckIfCOllection(new FieldTypes.SignedIntegral(s.Size), collection_size);
         }
-        private FieldType Visit(AST.FieldTypes.Utf8String s)
+        private FieldType VisitFieldType(AST.FieldTypes.Unsigned u, AST.Expressions.IExpression collection_size)
+        {
+            return CheckIfCOllection(new FieldTypes.UnsignedIntegral(u.Size), collection_size);
+        }
+
+        private FieldType VisitFieldType(AST.FieldTypes.AsciiString s, AST.Expressions.IExpression collection_size)
+        {
+            return new FieldTypes.AsciiString(VisitExpression((dynamic)collection_size));
+        }
+        private FieldType VisitFieldType(AST.FieldTypes.Utf8String s, AST.Expressions.IExpression collection_size)
         {
             // I'm not really sure how to handle this yet
             throw new NotImplementedException();
         }
 
         // Visit Enumerator
-        private void Visit(AST.Enumerator e)
+        private void VisitEnumerator(AST.Enumerator e)
         {
             // The parse can throw, but we should have checked for that in SA
+            // TODO: we need to determine if we want to do the parsing in the AST object or here and be consistent about it. For example AST.Literals.Integer parses on its own.
             enum_stack.Peek().AddEnumerator(new Model.Enumerator(e.Name, int.Parse(e.Value)));
+        }
+
+        // Visit expressions
+        private Expressions.Expression VisitExpression(AST.Expressions.Addition a)
+        {
+            return new Expressions.Addition(VisitExpression((dynamic)a.left), VisitExpression((dynamic)a.right));
+        }
+        private Expressions.Expression VisitExpression(AST.Expressions.Subtraction s)
+        {
+            return new Expressions.Subtraction(VisitExpression((dynamic)s.left), VisitExpression((dynamic)s.right));
+        }
+        private Expressions.Expression VisitExpression(AST.Expressions.Multiplication m)
+        {
+            return new Expressions.Multiplication(VisitExpression((dynamic)m.left), VisitExpression((dynamic)m.right));
+        }
+        private Expressions.Expression VisitExpression(AST.Expressions.Division d)
+        {
+            return new Expressions.Division(VisitExpression((dynamic)d.left), VisitExpression((dynamic)d.right));
+        }
+        private Expressions.Expression VisitExpression(AST.Expressions.This t)
+        {
+            return new Expressions.This();
+        }
+
+        private Expressions.Expression VisitExpression(AST.Identifiers.FieldIdentifier f)
+        {
+            return new Expressions.FieldIdentifier(f.id);
+        }
+
+        private Expressions.Expression VisitExpression(AST.Literals.Integer i)
+        {
+            return new Expressions.Number(i.value);
         }
     }
 }

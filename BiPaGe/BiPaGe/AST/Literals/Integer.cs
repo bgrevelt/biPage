@@ -9,11 +9,11 @@ namespace BiPaGe.AST.Literals
 {
     public class Integer : Literal, Expressions.IExpression
     {
-        public bool value
+        public int value
         {
             get
             {
-                return bool.Parse(value_as_string);
+                return int.Parse(value_as_string);
             }
         }
 

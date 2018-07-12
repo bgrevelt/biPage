@@ -54,6 +54,7 @@
     <Compile Include="Model\Expressions\Addition.cs" />
     <Compile Include="Model\Expressions\Division.cs" />
     <Compile Include="Model\Expressions\Expression.cs" />
+    <Compile Include="Model\Expressions\FieldIdentifier.cs" />
     <Compile Include="Model\Expressions\Multiplication.cs" />
     <Compile Include="Model\Expressions\Number.cs" />
     <Compile Include="Model\Expressions\Reference.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Model\FieldTypes\FloatingPoint.cs" />
     <Compile Include="Model\FieldTypes\Integral.cs" />
     <Compile Include="Model\FieldTypes\Reference.cs" />
+    <Compile Include="Model\FieldTypes\UnsignedIntegral.cs" />
     <Compile Include="Model\Structure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\generated_csharp\BiPaGeBaseListener.cs">
@@ -127,6 +129,7 @@
     <Compile Include="AST\Constants\ObjectField.cs" />
     <Compile Include="AST\Constants\IFIxer.cs" />
     <Compile Include="AST\Constants\LiteralCollection.cs" />
+    <Compile Include="Model\FieldTypes\SignedIntegral.cs" />
     <Compile Include="Test\AST\Whitespace.cs" />
     <Compile Include="Test\AST\Comments.cs" />
     <Compile Include="Test\AST\ComplexTypes.cs" />
@@ -148,6 +151,8 @@
       <Link>BiPaGe.g4</Link>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\Constants\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace BiPaGe.Model.FieldTypes
 {
-    public abstract class Integral : FieldType
+    public class SignedIntegral : Integral
     {
-        public Integral(uint size)
+        public SignedIntegral(uint size) : base(size)
         {
-            this.size = size;
+
         }
-        public uint size;   // size in bits
     }
 }

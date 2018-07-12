@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace BiPaGe.Model.FieldTypes
 {
-    // TODO: not sure about this one yet. Needs some more thought...
-    public class AsciiString : Collection
+    // TODO: there's some overlap here with collection. If in time we find that we always need to change the two together, we could break out a common case class
+    // 'VariableSizeField' or something like that which contains all the size stuff.
+    public class AsciiString : FieldType
     {
-        public AsciiString(Expressions.Expression size) : base( new Integral(false, 8), size)
-        { 
-        }
+        public Expressions.Expression size { get; }
+        public AsciiString(Expressions.Expression size)
+        {
+            this.size = size;
+        }    
+        
     }
 }
