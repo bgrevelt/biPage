@@ -8,5 +8,10 @@ namespace BiPaGe.Model.FieldTypes
 {
     public abstract class DynamicField : FieldType
     {
+        public Expressions.Expression Size { get; }
+        public DynamicField(Expressions.Expression size)
+        {
+            this.Size = size;
+        }
     }
 }

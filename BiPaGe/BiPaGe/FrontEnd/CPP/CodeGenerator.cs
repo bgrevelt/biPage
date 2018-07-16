@@ -12,6 +12,7 @@ namespace BiPaGe.FrontEnd.CPP
         private const uint tab_to_spaces = 4;
         private List<Model.Enumeration> Enumerations;
         private List<Model.Structure> Structures;
+        private ExpressionResolver resolver = new ExpressionResolver();
         System.IO.StreamWriter Writer;
 
         // TODO: in practice we would not get a write here because we would want to be able to write to multiple files
@@ -47,9 +48,12 @@ namespace BiPaGe.FrontEnd.CPP
                 {
                     // TODO: we somehow need to find out if the type it is referencing is dynamic or not...
                 }
-                else if (field.Type is Model.FieldTypes.DynamicField) // TODO: I think we've used an oversimplification here. Collections and strings are not necessarilly dynamic. Only if the size expression cannot be resolved at compile time....
+                else if (field.Type is Model.FieldTypes.DynamicField) 
                 {
-                    dynamic_fields.Add(field);
+                    if(resolver.IsStaticExpression((field.Type as Model.FieldTypes.DynamicField).Size))
+                        static_fields.Add(field);
+                    else
+                        dynamic_fields.Add(field);
                 }
                 else
                 {
@@ -85,16 +89,39 @@ namespace BiPaGe.FrontEnd.CPP
                 WriteDeletedConstructor(s.Name, indent + 1);
                 WriteDeletedCopyConstructor(s.Name,indent + 1);
                 WriteDeletedAssignmentOperator(s.Name, indent + 1);
+                foreach (var field in s.Fields)
+                    GenerateField(field, indent + 1);
+            }
+            else
+            {
+                WriteConstructor(s.Name, indent + 1, dynamic_fields);
             }
            
-            foreach (var field in s.Fields)
-                GenerateField(field);
+            
             if (dynamic_size)
             {
                 write_indented(indent, "private:");
                 // TODO: Add milepost members
             }
             write_indented(indent, "};");
+        }
+
+        public void WriteConstructor(String name, uint indent, List<Model.Field> dynamic_fields)
+        {
+            // The ctor for a variable sized field takes all variable sized fields as ctor arguments.
+            var ctor_string = $"{name}(";
+            for(int i = 0; i < dynamic_fields.Count; ++i)
+            {
+                var field = dynamic_fields[i];
+                ctor_string += $"const {type_to_cpp_type((dynamic)field.Type)}& {field.Name}";
+                if (i < dynamic_fields.Count - 1)
+                    ctor_string += ", ";
+            }
+            ctor_string += ")";
+            write_indented(indent, ctor_string);
+            write_indented(indent, "{");
+            write_indented(indent +1, "// We need a body here");
+            write_indented(indent, "}");
         }
 
 
@@ -111,35 +138,63 @@ namespace BiPaGe.FrontEnd.CPP
             write_indented(indent, $"{name}& operator=(const {name}&) = delete");
         }
 
-        private void GenerateDynamicSizeStructure(Model.Structure s, uint indent)
+        private void GenerateField(Model.Field field, uint indent)
         {
-            write_indented(indent, String.Format("class {0}", s.Name));
+            // TODO: here we need offsets and sizes and stuff...
+            write_indented(indent, $"const {type_to_cpp_type((dynamic)field.Type)}& {field.Name} const");
             write_indented(indent, "{");
-            foreach (var field in s.Fields)
-                GenerateField(field);
-            write_indented(indent, "};");
-        }
-
-        private void GenerateField(Model.Field field)
-        {
+            write_indented(indent + 1, $"return *reinterpret_cast<const {type_to_cpp_type((dynamic)field.Type)}*>(this);");
+            write_indented(indent, "}");
             // const& <field_type> name() const { return reinterpret_cast<
         }
 
         private String type_to_cpp_type(Model.FieldTypes.SignedIntegral s)
         {
-            // An enumeration cannot have a size that is not a multiple of 8, so round up
-            var size = ((int)Math.Ceiling((decimal)s.size / 8.0M)) * 8;
+            var size = Math.Max(8, Math.Pow(2, Math.Ceiling(Math.Log(s.size) / Math.Log(2))));
             Debug.Assert(size % 8 == 0);
             return String.Format("std::int{0}_t", size);
         }
 
         private String type_to_cpp_type(Model.FieldTypes.UnsignedIntegral u)
         {
-            // An enumeration cannot have a size that is not a multiple of 8, so round up
-            var size = ((int)Math.Ceiling((decimal)u.size / 8.0M)) * 8;
+            var size = Math.Max(8, Math.Pow(2, Math.Ceiling(Math.Log(u.size) / Math.Log(2))));
             Debug.Assert(size % 8 == 0);
             return String.Format("std::uint{0}_t", size);
         }
+
+        private String type_to_cpp_type(Model.FieldTypes.AsciiString s)
+        {
+            // TODO: 
+            return "ASCIISTring";
+        }
+
+        private String type_to_cpp_type(Model.FieldTypes.Collection c)
+        {
+            // TODO:
+            return "Collection";
+        }
+
+        private String type_to_cpp_type(Model.FieldTypes.Boolean b)
+        {
+            return "bool";
+        }
+
+        private String type_to_cpp_type(Model.FieldTypes.FloatingPoint f)
+        {
+            Debug.Assert(f.Size == 32 || f.Size == 64);
+
+            if (f.Size == 32)
+                return "float";
+            else
+                return "double";
+        }
+
+        private String type_to_cpp_type(Model.FieldTypes.Reference r)
+        {
+            return r.Name;
+        }
+
+
 
         private void write_indented(uint indent, String text)
         {

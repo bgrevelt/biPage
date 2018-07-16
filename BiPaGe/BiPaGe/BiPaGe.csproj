@@ -47,17 +47,18 @@
   <ItemGroup>
     <Compile Include="AST\Visitor.cs" />
     <Compile Include="FrontEnd\CPP\CodeGenerator.cs" />
+    <Compile Include="FrontEnd\ExpressionResolver.cs" />
     <Compile Include="Model\Builder.cs" />
     <Compile Include="Model\DataElement.cs" />
     <Compile Include="Model\Enumeration.cs" />
     <Compile Include="Model\Enumerator.cs" />
     <Compile Include="Model\Expressions\Addition.cs" />
+    <Compile Include="Model\Expressions\BinaryExpression.cs" />
     <Compile Include="Model\Expressions\Division.cs" />
     <Compile Include="Model\Expressions\Expression.cs" />
     <Compile Include="Model\Expressions\FieldIdentifier.cs" />
     <Compile Include="Model\Expressions\Multiplication.cs" />
     <Compile Include="Model\Expressions\Number.cs" />
-    <Compile Include="Model\Expressions\Reference.cs" />
     <Compile Include="Model\Expressions\Subtraction.cs" />
     <Compile Include="Model\Expressions\This.cs" />
     <Compile Include="Model\Field.cs" />

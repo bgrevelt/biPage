@@ -5,15 +5,12 @@ using NUnit.Framework;
 
 namespace BiPaGe.Model.Expressions
 {
-    public class Multiplication : Expression
+    public class Multiplication : BinaryExpression
     {
-        public Expression Left { get; }
-        public Expression Right { get; }
-
-        public Multiplication(Expression lhs, Expression rhs)
+      public Multiplication(Expression lhs, Expression rhs)
         {
-            this.Left = lhs;
-            this.Right = rhs;
+            this.left = lhs;
+            this.right = rhs;
         }
     }
 }

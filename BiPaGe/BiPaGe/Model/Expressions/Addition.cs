@@ -5,15 +5,12 @@ using NUnit.Framework;
 
 namespace BiPaGe.Model.Expressions
 {
-    public class Addition : Expression
+    public class Addition : BinaryExpression
     {
-        public Expression Left { get; }
-        public Expression Right { get; }
-
         public Addition(Expression lhs, Expression rhs) 
         {
-            this.Left = lhs;
-            this.Right = rhs;
+            this.left = lhs;
+            this.right = rhs;
         }
     }
 }

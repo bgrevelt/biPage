@@ -95,6 +95,23 @@ ObjectWithCollections
   
 }*/
 ";
+
+            var dynamic_input =
+@"Object1 
+{
+field_one: int12;
+field_two: u4;
+}
+
+Object2
+{
+field_three: uint18;
+field_five: float64;
+dynamic_bool_collection: bool[field_three];
+static_bool_collection: bool[(this-4) / 8];
+enum_field : Enumeration;
+}
+";
             var invalid_input =
 @"Object1 
 {
@@ -158,7 +175,7 @@ Tree
             var warnings = new List<SemanticAnalysis.Warning>();
 
             var builder = new BiPaGe.AST.Builder(errors, warnings);
-            var AST = builder.Program(static_input);
+            var AST = builder.Program(dynamic_input);
 
             //bool valid = AST.CheckSemantics(errors, warnings);
             foreach (var error in errors)
