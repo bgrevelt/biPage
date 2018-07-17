@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BiPaGe.Model.FieldTypes
 {
-    class Reference : FieldType
+    public class Reference : FieldType
     {
         public String Name { get; } 
         public Reference(String name)

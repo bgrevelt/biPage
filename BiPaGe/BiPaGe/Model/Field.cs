@@ -10,10 +10,14 @@ namespace BiPaGe.Model
     {
         public String Name { get; }
         public FieldType Type { get; }
-        public Field(String name, FieldType type)
+        public String OffsetFrom { get; }
+        public uint Offset { get; }
+        public Field(String name, FieldType type, uint offset, String offsetFrom)
         {
             this.Name = name;
             this.Type = type;
+            this.Offset = offset;
+            this.OffsetFrom = OffsetFrom;
         }
     }
 }

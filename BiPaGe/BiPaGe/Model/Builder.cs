@@ -42,6 +42,8 @@ namespace BiPaGe.Model
         private Stack<Enumeration> enum_stack = new Stack<Enumeration>();
         private Stack<String> field_name_stack = new Stack<string>();
 
+        private String last_dynamic_field = null;
+
         // TODO: eventually we want to make structures and enumerations private and wrap them in a Model class that also includes the parse rules.
         public Builder()
         {
@@ -50,6 +52,10 @@ namespace BiPaGe.Model
         }
         public void Build(AST.Parser AST)
         {
+            // TODO: we need to do this differently. Right now we iterate over the elements in the order in which they are defined. Because we support out of order definition (why do we support out of order definition any way?)
+            // We can get regerences to types that are defined 'lower' in the tree. 
+            // To do this the 'right' way, we could create a tree of DataElements, where each element branches to referenced elements. That way we can start iteration at the leaves and move up. If we do that, we should not
+
             foreach (var element in AST.Elements)
                 VisitElement((dynamic)element);
         }
@@ -107,7 +113,13 @@ namespace BiPaGe.Model
             field_name_stack.Push(f.Name);
             FieldType type = VisitFieldType((dynamic)f.Type, f.CollectionSize);           
 
-            structure_stack.Peek().AddField(new Field(f.Name, type));
+            structure_stack.Peek().AddField(new Field(f.Name, type, 0, last_dynamic_field));
+
+            if(/* this is a dynamic field */)
+            {
+                last_dynamic_field = f.Name;
+            }
+
             field_name_stack.Pop();
         }
 
