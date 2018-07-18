@@ -6,21 +6,29 @@ using System.Threading.Tasks;
 
 namespace BiPaGe.Model
 {
-    public class Enumeration
+    public class Enumeration : DataElement
     {
-        public String Name { get; }
-        public FieldType Type { get; }
+    
+        public FieldTypes.Integral Type { get; }
         public List<Enumerator> Enumerators { get; }
-        public Enumeration(String name, FieldType type)
+        public Enumeration(String name, FieldTypes.Integral type) : base(name)
         {
             Enumerators = new List<Enumerator>();
-            this.Name = name;
             this.Type = type;
         }
         public void AddEnumerator(Enumerator enumerator)
         {
             Enumerators.Add(enumerator);
         }
-        
+
+        public override bool HasStaticSize()
+        {
+            return true;
+        }
+
+        public override uint SizeInBits()
+        {
+            return this.Type.SizeInBits();
+        }
     }
 }

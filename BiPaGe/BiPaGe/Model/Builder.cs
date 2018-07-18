@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,14 +36,31 @@ namespace BiPaGe.Model
     public class Builder
     {
 
+        private class Scope
+        {
+            public Scope(Structure s)
+            {
+                this.CurrentStructure = s;
+                this.CurrentFieldOffset = 0;
+            }
+            public Structure CurrentStructure { get; }
+            public String CurrentFieldName { get; set; }
+            public Field LastDynamicField { get; set; }
+            public Enumeration CurrentEnumeration { get; set; }
+            public uint CurrentFieldOffset { get; set; }
+        }
+
         public List<Structure> Structures { get; }
         public List<Enumeration> Enumerations { get; }
 
-        private Stack<Structure> structure_stack = new Stack<Structure>();
-        private Stack<Enumeration> enum_stack = new Stack<Enumeration>();
-        private Stack<String> field_name_stack = new Stack<string>();
+        private Stack<Scope> scope = new Stack<Scope>(); 
+        //private Stack<Structure> structure_stack = new Stack<Structure>();
+        //private Stack<Enumeration> enum_stack = new Stack<Enumeration>();
+        //private Stack<String> field_name_stack = new Stack<string>();
 
-        private String last_dynamic_field = null;
+        private Dictionary<String, DataElement> elements = new Dictionary<string, DataElement>();
+
+        //private Field last_dynamic_field = null;
 
         // TODO: eventually we want to make structures and enumerations private and wrap them in a Model class that also includes the parse rules.
         public Builder()
@@ -53,11 +71,44 @@ namespace BiPaGe.Model
         public void Build(AST.Parser AST)
         {
             // TODO: we need to do this differently. Right now we iterate over the elements in the order in which they are defined. Because we support out of order definition (why do we support out of order definition any way?)
-            // We can get regerences to types that are defined 'lower' in the tree. 
-            // To do this the 'right' way, we could create a tree of DataElements, where each element branches to referenced elements. That way we can start iteration at the leaves and move up. If we do that, we should not
+            // We can get regerences to types that are defined 'lower' in the tree. This is a problem when we want to determine the offsets for fields. For each field we want to store the offset to the previous dynamic field.
+            // but if these fields are of a type defined somwhere else (e.g. a reference) we may not be able to determine if that field is dynamic or not. 
+
+            /*
+             * 1) create a dict<name, elementType>
+             * 2) create the model. Instead of references (as a type) we create an actual reference to the elementType (e.g. structure or enumeration)
+             * 3) Determine size information for all types.
+            */
+
+            // Create a 'root' scope (TODO: hmmm, that's a bit ugly...)
+            scope.Push(new Scope(null));
+
+
+            FirstPass(AST);
 
             foreach (var element in AST.Elements)
                 VisitElement((dynamic)element);
+        }
+
+        private void FirstPass(AST.Parser AST)
+        {
+            // So the idea is that we build up a list of structures and enumerations here based on their name. So we are only bothered with 'root level' structures and enumerations
+            foreach (var element in AST.Elements)
+            {
+                Debug.Assert(element is AST.Enumeration || element is AST.Object);
+                if (element is AST.Enumeration)
+                {
+                    var e = element as AST.Enumeration;
+                    elements[e.Identifier] = new Enumeration(e.Identifier, VisitFieldType((dynamic)e.Type, null));
+
+                }
+                else
+                {
+                    var o = element as AST.Object;
+                    elements[o.Identifier] = new Structure(o.Identifier);
+                }
+            }
+
         }
 
         private void Visit(AST.Constants.LiteralCollection lc)
@@ -90,37 +141,47 @@ namespace BiPaGe.Model
 
         private void VisitElement(AST.Object o)
         {
-            structure_stack.Push(new Structure(o.Identifier));
+            Debug.Assert(elements.ContainsKey(o.Identifier));
+
+            // TODO: this dynamic cast is ugly. See if we can do better (but we still need a dict to the common base class because we don't know the type for references)
+            scope.Push(new Scope((dynamic)elements[o.Identifier]));
             foreach (var field in o.Fields)
             {
                 VisitField(field);
             }
-            Structures.Add(structure_stack.Pop());
+            Structures.Add(scope.Pop().CurrentStructure);
         }
 
         private void VisitElement(AST.Enumeration e)
         {
-            enum_stack.Push(new Enumeration(e.Identifier, VisitFieldType((dynamic)e.Type, null)));
+            Debug.Assert(elements.ContainsKey(e.Identifier));
+            // TODO: this dynamic cast is ugly. See if we can do better (but we still need a dict to the common base class because we don't know the type for references)
+            scope.Peek().CurrentEnumeration = (dynamic)elements[e.Identifier];
+            
             foreach (var enumerator in e.Enumerators)
             {
                 VisitEnumerator(enumerator);
             }
-            Enumerations.Add(enum_stack.Pop());
+            Enumerations.Add(scope.Peek().CurrentEnumeration);
         }
 
         private void VisitField(AST.Field f)
         {
-            field_name_stack.Push(f.Name);
-            FieldType type = VisitFieldType((dynamic)f.Type, f.CollectionSize);           
+            scope.Peek().CurrentFieldName = f.Name;             
+            FieldType type = VisitFieldType((dynamic)f.Type, f.CollectionSize);
 
-            structure_stack.Peek().AddField(new Field(f.Name, type, 0, last_dynamic_field));
+            // TODO: we're only putting in the 'from' field right now. Still need to do the static offsets
+            var field = new Field(f.Name, type, scope.Peek().CurrentFieldOffset, scope.Peek().LastDynamicField?.Name);
 
-            if(/* this is a dynamic field */)
+            if (field.HasStaticSize())
             {
-                last_dynamic_field = f.Name;
+                scope.Peek().CurrentFieldOffset += field.SizeInBits();
             }
+            scope.Peek().CurrentStructure.AddField(field);
 
-            field_name_stack.Pop();
+
+            if(!field.HasStaticSize())            
+                scope.Peek().LastDynamicField = field;
         }
 
         // Visiting of field types
@@ -139,7 +200,9 @@ namespace BiPaGe.Model
 
         private FieldType VisitFieldType(AST.Identifiers.Identifier i, AST.Expressions.IExpression collection_size)
         {
-            return CheckIfCOllection(new FieldTypes.Reference(i.Id), collection_size);
+            Debug.Assert(elements.ContainsKey(i.Id));            
+
+            return CheckIfCOllection(elements[i.Id], collection_size);
         }
         
         private FieldType VisitFieldType(AST.FieldTypes.Boolean b, AST.Expressions.IExpression collection_size)
@@ -158,16 +221,15 @@ namespace BiPaGe.Model
             // (3) Return a (named) reference  to this new enumeration
 
             // (1) For now we just use the field name directly. TODO: this can lead to problems. Do better
-            var name = field_name_stack.Peek();
+            var name = scope.Peek().CurrentFieldName;
             // (2)
-            enum_stack.Push(new Enumeration(name, VisitFieldType((dynamic)ie.Type, null)));
+            scope.Peek().CurrentEnumeration = new Enumeration(name, VisitFieldType((dynamic)ie.Type, null));
             foreach(var enumerator in ie.Enumerators)
             {
                 VisitEnumerator(enumerator);
             }
-            Enumerations.Add(enum_stack.Pop());
             // (3)
-            return CheckIfCOllection(new FieldTypes.Reference(name), collection_size);
+            return CheckIfCOllection(scope.Peek().CurrentEnumeration, collection_size);
         }
         private FieldType VisitFieldType(AST.FieldTypes.InlineObject io, AST.Expressions.IExpression collection_size)
         {
@@ -177,16 +239,17 @@ namespace BiPaGe.Model
             // (3) Return a (named) reference  to this new structure
 
             // (1) For now we just use the field name directly. TODO: this can lead to problems. Do better
-            var name = field_name_stack.Peek();
+            var name = scope.Peek().CurrentFieldName;
             // (2)
-            structure_stack.Push(new Structure(name));            
+            scope.Push(new Scope(new Structure(name)));
             foreach (var field in io.Fields)
             {
                 VisitField(field);
             }
-            Structures.Add(structure_stack.Pop());
+            var s = scope.Pop();
+            Structures.Add(s.CurrentStructure);
             // (3)
-            return CheckIfCOllection(new FieldTypes.Reference(name), collection_size);
+            return CheckIfCOllection(s.CurrentStructure, collection_size);
         }
 
         private FieldType VisitFieldType(AST.FieldTypes.Signed s, AST.Expressions.IExpression collection_size)
@@ -213,7 +276,7 @@ namespace BiPaGe.Model
         {
             // The parse can throw, but we should have checked for that in SA
             // TODO: we need to determine if we want to do the parsing in the AST object or here and be consistent about it. For example AST.Literals.Integer parses on its own.
-            enum_stack.Peek().AddEnumerator(new Model.Enumerator(e.Name, e.Value));
+            scope.Peek().CurrentEnumeration.AddEnumerator(new Model.Enumerator(e.Name, e.Value));
         }
 
         // Visit expressions

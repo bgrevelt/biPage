@@ -108,8 +108,15 @@ Object2
 field_three: uint18;
 field_five: float64;
 dynamic_bool_collection: bool[field_three];
-static_bool_collection: bool[(this-4) / 8];
+static_bool_collection: bool[(12-4) / 8];
 enum_field : Enumeration;
+}
+
+Enumeration : u8
+{
+    value0 = 0,
+    value1 = 1,
+    value2 = 2
 }
 ";
             var invalid_input =

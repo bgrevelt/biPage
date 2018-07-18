@@ -17,7 +17,16 @@ namespace BiPaGe.Model
             this.Name = name;
             this.Type = type;
             this.Offset = offset;
-            this.OffsetFrom = OffsetFrom;
+            this.OffsetFrom = offsetFrom;
+        }
+        public bool HasStaticSize()
+        {
+            return Type.HasStaticSize();
+        }
+
+        public uint SizeInBits()
+        {
+            return Type.SizeInBits();
         }
     }
 }

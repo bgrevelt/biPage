@@ -45,7 +45,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\SizeChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\generated_csharp\BiPaGeBaseListener.cs">
       <Link>BiPaGeBaseListener.cs</Link>
@@ -140,12 +139,9 @@
     <Compile Include="Model\FieldTypes\AsciiString.cs" />
     <Compile Include="Model\FieldTypes\Boolean.cs" />
     <Compile Include="Model\FieldTypes\Collection.cs" />
-    <Compile Include="Model\FieldTypes\DynamicField.cs" />
     <Compile Include="Model\FieldTypes\FloatingPoint.cs" />
     <Compile Include="Model\FieldTypes\Integral.cs" />
-    <Compile Include="Model\FieldTypes\Reference.cs" />
     <Compile Include="Model\FieldTypes\SignedIntegral.cs" />
-    <Compile Include="Model\FieldTypes\StaticField.cs" />
     <Compile Include="Model\FieldTypes\UnsignedIntegral.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +150,7 @@
     <None Include="..\..\BiPaGe.g4">
       <Link>BiPaGe.g4</Link>
     </None>
+    <None Include="Test\ToTest.md" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

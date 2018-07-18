@@ -6,10 +6,20 @@ using System.Threading.Tasks;
 
 namespace BiPaGe.Model.FieldTypes
 {    
-    public class Boolean : StaticField
+    public class Boolean : FieldType
     {
         public Boolean()
         {
+        }
+
+        public override bool HasStaticSize()
+        {
+            return true;
+        }
+
+        public override uint SizeInBits()
+        {
+            return 1;
         }
     }
 }

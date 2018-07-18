@@ -6,12 +6,25 @@ using System.Threading.Tasks;
 
 namespace BiPaGe.Model.FieldTypes
 {
-    public class Collection : DynamicField
+    public class Collection : FieldType
     {
-        public Collection(FieldType type, Expressions.Expression size) : base(size)
+        private ExpressionResolver resolver = new ExpressionResolver();
+        public Expressions.Expression Size { get; }
+        public Collection(FieldType type, Expressions.Expression size)
         {
+            this.Size = size;
             this.Type = type;
         }
         public FieldType Type { get; }
+
+        public override bool HasStaticSize()
+        {
+            return resolver.IsStaticExpression(Size);
+        }
+
+        public override uint SizeInBits()
+        {
+            return (uint)resolver.Resolve(Size);
+        }
     }
 }

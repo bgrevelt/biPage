@@ -12,5 +12,11 @@ namespace BiPaGe.Model.FieldTypes
         {
 
         }
+
+        public override bool HasStaticSize()
+        {
+            return true;
+            
+        }
     }
 }

@@ -12,7 +12,6 @@ namespace BiPaGe.FrontEnd.CPP
         private const uint tab_to_spaces = 4;
         private List<Model.Enumeration> Enumerations;
         private List<Model.Structure> Structures;
-        private ExpressionResolver resolver = new ExpressionResolver();
         System.IO.StreamWriter Writer;
 
         // TODO: in practice we would not get a write here because we would want to be able to write to multiple files
@@ -44,17 +43,10 @@ namespace BiPaGe.FrontEnd.CPP
             foreach (var field in structure.Fields)
             {
 
-                if (field.Type is Model.FieldTypes.Reference)
+                if (field.HasStaticSize())
                 {
-                    // TODO: we somehow need to find out if the type it is referencing is dynamic or not...
-                }
-                else if (field.Type is Model.FieldTypes.DynamicField) 
-                {
-                    if(resolver.IsStaticExpression((field.Type as Model.FieldTypes.DynamicField).Size))
-                        static_fields.Add(field);
-                    else
-                        dynamic_fields.Add(field);
-                }
+                    static_fields.Add(field);                    
+                }               
                 else
                 {
                     static_fields.Add(field);
@@ -140,10 +132,13 @@ namespace BiPaGe.FrontEnd.CPP
 
         private void GenerateField(Model.Field field, uint indent)
         {
-            // TODO: here we need offsets and sizes and stuff...
+            // TODO: the offsets we use here are all wrong. We directly use the offset in bits instead of finding the right byte algined offset
+            // also we need to cast to the right encapsulating type, maks and shift and we do none of that stuff..
             write_indented(indent, $"const {type_to_cpp_type((dynamic)field.Type)}& {field.Name} const");
             write_indented(indent, "{");
-            write_indented(indent + 1, $"return *reinterpret_cast<const {type_to_cpp_type((dynamic)field.Type)}*>(this);");
+            var offset_from = field.OffsetFrom != null ? field.OffsetFrom + "()" : "this";
+            var offset = field.Offset == 0 ? "" : $" + {field.Offset}";
+            write_indented(indent + 1, $"return *reinterpret_cast<const {type_to_cpp_type((dynamic)field.Type)}*>({offset_from} {offset});");
             write_indented(indent, "}");
             // const& <field_type> name() const { return reinterpret_cast<
         }
@@ -189,9 +184,14 @@ namespace BiPaGe.FrontEnd.CPP
                 return "double";
         }
 
-        private String type_to_cpp_type(Model.FieldTypes.Reference r)
+        private String type_to_cpp_type(Model.Structure s)
         {
-            return r.Name;
+            return s.Name;
+        }
+
+        private String type_to_cpp_type(Model.Enumeration e)
+        {
+            return e.Name;
         }
 
 
