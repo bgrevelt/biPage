@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace BiPaGe.Model.Expressions
 {
     public class FieldIdentifier : Expression
@@ -12,6 +7,11 @@ namespace BiPaGe.Model.Expressions
         public FieldIdentifier(String identifier)
         {
             this.Identifier = identifier;
+        }
+
+        public override int? Resolve()
+        {
+            return null;
         }
     }
 }

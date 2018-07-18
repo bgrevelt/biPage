@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 namespace BiPaGe.Model
 {
     //public class Scope
@@ -170,7 +167,6 @@ namespace BiPaGe.Model
             scope.Peek().CurrentFieldName = f.Name;             
             FieldType type = VisitFieldType((dynamic)f.Type, f.CollectionSize);
 
-            // TODO: we're only putting in the 'from' field right now. Still need to do the static offsets
             var field = new Field(f.Name, type, scope.Peek().CurrentFieldOffset, scope.Peek().LastDynamicField?.Name);
 
             if (field.HasStaticSize())

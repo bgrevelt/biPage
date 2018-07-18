@@ -118,7 +118,6 @@
     <Compile Include="Test\SemanticAnalysis\Fixers.cs" />
     <Compile Include="Test\SemanticAnalysis\Identifiers.cs" />
     <Compile Include="Test\SemanticAnalysis\TestRunner.cs" />
-    <Compile Include="Model\ExpressionResolver.cs" />
     <Compile Include="FrontEnd\CPP\CodeGenerator.cs" />
     <Compile Include="Model\Builder.cs" />
     <Compile Include="Model\DataElement.cs" />

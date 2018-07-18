@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace BiPaGe.Model.FieldTypes
 {
     public class Collection : FieldType
     {
-        private ExpressionResolver resolver = new ExpressionResolver();
         public Expressions.Expression Size { get; }
         public Collection(FieldType type, Expressions.Expression size)
         {
@@ -19,12 +14,14 @@ namespace BiPaGe.Model.FieldTypes
 
         public override bool HasStaticSize()
         {
-            return resolver.IsStaticExpression(Size);
+            return Size.Resolve() != null;
         }
 
         public override uint SizeInBits()
         {
-            return (uint)resolver.Resolve(Size);
+            var value = Size.Resolve();
+            Debug.Assert(value > 0);
+            return (uint)value;
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace BiPaGe.Model.FieldTypes
 {
@@ -10,8 +6,7 @@ namespace BiPaGe.Model.FieldTypes
     // 'VariableSizeField' or something like that which contains all the size stuff.
     public class AsciiString : FieldType
     {
-        public Expressions.Expression Size { get; }
-        private ExpressionResolver resolver = new ExpressionResolver();
+        public Expressions.Expression Size { get; }        
         public AsciiString(Expressions.Expression size) 
         {
             this.Size = size;
@@ -19,12 +14,14 @@ namespace BiPaGe.Model.FieldTypes
 
         public override bool HasStaticSize()
         {
-            return resolver.IsStaticExpression(Size);
+            return Size.Resolve() != null;
         }
 
         public override uint SizeInBits()
         {
-            return (uint)resolver.Resolve(Size);
+            var value = Size.Resolve();
+            Debug.Assert(value > 0);
+            return (uint)value;
         }
     }
 }
