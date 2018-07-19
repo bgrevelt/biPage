@@ -37,5 +37,10 @@ namespace BiPaGe.AST.FieldTypes
         {
             PrintIndented(String.Format("{0} bit unsigned integer", Size), indentLevel);
         }
+
+        public override void Accept(IFieldTypeVisitor v)
+        {
+            v.Visit(this);
+        }
     }
 }

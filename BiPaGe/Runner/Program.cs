@@ -110,6 +110,15 @@ field_five: float64;
 dynamic_bool_collection: bool[field_three];
 static_bool_collection: bool[(12-4) / 8];
 enum_field : Enumeration;
+anonimous1 : {
+    field11 : i16;
+    field12 : u32;
+    anonimous2 : {
+    field21 : f32;
+    field22 : f64;
+
+};
+};
 }
 
 Enumeration : u8

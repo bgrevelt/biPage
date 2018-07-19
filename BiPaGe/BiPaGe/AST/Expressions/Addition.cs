@@ -35,5 +35,10 @@ namespace BiPaGe.AST.Expressions
             this.Left.Print(indentLevel+1);
             this.Right.Print(indentLevel+1);
         }
+
+        public void Accept(IExpressionVisitor v)
+        {
+            v.Visit(this);
+        }
     }
 }

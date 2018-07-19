@@ -39,5 +39,10 @@ namespace BiPaGe.AST.FieldTypes
             for (int i = 0; i < this.Fields.Count; ++i)
                 this.Fields[i].Validate(expected_object.Fields[i]);
         }
+
+        public override void Accept(IFieldTypeVisitor v)
+        {
+            v.Visit(this);
+        }
     }
 }

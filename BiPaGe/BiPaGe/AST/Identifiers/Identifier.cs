@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BiPaGe.AST.Constants;
+using BiPaGe.AST.FieldTypes;
 using NUnit.Framework;
 
 namespace BiPaGe.AST.Identifiers
@@ -28,6 +29,11 @@ namespace BiPaGe.AST.Identifiers
         {
             Assert.IsInstanceOf<Identifier>(expected);
             Assert.AreEqual(((Identifier)expected).Id, this.Id);
+        }
+
+        public override void Accept(IFieldTypeVisitor v)
+        {
+            v.Visit(this);
         }
     }
 }

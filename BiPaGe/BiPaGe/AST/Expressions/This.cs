@@ -26,5 +26,10 @@ namespace BiPaGe.AST.Expressions
             PrintIndented(String.Format("this"), indentLevel);
         }
 
+        public void Accept(IExpressionVisitor v)
+        {
+            v.Visit(this);
+        }
+
     }
 }

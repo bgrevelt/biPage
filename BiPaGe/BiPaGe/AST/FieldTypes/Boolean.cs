@@ -25,5 +25,10 @@ namespace BiPaGe.AST.FieldTypes
         {
             PrintIndented("Boolean", indentLevel);
         }
+
+        public override void Accept(IFieldTypeVisitor v)
+        {
+            v.Visit(this);
+        }
     }
 }

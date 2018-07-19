@@ -46,5 +46,9 @@ namespace BiPaGe.AST.Literals
                 return false;
             }
         }
+        public void Accept(IExpressionVisitor v)
+        {
+            v.Visit(this);
+        }
     }
 }

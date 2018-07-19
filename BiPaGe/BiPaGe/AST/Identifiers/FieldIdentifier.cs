@@ -29,5 +29,10 @@ namespace BiPaGe.AST.Identifiers
         {
             PrintIndented(String.Format("Field id: {0}", Id), indentLevel);
         }
+
+        public void Accept(IExpressionVisitor v)
+        {
+            v.Visit(this);
+        }
     }
 }
