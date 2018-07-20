@@ -39,65 +39,26 @@ namespace BiPaGe.Model
         }
 
         public void Visit(AST.FieldTypes.InlineEnumeration ie)
-        {            
-            /*  Here's where it gets interesting. We want to do three things here
-              (1) Invent a name for this anonimous enumeration
-              (2) Add a new enumeration to the enumeration list 
-              (3) Return a (named) reference  to this new enumeration
-             */
+        {
+            EnumerationBuilder builder = new EnumerationBuilder(this.Elements);
+            Debug.Assert(!this.Elements.ContainsKey(FieldName), "Crap, we already have a type that has the same name as the field that uses this anonimous type. Typenames should be unique");
 
-            // (1) For now we just use the field name directly. TODO: this can lead to problems. Do better
-            var name = FieldName;
-
-            // (2)
-            Debug.Assert(translated_type == null, "I don't think we need to be reentrant, so if there's ever anything here already, I overlooked something!");
-            ie.Type.Accept(this);
-            var enumeration = new Enumeration(name, (dynamic)translated_type); // TODO: we still have a dynamic here because we can't implicitly upcast. I'm not sure how to handle this without using typeofs. I want to restrict the enum type to only accept integer types (the language doesn't support other types of enumerations) but the translator return the base type. Should I have a translate specific for integral types?
-            foreach (var enumerator in ie.Enumerators)
-            {
-                enumeration.AddEnumerator(new Enumerator(enumerator.Name, enumerator.Value));
-            }
-
-            Debug.Assert(Elements.ContainsKey(name), "We should construct a unique type name for the anonimous enumerations");
-            Elements[name] = enumeration;
-
-            // (3)
-            translated_type = enumeration;
+            // TODO: For now we just use the field name directly as the type name for anonimous types. This can lead to problems. Do better
+            builder.Build(ie, FieldName);
+            Debug.Assert(this.Elements.ContainsKey(FieldName));
+            translated_type = this.Elements[FieldName];
         }
 
         public void Visit(AST.FieldTypes.InlineObject io)
         {
-            var fieldTranslator = new FieldTranslator(Elements);
-            // Similar to the enumeration
-            // (1) Invent a name for this anonimous structure
-            // (2) Add a new structure to the structure list 
-            // (3) Return a (named) reference  to this new structure
+            StructureBuilder structureBuilder = new StructureBuilder(this.Elements);
+            Debug.Assert(!this.Elements.ContainsKey(FieldName), "Crap, we already have a type that has the same name as the field that uses this anonimous type. Typenames should be unique");
 
-            // (1) For now we just use the field name directly. TODO: this can lead to problems. Do better
-            var name = FieldName;
-            // (2)
-            var structure = new Structure(name);
-            uint field_offset = 0;
-            String last_dynmic_field = null;
-            foreach (var field in io.Fields)
-            {
-                var model_field = fieldTranslator.Translate(field, field_offset, last_dynmic_field);
-                structure.AddField(model_field);
-                if (model_field.HasStaticSize())
-                {
-                    field_offset += model_field.SizeInBits();
-                }
-                else
-                {
-                    field_offset = 0;
-                    last_dynmic_field = model_field.Name;
-                }
-            }
-
-            Debug.Assert(!Elements.ContainsKey(name), "We should construct a unique type name for the anonimous structures");
-            Elements[name] = structure;
-            // (3)
-            translated_type = structure;
+            // TODO: For now we just use the field name directly as the type name for anonimous types. This can lead to problems. Do better            
+            structureBuilder.BuildStructure(io, FieldName);
+            structureBuilder.PopulateStructure(io, FieldName);
+            Debug.Assert(this.Elements.ContainsKey(FieldName));
+            translated_type = this.Elements[FieldName];
         }
 
         public void Visit(AST.FieldTypes.Signed s)
