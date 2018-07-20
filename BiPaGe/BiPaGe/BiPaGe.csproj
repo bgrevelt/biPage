@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Model\Notes\FieldParsing.md" />
+    <None Include="Notes\Notes.md" />
     <None Include="packages.config" />
     <None Include="..\..\BiPaGe.g4">
       <Link>BiPaGe.g4</Link>

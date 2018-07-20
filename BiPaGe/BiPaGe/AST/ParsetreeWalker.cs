@@ -285,8 +285,8 @@ namespace BiPaGe.AST
                 case "utf8_string":
                     return new AST.FieldTypes.Utf8String(sourceInfo);
                 default:
-                    // TODO: solve better
-                    throw new ArgumentException();
+                    // This indicates an error in our grammar or an error in ANTLR 
+                    throw new ArgumentException($"Unrecoginized fieldtype {type}");
             }
         }
     }

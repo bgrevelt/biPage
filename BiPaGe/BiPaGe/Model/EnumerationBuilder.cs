@@ -28,8 +28,7 @@ namespace BiPaGe.Model
 
         private void Build(String name, AST.FieldType type, IList<AST.Enumerator> enumerators)
         {
-            var enum_type = this.fieldTypeTranslator.Translate(type, null); // TODO: this is a little dodgy. We know that it will never need the fieldname since the type can only be an integral type, but maybe there should be a specific translate for that?
-            Debug.Assert(enum_type is FieldTypes.Integral, "Enumeration should be of integral type"); // We don't support other types of enumerations. F.i. enum : ascii_string { option_one : "bla", option_two : "blah"};
+            var enum_type = this.fieldTypeTranslator.TranslateIntegral(type); // We don't support other types of enumerations. F.i. enum : ascii_string { option_one : "bla", option_two : "blah"};
             var translated = new Enumeration(name, enum_type as FieldTypes.Integral);
 
             foreach (var enumerator in enumerators)
