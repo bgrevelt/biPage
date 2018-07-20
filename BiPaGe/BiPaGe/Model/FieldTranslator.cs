@@ -32,7 +32,7 @@ namespace BiPaGe.Model
                 translated_type = new FieldTypes.Collection(translated_type, ExpressionTranslator.Translate(original.CollectionSize));
             }
 
-            return new Field(original.Name, translated_type, field_offset, offset_from);            // TODO: static and dynamic offsets
+            return new Field(original.Name, translated_type, field_offset, offset_from);
         }
     }
 }

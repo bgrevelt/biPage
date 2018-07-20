@@ -26,8 +26,16 @@ namespace BiPaGe.AST
 
         public override bool CheckSemantics(IList<Error> errors, IList<Warning> warnings)
         {
-            // TODO: check if the we can convert value to an integer
-            throw new NotImplementedException();
+            int dummy;
+            if(!int.TryParse(this.Original_value, out dummy))
+            {
+                // TODO: log message
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public override void Validate(IASTNode expected)

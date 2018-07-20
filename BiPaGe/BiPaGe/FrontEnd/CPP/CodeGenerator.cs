@@ -71,7 +71,7 @@ namespace BiPaGe.FrontEnd.CPP
             List<Model.Field> static_fields;
             List<Model.Field> dynamic_fields;
             AnalyzeFields(s, out static_fields, out dynamic_fields);
-            bool dynamic_size = dynamic_fields.Count > 0; // TODO: this is important. We need to know if the structure contains dynamic elements now because the ctor will be different!
+            bool dynamic_size = dynamic_fields.Count > 0; 
 
             write_indented(indent, String.Format("class {0}", s.Name));
             write_indented(indent, "{");

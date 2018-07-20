@@ -15,7 +15,7 @@ namespace BiPaGe.AST.Identifiers
 
         public override bool CheckSemantics(IList<SemanticAnalysis.Error> errors, IList<SemanticAnalysis.Warning> warnings)
         {
-            // TODO: we should pass in a list of know objects and their fields
+            // TODO: we should pass in a list of known objects and their fields
             return true;
         }
 

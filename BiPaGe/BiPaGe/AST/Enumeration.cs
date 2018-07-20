@@ -10,7 +10,7 @@ namespace BiPaGe.AST
     {
         public IList<Enumerator> Enumerators { get; }
         public String Identifier { get; }
-        public FieldType Type { get; } // TODO: we should include a level between the concrete type and FieldType for basic types
+        public FieldType Type { get; } 
         public Enumeration(SourceInfo sourceInfo, String identifier, FieldType type, IList<Enumerator> enumerators) : base(sourceInfo)
         {
             this.Identifier = identifier;
