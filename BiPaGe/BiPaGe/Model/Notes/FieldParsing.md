@@ -76,10 +76,10 @@ Basically we determine which power of 2 the minimum size is, round that up and u
 
 In our example this would be
 ```
-min(2^(Ceil(2Log(16+(35-32)))),8)
-min(2^(Ceil(2Log(19))),8)
-min(2^(Ceil(~4.248)),)
-min(2^5,8)
+max(2^(Ceil(2Log(16+(35-32)))),8)
+max(2^(Ceil(2Log(19))),8)
+max(2^(Ceil(~4.248)),)
+max(2^5,8)
 32
 ```
 

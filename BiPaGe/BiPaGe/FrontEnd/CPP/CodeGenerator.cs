@@ -138,9 +138,46 @@ namespace BiPaGe.FrontEnd.CPP
             write_indented(indent, "{");
             var offset_from = field.OffsetFrom != null ? field.OffsetFrom + "()" : "this";
             var offset = field.Offset == 0 ? "" : $" + {field.Offset}";
-            write_indented(indent + 1, $"return *reinterpret_cast<const {type_to_cpp_type((dynamic)field.Type)}*>({offset_from} {offset});");
+            var capture_type = GetCaptureType(field);
+            var byte_algined_offset = GetFieldByteOffset(field);
+            var mask = GetMask(field);
+            var shift = GetShift(field);
+
+            write_indented(indent + 1, $"auto captured = reinterpret_cast<const {capture_type}*>({offset_from} + {byte_algined_offset});");
+            write_indented(indent + 1, $"return ((*captured & {mask.ToString("X")}) >> {shift});");            
             write_indented(indent, "}");
             // const& <field_type> name() const { return reinterpret_cast<
+        }
+
+        private uint GetFieldByteOffset(Model.Field field)
+        {
+            return field.Offset - (field.Offset % 8);
+        }
+
+        private String GetCaptureType(Model.Field field)
+        {
+            var byte_aligned_offset = GetFieldByteOffset(field);
+            var minimum_capture_size = (field.Offset - (byte_aligned_offset * 8)) + field.SizeInBits();
+            var capture_type_width = (uint)Math.Max(Math.Pow(2, Math.Ceiling(Math.Log(minimum_capture_size) / Math.Log(2))), 8);
+            return String.Format("std::uint{0}_t", capture_type_width);
+        }
+
+        private int GetMask(Model.Field field)
+        {
+            var byte_aligned_offset = GetFieldByteOffset(field);
+            var minimum_capture_size = (field.Offset - (byte_aligned_offset * 8)) + field.SizeInBits();
+            var capture_type_width = (uint)Math.Max(Math.Pow(2, Math.Ceiling(Math.Log(minimum_capture_size) / Math.Log(2))), 8);
+            var mask = (int)Math.Pow(2, field.SizeInBits()) - 1;            
+           return mask << (int)(capture_type_width - field.SizeInBits() - (field.Offset - (byte_aligned_offset * 8)));
+
+        }
+
+        private uint GetShift(Model.Field field)
+        {
+            var byte_aligned_offset = GetFieldByteOffset(field);
+            var minimum_capture_size = (field.Offset - (byte_aligned_offset * 8)) + field.SizeInBits();
+            var capture_type_width = (uint)Math.Max(Math.Pow(2, Math.Ceiling(Math.Log(minimum_capture_size) / Math.Log(2))), 8);
+            return (capture_type_width - field.SizeInBits() - (field.Offset - (byte_aligned_offset * 8)));
         }
 
         private String type_to_cpp_type(Model.FieldTypes.SignedIntegral s)
