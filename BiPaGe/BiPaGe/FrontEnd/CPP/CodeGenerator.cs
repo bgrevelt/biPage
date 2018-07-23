@@ -132,8 +132,8 @@ namespace BiPaGe.FrontEnd.CPP
 
         private void GenerateField(Model.Field field, uint indent)
         {
-            // TODO: the offsets we use here are all wrong. We directly use the offset in bits instead of finding the right byte algined offset
-            // also we need to cast to the right encapsulating type, maks and shift and we do none of that stuff..
+            // TODO: Remove shifting and/or masking if it's not required
+            // TODO: Return by reference for directly castable types, otherwise return by value
             write_indented(indent, $"const {type_to_cpp_type((dynamic)field.Type)}& {field.Name} const");
             write_indented(indent, "{");
             var offset_from = field.OffsetFrom != null ? field.OffsetFrom + "()" : "this";
@@ -143,8 +143,8 @@ namespace BiPaGe.FrontEnd.CPP
             var mask = GetMask(field);
             var shift = GetShift(field);
 
-            write_indented(indent + 1, $"auto captured = reinterpret_cast<const {capture_type}*>({offset_from} + {byte_algined_offset});");
-            write_indented(indent + 1, $"return ((*captured & {mask.ToString("X")}) >> {shift});");            
+            write_indented(indent + 1, $"auto captured = reinterpret_cast<const {capture_type}*>({offset_from} + {byte_algined_offset / 8});");
+            write_indented(indent + 1, $"return ((*captured & 0x{mask.ToString("X")}) >> {shift});");            
             write_indented(indent, "}");
             // const& <field_type> name() const { return reinterpret_cast<
         }
@@ -157,39 +157,34 @@ namespace BiPaGe.FrontEnd.CPP
         private String GetCaptureType(Model.Field field)
         {
             var byte_aligned_offset = GetFieldByteOffset(field);
-            var minimum_capture_size = (field.Offset - (byte_aligned_offset * 8)) + field.SizeInBits();
+            var minimum_capture_size = field.Offset - byte_aligned_offset + field.SizeInBits();
             var capture_type_width = (uint)Math.Max(Math.Pow(2, Math.Ceiling(Math.Log(minimum_capture_size) / Math.Log(2))), 8);
             return String.Format("std::uint{0}_t", capture_type_width);
         }
 
-        private int GetMask(Model.Field field)
+        private uint GetMask(Model.Field field)
         {
             var byte_aligned_offset = GetFieldByteOffset(field);
-            var minimum_capture_size = (field.Offset - (byte_aligned_offset * 8)) + field.SizeInBits();
-            var capture_type_width = (uint)Math.Max(Math.Pow(2, Math.Ceiling(Math.Log(minimum_capture_size) / Math.Log(2))), 8);
-            var mask = (int)Math.Pow(2, field.SizeInBits()) - 1;            
-           return mask << (int)(capture_type_width - field.SizeInBits() - (field.Offset - (byte_aligned_offset * 8)));
-
+            var mask = (uint)Math.Pow(2, field.SizeInBits()) - 1;
+            return mask << (int)(field.Offset - byte_aligned_offset);
         }
 
         private uint GetShift(Model.Field field)
         {
             var byte_aligned_offset = GetFieldByteOffset(field);
-            var minimum_capture_size = (field.Offset - (byte_aligned_offset * 8)) + field.SizeInBits();
-            var capture_type_width = (uint)Math.Max(Math.Pow(2, Math.Ceiling(Math.Log(minimum_capture_size) / Math.Log(2))), 8);
-            return (capture_type_width - field.SizeInBits() - (field.Offset - (byte_aligned_offset * 8)));
+            return field.Offset - byte_aligned_offset;
         }
 
         private String type_to_cpp_type(Model.FieldTypes.SignedIntegral s)
         {
-            var size = Math.Max(8, Math.Pow(2, Math.Ceiling(Math.Log(s.size) / Math.Log(2))));
+            var size = (uint)Math.Max(8, Math.Pow(2, Math.Ceiling(Math.Log(s.size) / Math.Log(2))));
             Debug.Assert(size % 8 == 0);
             return String.Format("std::int{0}_t", size);
         }
 
         private String type_to_cpp_type(Model.FieldTypes.UnsignedIntegral u)
         {
-            var size = Math.Max(8, Math.Pow(2, Math.Ceiling(Math.Log(u.size) / Math.Log(2))));
+            var size = (uint)Math.Max(8, Math.Pow(2, Math.Ceiling(Math.Log(u.size) / Math.Log(2))));
             Debug.Assert(size % 8 == 0);
             return String.Format("std::uint{0}_t", size);
         }

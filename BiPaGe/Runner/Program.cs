@@ -106,6 +106,7 @@ field_two: u4;
 Object2
 {
 field_three: uint18;
+field_four: int14;
 field_five: float64;
 dynamic_bool_collection: bool[field_three];
 static_bool_collection: bool[(12-4) / 8];
