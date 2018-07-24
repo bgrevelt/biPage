@@ -225,7 +225,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(8), 4, null);
             var declaration = gen.GetDeclaration(field);
             var body = gen.GetBody(field);
-            
+
             // Return by value
             Assert.AreEqual("std::int8_t TEST() const", declaration);
             // The encapsulating type should be a 16 bit integer. We should then mask out the most and least significant nibble and shift four places right. The resulting value needs to 
@@ -424,7 +424,201 @@ namespace BiPaGe.Test.FrontEnd.CPP
         }
     }
 
-    // TODO: Tests for fields with a dynamic offset
-    // TODO: Tests for fields with a dynamic and static offset
+    public class StandardWidthIntegersDynamicOffset
+    {
+        [Test()]
+        public void Int8()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(8), 0, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
 
+            Assert.AreEqual("const std::int8_t& TEST() const", declaration);
+            Assert.AreEqual("return *(reinterpret_cast<const std::int8_t*>(SomeOtherField().end() + 0));", body);
+        }
+
+        [Test()]
+        public void Int16()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(16), 0, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            Assert.AreEqual("const std::int16_t& TEST() const", declaration);
+            Assert.AreEqual("return *(reinterpret_cast<const std::int16_t*>(SomeOtherField().end() + 0));", body);
+        }
+
+        [Test()]
+        public void Int32()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(32), 0, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            Assert.AreEqual("const std::int32_t& TEST() const", declaration);
+            Assert.AreEqual("return *(reinterpret_cast<const std::int32_t*>(SomeOtherField().end() + 0));", body);
+        }
+
+        [Test()]
+        public void Int64()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(64), 0, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            Assert.AreEqual("const std::int64_t& TEST() const", declaration);
+            Assert.AreEqual("return *(reinterpret_cast<const std::int64_t*>(SomeOtherField().end() + 0));", body);
+        }
+
+        [Test()]
+        public void Uint8()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(8), 0, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            Assert.AreEqual("const std::uint8_t& TEST() const", declaration);
+            Assert.AreEqual("return *(reinterpret_cast<const std::uint8_t*>(SomeOtherField().end() + 0));", body);
+        }
+
+        [Test()]
+        public void Uint16()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(16), 0, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            Assert.AreEqual("const std::uint16_t& TEST() const", declaration);
+            Assert.AreEqual("return *(reinterpret_cast<const std::uint16_t*>(SomeOtherField().end() + 0));", body);
+        }
+
+        [Test()]
+        public void Uint32()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(32), 0, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            Assert.AreEqual("const std::uint32_t& TEST() const", declaration);
+            Assert.AreEqual("return *(reinterpret_cast<const std::uint32_t*>(SomeOtherField().end() + 0));", body);
+        }
+
+        [Test()]
+        public void Uint64()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(64), 0, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            Assert.AreEqual("const std::uint64_t& TEST() const", declaration);
+            Assert.AreEqual("return *(reinterpret_cast<const std::uint64_t*>(SomeOtherField().end() + 0));", body);
+        }
+    }
+
+    public class StandardWidthIntegersStaticAndDynamicOffset
+    {
+        [Test()]
+        public void Int8()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(8), 4, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            // Return by value
+            Assert.AreEqual("std::int8_t TEST() const", declaration);
+            // The encapsulating type should be a 16 bit integer. We should then mask out the most and least significant nibble and shift four places right. The resulting value needs to 
+            // be cast back to the expected type: int8
+            Assert.AreEqual("return static_cast<std::int8_t>(((*(reinterpret_cast<const std::int16_t*>(SomeOtherField().end() + 0)) & 0xff0) >> 4));", body);
+        }
+
+        [Test()]
+        public void Int16()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(16), 22, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            // Return by value
+            Assert.AreEqual("std::int16_t TEST() const", declaration);
+            // The encapsulating type should be a 32 bit integer which has a byte offset of 2 (the first 16 bits of the offset).
+            // We should mask out the least significant 6 bits and the most significant 10 bits and shift six places right. The resulting value needs to 
+            // be cast back to the expected type: int16            
+            Assert.AreEqual("return static_cast<std::int16_t>(((*(reinterpret_cast<const std::int32_t*>(SomeOtherField().end() + 2)) & 0x3fffc0) >> 6));", body);
+        }
+
+        [Test()]
+        public void Int32()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(32), 523, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            // Return by value
+            Assert.AreEqual("std::int32_t TEST() const", declaration);
+            // The encapsulating type should be a 64 bit integer which has a byte offset of 65 (the first 520 bits of the offset).
+            // We should mask out the least significant 3 bits and the most significant 5 bits and shift 3 places right. The resulting value needs to 
+            // be cast back to the expected type: int32
+            ;
+            Assert.AreEqual("return static_cast<std::int32_t>(((*(reinterpret_cast<const std::int64_t*>(SomeOtherField().end() + 65)) & 0x7fffffff8) >> 3));", body);
+        }
+
+        [Test()]
+        public void Uint8()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(8), 4, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            // Return by value
+            Assert.AreEqual("std::uint8_t TEST() const", declaration);
+            // The encapsulating type should be a 16 bit integer. We should then mask out the most and least significant nibble and shift four places right. The resulting value needs to 
+            // be cast back to the expected type: int8
+            Assert.AreEqual("return static_cast<std::uint8_t>(((*(reinterpret_cast<const std::uint16_t*>(SomeOtherField().end() + 0)) & 0xff0) >> 4));", body);
+        }
+
+        [Test()]
+        public void Uint16()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(16), 22, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            // Return by value
+            Assert.AreEqual("std::uint16_t TEST() const", declaration);
+            // The encapsulating type should be a 32 bit integer which has a byte offset of 2 (the first 16 bits of the offset).
+            // We should mask out the least significant 6 bits and the most significant 10 bits and shift six places right. The resulting value needs to 
+            // be cast back to the expected type: int16            
+            Assert.AreEqual("return static_cast<std::uint16_t>(((*(reinterpret_cast<const std::uint32_t*>(SomeOtherField().end() + 2)) & 0x3fffc0) >> 6));", body);
+        }
+
+        [Test()]
+        public void Uint32()
+        {
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator();
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(32), 523, "SomeOtherField");
+            var declaration = gen.GetDeclaration(field);
+            var body = gen.GetBody(field);
+
+            // Return by value
+            Assert.AreEqual("std::uint32_t TEST() const", declaration);
+            // The encapsulating type should be a 64 bit integer which has a byte offset of 65 (the first 520 bits of the offset).
+            // We should mask out the least significant 3 bits and the most significant 5 bits and shift 3 places right. The resulting value needs to 
+            // be cast back to the expected type: int32
+            ;
+            Assert.AreEqual("return static_cast<std::uint32_t>(((*(reinterpret_cast<const std::uint64_t*>(SomeOtherField().end() + 65)) & 0x7fffffff8) >> 3));", body);
+        }
+    }
 }

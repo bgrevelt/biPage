@@ -45,7 +45,7 @@ namespace BiPaGe.FrontEnd.CPP
             bool needs_shift = shift != 0;
             bool needs_type_cast = capture_type != return_type;
 
-            var offset_from = field.OffsetFrom != null ? field.OffsetFrom + "()" : "reinterpret_cast<const std::uint8_t*>(this)";
+            var offset_from = field.OffsetFrom != null ? field.OffsetFrom + "().end()" : "reinterpret_cast<const std::uint8_t*>(this)";
             var offset = field.Offset == 0 ? "" : $" + {field.Offset}";
 
             var body = $"*(reinterpret_cast<const {capture_type}*>({offset_from} + {byte_algined_offset / 8}))";
