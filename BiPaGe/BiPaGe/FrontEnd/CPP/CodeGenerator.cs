@@ -132,26 +132,55 @@ namespace BiPaGe.FrontEnd.CPP
 
         private void GenerateField(Model.Field field, uint indent)
         {
-            // TODO: Remove shifting and/or masking if it's not required
-            // TODO: Return by reference for directly castable types, otherwise return by value
-            write_indented(indent, $"const {type_to_cpp_type((dynamic)field.Type)}& {field.Name} const");
-            write_indented(indent, "{");
-            var offset_from = field.OffsetFrom != null ? field.OffsetFrom + "()" : "this";
-            var offset = field.Offset == 0 ? "" : $" + {field.Offset}";
-            var capture_type = GetCaptureType(field);
+            var capture_size = GetCaptureSize(field);
+            var capture_type = String.Format("std::uint{0}_t", capture_size);
             var byte_algined_offset = GetFieldByteOffset(field);
             var mask = GetMask(field);
             var shift = GetShift(field);
 
-            write_indented(indent + 1, $"auto captured = reinterpret_cast<const {capture_type}*>({offset_from} + {byte_algined_offset / 8});");
-            write_indented(indent + 1, $"return ((*captured & 0x{mask.ToString("X")}) >> {shift});");            
-            write_indented(indent, "}");
-            // const& <field_type> name() const { return reinterpret_cast<
+            bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
+            bool needs_shift = shift != 0;
+
+            if (needs_mask || needs_shift)
+            {
+                // Return by value
+                write_indented(indent, $"const {type_to_cpp_type((dynamic)field.Type)} {field.Name} const");
+            }
+            else
+            {
+                // Return by reference
+                write_indented(indent, $"const {type_to_cpp_type((dynamic)field.Type)}& {field.Name} const");
+            }
+
+            write_indented(indent, "{");
+            var offset_from = field.OffsetFrom != null ? field.OffsetFrom + "()" : "reinterpret_cast<const std::uint8_t*>(this)";
+            var offset = field.Offset == 0 ? "" : $" + {field.Offset}";
+
+            var body = $"(reinterpret_cast<const {capture_type}*>({offset_from} + {byte_algined_offset / 8}))";
+            if (needs_mask)
+                body = $"({body} & 0x{mask.ToString("x")})";
+            if (needs_shift)
+                body = $"({body} >> {shift})";
+
+            body = $"return {body};";
+          
+
+            write_indented(indent + 1, body);
+           
+            write_indented(indent, "}");            
         }
 
         private uint GetFieldByteOffset(Model.Field field)
         {
             return field.Offset - (field.Offset % 8);
+        }
+
+        private uint GetCaptureSize(Model.Field field)
+        {
+            var byte_aligned_offset = GetFieldByteOffset(field);
+            var minimum_capture_size = field.Offset - byte_aligned_offset + field.SizeInBits();
+            var capture_type_width = (uint)Math.Max(Math.Pow(2, Math.Ceiling(Math.Log(minimum_capture_size) / Math.Log(2))), 8);
+            return capture_type_width;
         }
 
         private String GetCaptureType(Model.Field field)
