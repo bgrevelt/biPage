@@ -17,5 +17,10 @@
         {
             return this.Size;
         }
+
+        public override void Accept(IFieldTypeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

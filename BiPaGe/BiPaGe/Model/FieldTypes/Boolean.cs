@@ -18,5 +18,10 @@ namespace BiPaGe.Model.FieldTypes
         {
             return 1;
         }
+
+        public override void Accept(IFieldTypeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

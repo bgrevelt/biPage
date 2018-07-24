@@ -19,7 +19,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int8_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int8_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int8_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
         }
 
         [Test()]
@@ -31,7 +31,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int16_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int16_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
         }
 
         [Test()]
@@ -43,7 +43,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int32_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int32_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
         }
 
         [Test()]
@@ -55,7 +55,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int64_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
         }
 
         [Test()]
@@ -67,7 +67,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint8_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint8_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint8_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
         }
 
         [Test()]
@@ -79,7 +79,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint16_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint16_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
         }
 
         [Test()]
@@ -91,7 +91,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint32_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
         }
 
         [Test()]
@@ -103,7 +103,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint64_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint64_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
         }
     }
 
@@ -118,7 +118,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int8_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int8_t*>(reinterpret_cast<const std::uint8_t*>(this) + 2));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int8_t*>(reinterpret_cast<const std::uint8_t*>(this) + 2);", body);
         }
 
         [Test()]
@@ -130,7 +130,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int16_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 1));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 1);", body);
         }
 
         [Test()]
@@ -142,7 +142,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int32_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 3));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 3);", body);
         }
 
         [Test()]
@@ -154,7 +154,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int64_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 16));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 16);", body);
         }
 
         [Test()]
@@ -166,7 +166,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint8_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint8_t*>(reinterpret_cast<const std::uint8_t*>(this) + 32));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint8_t*>(reinterpret_cast<const std::uint8_t*>(this) + 32);", body);
         }
 
         [Test()]
@@ -178,7 +178,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint16_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 5));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 5);", body);
         }
 
         [Test()]
@@ -190,7 +190,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint32_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 9));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 9);", body);
         }
 
         [Test()]
@@ -202,7 +202,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint64_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 10));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 10);", body);
         }
     }
 
@@ -230,7 +230,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual("std::int8_t TEST() const", declaration);
             // The encapsulating type should be a 16 bit integer. We should then mask out the most and least significant nibble and shift four places right. The resulting value needs to 
             // be cast back to the expected type: int8
-            Assert.AreEqual("return static_cast<std::int8_t>(((*(reinterpret_cast<const std::int16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0xff0) >> 4));", body);
+            Assert.AreEqual("return static_cast<std::int8_t>(((*reinterpret_cast<const std::int16_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0xff0) >> 4));", body);
         }
 
         [Test()]
@@ -246,7 +246,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             // The encapsulating type should be a 32 bit integer which has a byte offset of 2 (the first 16 bits of the offset).
             // We should mask out the least significant 6 bits and the most significant 10 bits and shift six places right. The resulting value needs to 
             // be cast back to the expected type: int16            
-            Assert.AreEqual("return static_cast<std::int16_t>(((*(reinterpret_cast<const std::int32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 2)) & 0x3fffc0) >> 6));", body);
+            Assert.AreEqual("return static_cast<std::int16_t>(((*reinterpret_cast<const std::int32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 2) & 0x3fffc0) >> 6));", body);
         }
 
         [Test()]
@@ -263,7 +263,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             // We should mask out the least significant 3 bits and the most significant 5 bits and shift 3 places right. The resulting value needs to 
             // be cast back to the expected type: int32
             ;
-            Assert.AreEqual("return static_cast<std::int32_t>(((*(reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 65)) & 0x7fffffff8) >> 3));", body);
+            Assert.AreEqual("return static_cast<std::int32_t>(((*reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 65) & 0x7fffffff8) >> 3));", body);
         }
 
         [Test()]
@@ -278,7 +278,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual("std::uint8_t TEST() const", declaration);
             // The encapsulating type should be a 16 bit integer. We should then mask out the most and least significant nibble and shift four places right. The resulting value needs to 
             // be cast back to the expected type: int8
-            Assert.AreEqual("return static_cast<std::uint8_t>(((*(reinterpret_cast<const std::uint16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0xff0) >> 4));", body);
+            Assert.AreEqual("return static_cast<std::uint8_t>(((*reinterpret_cast<const std::uint16_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0xff0) >> 4));", body);
         }
 
         [Test()]
@@ -294,7 +294,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             // The encapsulating type should be a 32 bit integer which has a byte offset of 2 (the first 16 bits of the offset).
             // We should mask out the least significant 6 bits and the most significant 10 bits and shift six places right. The resulting value needs to 
             // be cast back to the expected type: int16            
-            Assert.AreEqual("return static_cast<std::uint16_t>(((*(reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 2)) & 0x3fffc0) >> 6));", body);
+            Assert.AreEqual("return static_cast<std::uint16_t>(((*reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 2) & 0x3fffc0) >> 6));", body);
         }
 
         [Test()]
@@ -311,7 +311,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             // We should mask out the least significant 3 bits and the most significant 5 bits and shift 3 places right. The resulting value needs to 
             // be cast back to the expected type: int32
             ;
-            Assert.AreEqual("return static_cast<std::uint32_t>(((*(reinterpret_cast<const std::uint64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 65)) & 0x7fffffff8) >> 3));", body);
+            Assert.AreEqual("return static_cast<std::uint32_t>(((*reinterpret_cast<const std::uint64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 65) & 0x7fffffff8) >> 3));", body);
         }
 
         /*
@@ -336,7 +336,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("std::int8_t TEST() const", declaration);
-            Assert.AreEqual("return (*(reinterpret_cast<const std::int8_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0x7);", body);
+            Assert.AreEqual("return (*reinterpret_cast<const std::int8_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0x7);", body);
         }
 
         [Test()]
@@ -348,7 +348,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("std::int16_t TEST() const", declaration);
-            Assert.AreEqual("return (*(reinterpret_cast<const std::int16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0xfff);", body);
+            Assert.AreEqual("return (*reinterpret_cast<const std::int16_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0xfff);", body);
         }
 
         [Test()]
@@ -360,7 +360,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("std::int32_t TEST() const", declaration);
-            Assert.AreEqual("return (*(reinterpret_cast<const std::int32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0x1ffff);", body);
+            Assert.AreEqual("return (*reinterpret_cast<const std::int32_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0x1ffff);", body);
         }
 
         [Test()]
@@ -372,7 +372,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("std::int64_t TEST() const", declaration);
-            Assert.AreEqual("return (*(reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0x7fffffffff);", body);
+            Assert.AreEqual("return (*reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0x7fffffffff);", body);
         }
 
         [Test()]
@@ -384,7 +384,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("std::uint8_t TEST() const", declaration);
-            Assert.AreEqual("return (*(reinterpret_cast<const std::uint8_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0x1f);", body);
+            Assert.AreEqual("return (*reinterpret_cast<const std::uint8_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0x1f);", body);
         }
 
         [Test()]
@@ -396,7 +396,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("std::uint16_t TEST() const", declaration);
-            Assert.AreEqual("return (*(reinterpret_cast<const std::uint16_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0x7fff);", body);
+            Assert.AreEqual("return (*reinterpret_cast<const std::uint16_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0x7fff);", body);
         }
 
         [Test()]
@@ -408,7 +408,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("std::uint32_t TEST() const", declaration);
-            Assert.AreEqual("return (*(reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0xffffff);", body);
+            Assert.AreEqual("return (*reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0xffffff);", body);
         }
 
         [Test()]
@@ -420,7 +420,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("std::uint64_t TEST() const", declaration);
-            Assert.AreEqual("return (*(reinterpret_cast<const std::uint64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 0)) & 0x1ffffffffffffff);", body);
+            Assert.AreEqual("return (*reinterpret_cast<const std::uint64_t*>(reinterpret_cast<const std::uint8_t*>(this)) & 0x1ffffffffffffff);", body);
         }
     }
 
@@ -435,7 +435,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int8_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int8_t*>(SomeOtherField().end() + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int8_t*>(SomeOtherField().end());", body);
         }
 
         [Test()]
@@ -447,7 +447,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int16_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int16_t*>(SomeOtherField().end() + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int16_t*>(SomeOtherField().end());", body);
         }
 
         [Test()]
@@ -459,7 +459,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int32_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int32_t*>(SomeOtherField().end() + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int32_t*>(SomeOtherField().end());", body);
         }
 
         [Test()]
@@ -471,7 +471,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::int64_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::int64_t*>(SomeOtherField().end() + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::int64_t*>(SomeOtherField().end());", body);
         }
 
         [Test()]
@@ -483,7 +483,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint8_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint8_t*>(SomeOtherField().end() + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint8_t*>(SomeOtherField().end());", body);
         }
 
         [Test()]
@@ -495,7 +495,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint16_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint16_t*>(SomeOtherField().end() + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint16_t*>(SomeOtherField().end());", body);
         }
 
         [Test()]
@@ -507,7 +507,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint32_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint32_t*>(SomeOtherField().end() + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint32_t*>(SomeOtherField().end());", body);
         }
 
         [Test()]
@@ -519,7 +519,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody(field);
 
             Assert.AreEqual("const std::uint64_t& TEST() const", declaration);
-            Assert.AreEqual("return *(reinterpret_cast<const std::uint64_t*>(SomeOtherField().end() + 0));", body);
+            Assert.AreEqual("return *reinterpret_cast<const std::uint64_t*>(SomeOtherField().end());", body);
         }
     }
 
@@ -537,7 +537,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual("std::int8_t TEST() const", declaration);
             // The encapsulating type should be a 16 bit integer. We should then mask out the most and least significant nibble and shift four places right. The resulting value needs to 
             // be cast back to the expected type: int8
-            Assert.AreEqual("return static_cast<std::int8_t>(((*(reinterpret_cast<const std::int16_t*>(SomeOtherField().end() + 0)) & 0xff0) >> 4));", body);
+            Assert.AreEqual("return static_cast<std::int8_t>(((*reinterpret_cast<const std::int16_t*>(SomeOtherField().end()) & 0xff0) >> 4));", body);
         }
 
         [Test()]
@@ -553,7 +553,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             // The encapsulating type should be a 32 bit integer which has a byte offset of 2 (the first 16 bits of the offset).
             // We should mask out the least significant 6 bits and the most significant 10 bits and shift six places right. The resulting value needs to 
             // be cast back to the expected type: int16            
-            Assert.AreEqual("return static_cast<std::int16_t>(((*(reinterpret_cast<const std::int32_t*>(SomeOtherField().end() + 2)) & 0x3fffc0) >> 6));", body);
+            Assert.AreEqual("return static_cast<std::int16_t>(((*reinterpret_cast<const std::int32_t*>(SomeOtherField().end() + 2) & 0x3fffc0) >> 6));", body);
         }
 
         [Test()]
@@ -570,7 +570,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             // We should mask out the least significant 3 bits and the most significant 5 bits and shift 3 places right. The resulting value needs to 
             // be cast back to the expected type: int32
             ;
-            Assert.AreEqual("return static_cast<std::int32_t>(((*(reinterpret_cast<const std::int64_t*>(SomeOtherField().end() + 65)) & 0x7fffffff8) >> 3));", body);
+            Assert.AreEqual("return static_cast<std::int32_t>(((*reinterpret_cast<const std::int64_t*>(SomeOtherField().end() + 65) & 0x7fffffff8) >> 3));", body);
         }
 
         [Test()]
@@ -585,7 +585,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual("std::uint8_t TEST() const", declaration);
             // The encapsulating type should be a 16 bit integer. We should then mask out the most and least significant nibble and shift four places right. The resulting value needs to 
             // be cast back to the expected type: int8
-            Assert.AreEqual("return static_cast<std::uint8_t>(((*(reinterpret_cast<const std::uint16_t*>(SomeOtherField().end() + 0)) & 0xff0) >> 4));", body);
+            Assert.AreEqual("return static_cast<std::uint8_t>(((*reinterpret_cast<const std::uint16_t*>(SomeOtherField().end()) & 0xff0) >> 4));", body);
         }
 
         [Test()]
@@ -601,7 +601,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             // The encapsulating type should be a 32 bit integer which has a byte offset of 2 (the first 16 bits of the offset).
             // We should mask out the least significant 6 bits and the most significant 10 bits and shift six places right. The resulting value needs to 
             // be cast back to the expected type: int16            
-            Assert.AreEqual("return static_cast<std::uint16_t>(((*(reinterpret_cast<const std::uint32_t*>(SomeOtherField().end() + 2)) & 0x3fffc0) >> 6));", body);
+            Assert.AreEqual("return static_cast<std::uint16_t>(((*reinterpret_cast<const std::uint32_t*>(SomeOtherField().end() + 2) & 0x3fffc0) >> 6));", body);
         }
 
         [Test()]
@@ -618,7 +618,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             // We should mask out the least significant 3 bits and the most significant 5 bits and shift 3 places right. The resulting value needs to 
             // be cast back to the expected type: int32
             ;
-            Assert.AreEqual("return static_cast<std::uint32_t>(((*(reinterpret_cast<const std::uint64_t*>(SomeOtherField().end() + 65)) & 0x7fffffff8) >> 3));", body);
+            Assert.AreEqual("return static_cast<std::uint32_t>(((*reinterpret_cast<const std::uint64_t*>(SomeOtherField().end() + 65) & 0x7fffffff8) >> 3));", body);
         }
     }
 }

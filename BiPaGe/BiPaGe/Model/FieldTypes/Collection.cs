@@ -23,5 +23,10 @@ namespace BiPaGe.Model.FieldTypes
             Debug.Assert(value > 0);
             return (uint)value;
         }
+
+        public override void Accept(IFieldTypeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

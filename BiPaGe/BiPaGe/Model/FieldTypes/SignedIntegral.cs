@@ -11,5 +11,10 @@
         {
             return true;
         }
+
+        public override void Accept(IFieldTypeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

@@ -27,5 +27,10 @@ namespace BiPaGe.Model
         {
             return this.Type.SizeInBits();
         }
+
+        public override void Accept(IFieldTypeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

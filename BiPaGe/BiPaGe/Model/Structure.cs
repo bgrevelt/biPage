@@ -32,5 +32,10 @@ namespace BiPaGe.Model
 
             return sum;
         }
+
+        public override void Accept(IFieldTypeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

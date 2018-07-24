@@ -52,6 +52,7 @@
     <Compile Include="Model\FieldTranslator.cs" />
     <Compile Include="AST\FieldTypes\IFieldTypeVisitor.cs" />
     <Compile Include="Model\FieldTypeTranslator.cs" />
+    <Compile Include="Model\IFieldTypeVisitor.cs" />
     <Compile Include="Model\StructureBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\generated_csharp\BiPaGeBaseListener.cs">
