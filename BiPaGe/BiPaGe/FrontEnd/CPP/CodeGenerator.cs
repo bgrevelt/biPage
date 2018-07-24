@@ -13,6 +13,7 @@ namespace BiPaGe.FrontEnd.CPP
         private List<Model.Enumeration> Enumerations;
         private List<Model.Structure> Structures;
         System.IO.StreamWriter Writer;
+        private readonly FieldGetterGenerator getterGenerator = new FieldGetterGenerator();
 
         // TODO: in practice we would not get a write here because we would want to be able to write to multiple files
 
@@ -141,32 +142,9 @@ namespace BiPaGe.FrontEnd.CPP
             bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
             bool needs_shift = shift != 0;
 
-            if (needs_mask || needs_shift)
-            {
-                // Return by value
-                write_indented(indent, $"const {type_to_cpp_type((dynamic)field.Type)} {field.Name} const");
-            }
-            else
-            {
-                // Return by reference
-                write_indented(indent, $"const {type_to_cpp_type((dynamic)field.Type)}& {field.Name} const");
-            }
-
+            write_indented(indent, getterGenerator.GetDeclaration(field));
             write_indented(indent, "{");
-            var offset_from = field.OffsetFrom != null ? field.OffsetFrom + "()" : "reinterpret_cast<const std::uint8_t*>(this)";
-            var offset = field.Offset == 0 ? "" : $" + {field.Offset}";
-
-            var body = $"(reinterpret_cast<const {capture_type}*>({offset_from} + {byte_algined_offset / 8}))";
-            if (needs_mask)
-                body = $"({body} & 0x{mask.ToString("x")})";
-            if (needs_shift)
-                body = $"({body} >> {shift})";
-
-            body = $"return {body};";
-          
-
-            write_indented(indent + 1, body);
-           
+            write_indented(indent + 1, getterGenerator.GetBody(field));           
             write_indented(indent, "}");            
         }
 

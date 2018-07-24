@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\Expressions\IExpressionVisitor.cs" />
+    <Compile Include="FrontEnd\CPP\FieldGetterGenerator.cs" />
     <Compile Include="Model\EnumerationBuilder.cs" />
     <Compile Include="Model\ExpressionTranslator.cs" />
     <Compile Include="Model\FieldTranslator.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Test\AST\Whitespace.cs" />
     <Compile Include="Test\AST\Comments.cs" />
     <Compile Include="Test\AST\ComplexTypes.cs" />
+    <Compile Include="Test\FrontEnd\CPP\FieldGetterGeneration.cs" />
     <Compile Include="Test\Helpers.cs" />
     <Compile Include="Test\AST\Collections.cs" />
     <Compile Include="Test\AST\Enumeration.cs" />
