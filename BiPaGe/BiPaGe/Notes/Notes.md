@@ -1,3 +1,6 @@
 ﻿# Anonimous names
 In the current model we have removen the difference between anonimous structures/enumerations and 'normal' structures/enumerations. I'm not sure if by doing so we didn't introduce a language dependent construct in the model. 
 There may be languages that support anonimous types (I don't know if there are, but I would be surprised if there are not) and besides that, there may be other ways to handle the difference. In python for instance, we may want to return anonimous structures as named tuples.
+# non-standard size types
+I don't think we are doing this quite right. At the moment we're just doing the same thing for signed types that we are doing for the unsigned types: maks out the bits that don't belong to the data and shift the bits right if required. However, for sized types it seems that we would also need to put the sign bit at the right place.
+For example a int3 type is a three bit type that has a sign bit at bit two. To convert this to a 'standard' cpp data type, int8, we would need to put the sign bit at bit 7, have bits 6-2 be zero and have bits 1-0 be a copy of those in the original data.

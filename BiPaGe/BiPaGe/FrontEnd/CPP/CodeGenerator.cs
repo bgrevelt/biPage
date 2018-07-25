@@ -13,7 +13,6 @@ namespace BiPaGe.FrontEnd.CPP
         private List<Model.Enumeration> Enumerations;
         private List<Model.Structure> Structures;
         System.IO.StreamWriter Writer;
-        private readonly FieldGetterGenerator getterGenerator = new FieldGetterGenerator();
 
         // TODO: in practice we would not get a write here because we would want to be able to write to multiple files
 
@@ -133,18 +132,19 @@ namespace BiPaGe.FrontEnd.CPP
 
         private void GenerateField(Model.Field field, uint indent)
         {
-            var capture_size = GetCaptureSize(field);
-            var capture_type = String.Format("std::uint{0}_t", capture_size);
-            var byte_algined_offset = GetFieldByteOffset(field);
-            var mask = GetMask(field);
-            var shift = GetShift(field);
+            FieldGetterGenerator getterGenerator = new FieldGetterGenerator(field);
+            //var capture_size = GetCaptureSize(field);
+            //var capture_type = String.Format("std::uint{0}_t", capture_size);
+            //var byte_algined_offset = GetFieldByteOffset(field);
+            //var mask = GetMask();
+            //var shift = GetShift();
 
-            bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
-            bool needs_shift = shift != 0;
+            //bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
+            //bool needs_shift = shift != 0;
 
-            write_indented(indent, getterGenerator.GetDeclaration(field));
+            write_indented(indent, getterGenerator.GetDeclaration());
             write_indented(indent, "{");
-            write_indented(indent + 1, getterGenerator.GetBody(field));           
+            write_indented(indent + 1, String.Join(Environment.NewLine, getterGenerator.GetBody()));           
             write_indented(indent, "}");            
         }
 
@@ -161,26 +161,26 @@ namespace BiPaGe.FrontEnd.CPP
             return capture_type_width;
         }
 
-        private String GetCaptureType(Model.Field field)
-        {
-            var byte_aligned_offset = GetFieldByteOffset(field);
-            var minimum_capture_size = field.Offset - byte_aligned_offset + field.SizeInBits();
-            var capture_type_width = (uint)Math.Max(Math.Pow(2, Math.Ceiling(Math.Log(minimum_capture_size) / Math.Log(2))), 8);
-            return String.Format("std::uint{0}_t", capture_type_width);
-        }
+        //private String GetCaptureType(Model.Field field)
+        //{
+        //    var byte_aligned_offset = GetFieldByteOffset(field);
+        //    var minimum_capture_size = field.Offset - byte_aligned_offset + field.SizeInBits();
+        //    var capture_type_width = (uint)Math.Max(Math.Pow(2, Math.Ceiling(Math.Log(minimum_capture_size) / Math.Log(2))), 8);
+        //    return String.Format("std::uint{0}_t", capture_type_width);
+        //}
 
-        private uint GetMask(Model.Field field)
-        {
-            var byte_aligned_offset = GetFieldByteOffset(field);
-            var mask = (uint)Math.Pow(2, field.SizeInBits()) - 1;
-            return mask << (int)(field.Offset - byte_aligned_offset);
-        }
+        //private uint GetMask(Model.Field field)
+        //{
+        //    var byte_aligned_offset = GetFieldByteOffset(field);
+        //    var mask = (uint)Math.Pow(2, field.SizeInBits()) - 1;
+        //    return mask << (int)(field.Offset - byte_aligned_offset);
+        //}
 
-        private uint GetShift(Model.Field field)
-        {
-            var byte_aligned_offset = GetFieldByteOffset(field);
-            return field.Offset - byte_aligned_offset;
-        }
+        //private uint GetShift(Model.Field field)
+        //{
+        //    var byte_aligned_offset = GetFieldByteOffset(field);
+        //    return field.Offset - byte_aligned_offset;
+        //}
 
         private String type_to_cpp_type(Model.FieldTypes.SignedIntegral s)
         {

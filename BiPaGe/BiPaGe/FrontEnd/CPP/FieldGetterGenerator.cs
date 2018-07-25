@@ -11,21 +11,26 @@ namespace BiPaGe.FrontEnd.CPP
 { 
     class FieldGetterGenerator : Model.IFieldTypeVisitor
     {
-        private String declaration = null;
-        private String body = null;
+        private List<String> declaration = new List<string>();
+        private List<String> body = new List<string>();
         private Model.Field field;
-        public String GetDeclaration(Model.Field field)
+
+        public FieldGetterGenerator(Model.Field field)
         {
             this.field = field;
             field.Type.Accept(this);
-            return declaration;
+            Debug.Assert(this.body != null);
+            Debug.Assert(this.declaration != null);
         }
 
-        public String GetBody(Model.Field field)
+        public String GetDeclaration()
         {
-            this.field = field;
-            field.Type.Accept(this);
-            return body;
+            return String.Join("\n", declaration.ToArray());
+        }
+
+        public List<String> GetBody()
+        {
+            return this.body;
         }
 
         public void CreateIntegralDeclaration(String typeTemplate)
@@ -42,12 +47,12 @@ namespace BiPaGe.FrontEnd.CPP
             if (needs_mask || needs_shift)
             {
                 // Return by value
-                declaration =  $"{return_type} {field.Name}() const";
+                declaration.Add($"{return_type} {field.Name}() const");
             }
             else
             {
                 // Return by reference
-                declaration = $"const {return_type}& {field.Name}() const";
+                declaration.Add($"const {return_type}& {field.Name}() const");
             }
         }
 
@@ -61,48 +66,68 @@ namespace BiPaGe.FrontEnd.CPP
             CreateIntegralDeclaration("std::uint{0}_t");
         }
 
+        /*
+        * return static_cast<std::int32_t>(((*reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 65) & 0x7fffffff8) >> 3));
+        * 
+        * auto data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;
+        * auto captured_data = *reinterpret_cast<const std::int64_t*>(data_offset);
+        * auto masked_data = (captured_data & 0x7fffffff8) >> 3;
+        * return static_cast<std::int32_t>(masked_data);
+        */
+
         public void CreateIntegralBody(String typeTemplate)
         {
-            var return_type = String.Format(typeTemplate, toStandardSize(field.SizeInBits()));
+            
             var byte_algined_offset = GetFieldByteOffset(field.Offset);
-            bool isByteAlgined = field.Offset % 8 == 0;
-            bool isStandardSize = toStandardSize(field.SizeInBits()) == field.SizeInBits();
 
-            var body = field.OffsetFrom != null ? field.OffsetFrom + "().end()" : "reinterpret_cast<const std::uint8_t*>(this)";
+            // Determine offset to the data we need
+            var offset = field.OffsetFrom != null ? field.OffsetFrom + "().end()" : "reinterpret_cast<const std::uint8_t*>(this)";
             if (byte_algined_offset > 0)
-                body += $" + {byte_algined_offset / 8}";
+                offset += $" + {byte_algined_offset / 8}";
+            
+            body.Add($"const std::uint8_t* data_offset = {offset};");
+            String to_return = "*data_offset";
 
-            if (isByteAlgined && isStandardSize)
+
+            // Add a line to create a pointer to the encapsulating data type (if that's not an uint8)
+            var capture_size = GetCaptureSize(field.Offset, byte_algined_offset, field.SizeInBits());
+            var capture_type = String.Format(typeTemplate, capture_size);
+            bool needs_capture = capture_type != "std::uint8_t";
+            if(needs_capture)
             {
-                // This is the easiest case. We just have to create a getter that returns a pointer at the offset of the right type
-                body = $"*reinterpret_cast<const {return_type}*>({body})";
+                
+                body.Add($"const {capture_type}* captured_data = reinterpret_cast<const {capture_type}*>(data_offset);");
+                to_return = "*captured_data";
             }
-            else
+
+            // If the data we need is not byte algined or not one of C++'s standard data types, we will need to mask out the bits that we don't need
+            // If we do that we will also have to return by value instead of by reference. 
+            bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
+            var shift = GetShift(field.Offset, byte_algined_offset);
+            if(needs_mask)
             {
-                var capture_size = GetCaptureSize(field.Offset, byte_algined_offset, field.SizeInBits());
-                var capture_type = String.Format(typeTemplate, capture_size);
                 var mask = GetMask(field.Offset, field.SizeInBits(), byte_algined_offset);
-                var shift = GetShift(field.Offset, byte_algined_offset);
-                bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
-                bool needs_shift = shift != 0;
-                bool needs_type_cast = capture_type != return_type;
-
-                var offset_from = field.OffsetFrom != null ? field.OffsetFrom + "().end()" : "reinterpret_cast<const std::uint8_t*>(this)";
-                var offset = field.Offset == 0 ? "" : $" + {field.Offset}";
-
-                body = $"*reinterpret_cast<const {capture_type}*>({body})";
-                // var body = $"*(reinterpret_cast<const {capture_type}*>({offset_from} + {byte_algined_offset / 8}))";
-                if (needs_mask)
-                    body = $"({body} & 0x{mask.ToString("x")})";
-                if (needs_shift)
-                    body = $"({body} >> {shift})";
-                if (needs_type_cast)
-                    body = $"static_cast<{return_type}>({body})";
+                var temp = $"{capture_type} masked_data = (*captured_data & 0x{mask.ToString("x")})";
+                if (shift > 0)
+                    temp = $"{temp} >> {shift};";
+                else
+                    temp += ";";
+                body.Add(temp);
+                to_return = "masked_data";
             }
 
+            // In some cases our capture data is larger than the data type we want to return (for example when a standard type is not byte algined). We removed all the data we don't need in the masking and shifting step
+            // so now cast back to the type we want to return
+            var return_type = String.Format(typeTemplate, toStandardSize(field.SizeInBits()));
+            bool needs_type_cast = capture_type != return_type;
+            if(needs_type_cast)
+            {
+                body.Add($"{return_type} typed_data = static_cast<{return_type}>({to_return});");
+                to_return = "typed_data";
+            }
 
-
-            this.body = $"return {body};";
+            // And finally add a line that returns the data
+            body.Add($"return {to_return};");
         }
 
         public void CreateSignedIntegerBody()
