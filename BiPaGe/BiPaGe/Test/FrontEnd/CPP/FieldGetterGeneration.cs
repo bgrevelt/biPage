@@ -653,6 +653,8 @@ namespace BiPaGe.Test.FrontEnd.CPP
         }
     }
 
+    // TODO: non-standard width with offsets
+
     public class StandardWidthIntegersStaticAndDynamicOffset
     {
         [Test()]
@@ -788,102 +790,155 @@ namespace BiPaGe.Test.FrontEnd.CPP
     }
 
     [TestFixture()]
-    public class EnumerationStandardWidthIntegersNoOffset
+    public class Enumeration
     {
-        //[Test()]
-        //public void Int8()
-        //{
-        //    
-        //    var field = new Model.Field("TEST", new Model.Enumeration("Enum", new Model.FieldTypes.SignedIntegral(8)), 0, null);
-        //    var declaration = gen.GetDeclaration();
-        //    var body = gen.GetBody();
+        [Test()]
+        public void SignedStandardNoOffset()
+        {
+            var field = new Model.Field("TEST", new Model.Enumeration("Enum", new Model.FieldTypes.SignedIntegral(8)), 0, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
 
-        //    Assert.AreEqual("const Enum& TEST() const", declaration);
-        //    Assert.AreEqual("return *reinterpret_cast<const std::int8_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
-        //}
+            Assert.AreEqual("const Enum& TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
+                "const Enum* typed_data = reinterpret_cast<const Enum*>(captured_data);",
+                "return *typed_data;"}, body);
+        }
 
-        //[Test()]
-        //public void Int16()
-        //{
-        //    
-        //    var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(16), 0, null);
-        //    var declaration = gen.GetDeclaration();
-        //    var body = gen.GetBody();
+        [Test()]
+        public void SignedStandardMultiByteOffset()
+        {
+            var field = new Model.Field("TEST", new Model.Enumeration("Enum", new Model.FieldTypes.SignedIntegral(8)), 16, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
 
-        //    Assert.AreEqual("const std::int16_t& TEST() const", declaration);
-        //    Assert.AreEqual("return *reinterpret_cast<const std::int16_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
-        //}
+            Assert.AreEqual("const Enum& TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 2;",
+                "const Enum* typed_data = reinterpret_cast<const Enum*>(data_offset);",
+                "return *typed_data;"}, body);
+        }
 
-        //[Test()]
-        //public void Int32()
-        //{
-        //    
-        //    var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(32), 0, null);
-        //    var declaration = gen.GetDeclaration();
-        //    var body = gen.GetBody();
+        [Test()]
+        public void SignedStandardNonByteAlignedOffset()
+        {
+            var field = new Model.Field("TEST", new Model.Enumeration("Enum", new Model.FieldTypes.SignedIntegral(32)), 523, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
 
-        //    Assert.AreEqual("const std::int32_t& TEST() const", declaration);
-        //    Assert.AreEqual("return *reinterpret_cast<const std::int32_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
-        //}
+            Assert.AreEqual("const Enum& TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;",
+                "const std::int64_t* captured_data = reinterpret_cast<const std::int64_t*>(data_offset);",
+                "std::int64_t masked_data = (*captured_data & 0x7fffffff8) >> 3;",
+                "Enum typed_data = static_cast<Enum>(masked_data);",
+                "return typed_data;"}, body);
+        }
 
-        //[Test()]
-        //public void Int64()
-        //{
-        //    
-        //    var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(64), 0, null);
-        //    var declaration = gen.GetDeclaration();
-        //    var body = gen.GetBody();
+        [Test()]
+        public void NonStandardWidth()
+        {
+            var field = new Model.Field("TEST", new Model.Enumeration("Enum", new Model.FieldTypes.SignedIntegral(17)), 0, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
 
-        //    Assert.AreEqual("const std::int64_t& TEST() const", declaration);
-        //    Assert.AreEqual("return *reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
-        //}
+            Assert.AreEqual("std::int32_t TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
+                "const std::int32_t* captured_data = reinterpret_cast<const std::int32_t*>(data_offset);",
+                "std::int32_t masked_data = (*captured_data & 0x1ffff);",
+                "Enum typed_data = static_cast<Enum>(masked_data);",
+                "return typed_data;"}, body);
+        }
 
-        //[Test()]
-        //public void Uint8()
-        //{
-        //    
-        //    var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(8), 0, null);
-        //    var declaration = gen.GetDeclaration();
-        //    var body = gen.GetBody();
+        //
+        [Test()]
+        public void NonStandardWidthNonByteAlignedOffset()
+        {
+            var field = new Model.Field("TEST", new Model.Enumeration("Enum", new Model.FieldTypes.SignedIntegral(17)), 523, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
 
-        //    Assert.AreEqual("const std::uint8_t& TEST() const", declaration);
-        //    Assert.AreEqual("return *reinterpret_cast<const std::uint8_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
-        //}
+            //[.........][....****][********][*****...]
+            Assert.AreEqual("std::int32_t TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;",
+                "const std::int32_t* captured_data = reinterpret_cast<const std::int32_t*>(data_offset);",
+                "std::int32_t masked_data = (*captured_data & 0xffff8) >> 3;",
+                "Enum typed_data = static_cast<Enum>(masked_data);",
+                "return typed_data;"}, body);
+        }
+    }
 
-        //[Test()]
-        //public void Uint16()
-        //{
-        //    
-        //    var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(16), 0, null);
-        //    var declaration = gen.GetDeclaration();
-        //    var body = gen.GetBody();
+    [TestFixture()]
+    public class FloatingPoint
+    {
+        [Test()]
+        public void NoOffset()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.FloatingPoint(32), 0, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
 
-        //    Assert.AreEqual("const std::uint16_t& TEST() const", declaration);
-        //    Assert.AreEqual("return *reinterpret_cast<const std::uint16_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
-        //}
+            Assert.AreEqual("const float& TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
+                "const float* captured_data = reinterpret_cast<const float*>(data_offset);",
+                "return *captured_data;"}, body);
+        }
 
-        //[Test()]
-        //public void Uint32()
-        //{
-        //    
-        //    var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(32), 0, null);
-        //    var declaration = gen.GetDeclaration();
-        //    var body = gen.GetBody();
+        [Test()]
+        public void StaticMultiByteOffset()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.FloatingPoint(64), 40, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
 
-        //    Assert.AreEqual("const std::uint32_t& TEST() const", declaration);
-        //    Assert.AreEqual("return *reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
-        //}
+            Assert.AreEqual("const double& TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 5;",
+                "const doublde* captured_data = reinterpret_cast<const double*>(data_offset);",
+                "return *captured_data;"}, body);
+        }
 
-        //[Test()]
-        //public void Uint64()
-        //{
-        //    
-        //    var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(64), 0, null);
-        //    var declaration = gen.GetDeclaration();
-        //    var body = gen.GetBody();
+        [Test()]
+        public void StaticNonMultiByteOffset()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.FloatingPoint(32), 43, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
 
-        //    Assert.AreEqual("const std::uint64_t& TEST() const", declaration);
-        //    Assert.AreEqual("return *reinterpret_cast<const std::uint64_t*>(reinterpret_cast<const std::uint8_t*>(this));", body);
-        //}
+            Assert.AreEqual("const float TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 5;",
+                "const std::uint64* captured_data = reinterpret_cast<const std::uint64_t*>(data_offset);",
+                "std::uint64 masked_data = (*captured_data & 0x7fffffff8) >> 3;",
+                "float typed_data = static_cast<float>(masked_data);",
+                "return typed_data;"}, body);
+        }
+
+        [Test()]
+        public void MixedOffset()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.FloatingPoint(64), 24, "SomeOtherField");
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            Assert.AreEqual("const double& TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = SomeOtherField().end() + 3;",
+                "const double* captured_data = reinterpret_cast<const double*>(data_offset);",
+                "return *captured_data;"}, body);
+        }
     }
 }
