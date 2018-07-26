@@ -33,6 +33,75 @@ namespace BiPaGe.FrontEnd.CPP
             return this.body;
         }
 
+        public void CreateFloatingPointDeclaration()
+        {
+            Debug.Assert(this.field.SizeInBits() == 32 || this.field.SizeInBits() == 64, "Only 32 bit and 64 bit floating point types are supported");
+            String return_type = this.field.SizeInBits() == 32 ? "float" : "double";
+
+            var byte_algined_offset = GetFieldByteOffset(field.Offset);
+            var capture_size = GetCaptureSize(field.Offset, byte_algined_offset, field.SizeInBits());
+
+            var shift = GetShift(field.Offset, byte_algined_offset);
+
+            bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
+            bool needs_shift = shift != 0;
+
+            if (needs_mask || needs_shift)
+            {
+                // Return by value
+                declaration.Add($"{return_type} {field.Name}() const");
+            }
+            else
+            {
+                // Return by reference
+                declaration.Add($"const {return_type}& {field.Name}() const");
+            }
+        }
+
+        public void CreateFloatingPointBody()
+        {
+            Debug.Assert(this.field.SizeInBits() == 32 || this.field.SizeInBits() == 64, "Only 32 bit and 64 bit floating point types are supported");
+            String return_type = this.field.SizeInBits() == 32 ? "float" : "double";
+            var byte_algined_offset = GetFieldByteOffset(field.Offset);
+
+            // Determine offset to the data we need
+            var offset = field.OffsetFrom != null ? field.OffsetFrom + "().end()" : "reinterpret_cast<const std::uint8_t*>(this)";
+            if (byte_algined_offset > 0)
+                offset += $" + {byte_algined_offset / 8}";
+
+            body.Add($"const std::uint8_t* data_offset = {offset};");
+            String to_return = "*data_offset";
+
+            if (byte_algined_offset == this.field.Offset)
+            {
+                // We can simply cast directly to the return type
+                body.Add($"const {return_type}* captured_data = reinterpret_cast<const {return_type}*>(data_offset);");
+                to_return = "*captured_data";
+            }
+            else
+            {
+                var shift = GetShift(field.Offset, byte_algined_offset);
+                var capture_size = GetCaptureSize(field.Offset, byte_algined_offset, field.SizeInBits());
+                var capture_type = String.Format("std::uint{0}_t", capture_size);
+                body.Add($"const {capture_type}* captured_data = reinterpret_cast<const {capture_type}*>(data_offset);");
+
+                var mask = GetMask(field.Offset, field.SizeInBits(), byte_algined_offset);
+                var temp = $"{capture_type} masked_data = (*captured_data & 0x{mask.ToString("x")})";
+                if (shift > 0)
+                    temp = $"{temp} >> {shift};";
+                else
+                    temp += ";";
+
+                body.Add(temp);
+                body.Add($"{return_type} typed_data = static_cast<{return_type}>(masked_data);");
+
+                to_return = "typed_data";
+            }
+
+            //// And finally add a line that returns the data
+            body.Add($"return {to_return};");
+        }
+
         public void CreateIntegralDeclaration(String typeTemplate)
         {
             var return_type = String.Format(typeTemplate, toStandardSize(field.SizeInBits()));
@@ -248,7 +317,8 @@ namespace BiPaGe.FrontEnd.CPP
 
         public void Visit(FloatingPoint f)
         {
-            throw new NotImplementedException();
+            CreateFloatingPointDeclaration();
+            CreateFloatingPointBody();
         }
 
         public void Visit(SignedIntegral s)

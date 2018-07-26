@@ -905,7 +905,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual("const double& TEST() const", declaration);
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 5;",
-                "const doublde* captured_data = reinterpret_cast<const double*>(data_offset);",
+                "const double* captured_data = reinterpret_cast<const double*>(data_offset);",
                 "return *captured_data;"}, body);
         }
 
@@ -917,11 +917,11 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var declaration = gen.GetDeclaration();
             var body = gen.GetBody();
 
-            Assert.AreEqual("const float TEST() const", declaration);
+            Assert.AreEqual("float TEST() const", declaration);
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 5;",
-                "const std::uint64* captured_data = reinterpret_cast<const std::uint64_t*>(data_offset);",
-                "std::uint64 masked_data = (*captured_data & 0x7fffffff8) >> 3;",
+                "const std::uint64_t* captured_data = reinterpret_cast<const std::uint64_t*>(data_offset);",
+                "std::uint64_t masked_data = (*captured_data & 0x7fffffff8) >> 3;",
                 "float typed_data = static_cast<float>(masked_data);",
                 "return typed_data;"}, body);
         }
