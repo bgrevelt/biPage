@@ -14,6 +14,7 @@ namespace BiPaGe.FrontEnd.CPP
         private List<String> declaration = new List<string>();
         private List<String> body = new List<string>();
         private Model.Field field;
+        private readonly FieldTypeConverter fieleTypeConverter = new FieldTypeConverter();
 
         public FieldGetterGenerator(Model.Field field)
         {
@@ -31,6 +32,103 @@ namespace BiPaGe.FrontEnd.CPP
         public List<String> GetBody()
         {
             return this.body;
+        }
+
+        public void CreateEnumerationDeclaration()
+        {
+            String return_type = fieleTypeConverter.Convert(this.field.Type);
+            var byte_algined_offset = GetFieldByteOffset(field.Offset);
+            var capture_size = GetCaptureSize(field.Offset, byte_algined_offset, field.SizeInBits());
+
+            var shift = GetShift(field.Offset, byte_algined_offset);
+
+            bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
+            bool needs_shift = shift != 0;
+
+            if (needs_mask || needs_shift)
+                declaration.Add($"{return_type} {field.Name}() const");
+            else
+                declaration.Add($"const {return_type}& {field.Name}() const");
+        }
+
+        public void CreateEnumerationBody()
+        {
+            String return_type = fieleTypeConverter.Convert(this.field.Type);
+
+            var byte_algined_offset = GetFieldByteOffset(field.Offset);
+
+            var offset = field.OffsetFrom != null ? field.OffsetFrom + "().end()" : "reinterpret_cast<const std::uint8_t*>(this)";
+            if (byte_algined_offset > 0)
+                offset += $" + {byte_algined_offset / 8}";
+
+            body.Add($"const std::uint8_t* data_offset = {offset};");
+            String to_return = "*data_offset";
+
+            var capture_size = GetCaptureSize(field.Offset, byte_algined_offset, field.SizeInBits());
+            if (byte_algined_offset == this.field.Offset && capture_size == this.field.SizeInBits())
+            {
+                // We can simply cast directly to the return type
+                body.Add($"const {return_type}* captured_data = reinterpret_cast<const {return_type}*>(data_offset);");
+                to_return = "*captured_data";
+            }
+            else
+            {                
+                var capture_type = fieleTypeConverter.Convert((this.field.Type as Model.Enumeration).Type, capture_size);
+                bool needs_capture = capture_type != "std::uint8_t";
+                if (needs_capture)
+                {
+
+                    body.Add($"const {capture_type}* captured_data = reinterpret_cast<const {capture_type}*>(data_offset);");
+                    to_return = "*captured_data";
+                }
+
+                // If the data we need is not byte algined or not one of C++'s standard data types, we will need to mask out the bits that we don't need
+                // If we do that we will also have to return by value instead of by reference. 
+                bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
+                var shift = GetShift(field.Offset, byte_algined_offset);
+                if (needs_mask)
+                {
+                    var mask = GetMask(field.Offset, field.SizeInBits(), byte_algined_offset);
+                    var temp = $"{capture_type} masked_data = (*captured_data & 0x{mask.ToString("x")})";
+                    if (shift > 0)
+                        temp = $"{temp} >> {shift};";
+                    else
+                        temp += ";";
+                    body.Add(temp);
+                    to_return = "masked_data";
+                }
+
+                body.Add($"{return_type} typed_data = static_cast<{return_type}>({to_return});");
+                to_return = "typed_data";
+
+                // And finally add a line that returns the data
+               
+            }
+            body.Add($"return {to_return};");
+            //if (byte_algined_offset == this.field.Offset)
+            //{
+            //    // We can simply cast directly to the return type
+            //    body.Add($"const {return_type}* captured_data = reinterpret_cast<const {return_type}*>(data_offset);");
+            //    to_return = "*captured_data";
+            //}
+            //else
+            //{
+            //    var capture_size = GetCaptureSize(field.Offset, byte_algined_offset, field.SizeInBits());
+            //    var capture_type = String.Format("std::uint{0}_t", capture_size);
+            //    var mask = GetMask(field.Offset, field.SizeInBits(), byte_algined_offset);
+            //    var temp = $"{capture_type} masked_data = (*captured_data & 0x{mask.ToString("x")})";
+            //    var shift = GetShift(field.Offset, byte_algined_offset);
+            //    if (shift > 0)
+            //        temp = $"{temp} >> {shift};";
+            //    else
+            //        temp += ";";
+            //    body.Add(temp);
+            //    to_return = "masked_data";
+            //    body.Add($"const {capture_type}* typed_data = static_cast<{return_type }> (masked_data);");
+            //    to_return = "*typed_data";
+            //}
+
+            //body.Add($"return {to_return};");
         }
 
         public void CreateFloatingPointDeclaration()
@@ -340,7 +438,8 @@ namespace BiPaGe.FrontEnd.CPP
 
         public void Visit(Enumeration e)
         {
-            throw new NotImplementedException();
+            CreateEnumerationDeclaration();
+            CreateEnumerationBody();
         }
     }
 }

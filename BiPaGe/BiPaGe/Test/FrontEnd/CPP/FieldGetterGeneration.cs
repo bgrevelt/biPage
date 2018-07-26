@@ -803,8 +803,8 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual("const Enum& TEST() const", declaration);
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
-                "const Enum* typed_data = reinterpret_cast<const Enum*>(captured_data);",
-                "return *typed_data;"}, body);
+                "const Enum* captured_data = reinterpret_cast<const Enum*>(data_offset);",
+                "return *captured_data;"}, body);
         }
 
         [Test()]
@@ -818,8 +818,8 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual("const Enum& TEST() const", declaration);
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 2;",
-                "const Enum* typed_data = reinterpret_cast<const Enum*>(data_offset);",
-                "return *typed_data;"}, body);
+                "const Enum* captured_data = reinterpret_cast<const Enum*>(data_offset);",
+                "return *captured_data;"}, body);
         }
 
         [Test()]
@@ -830,7 +830,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var declaration = gen.GetDeclaration();
             var body = gen.GetBody();
 
-            Assert.AreEqual("const Enum& TEST() const", declaration);
+            Assert.AreEqual("Enum TEST() const", declaration);
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;",
                 "const std::int64_t* captured_data = reinterpret_cast<const std::int64_t*>(data_offset);",
@@ -847,7 +847,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var declaration = gen.GetDeclaration();
             var body = gen.GetBody();
 
-            Assert.AreEqual("std::int32_t TEST() const", declaration);
+            Assert.AreEqual("Enum TEST() const", declaration);
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
                 "const std::int32_t* captured_data = reinterpret_cast<const std::int32_t*>(data_offset);",
@@ -866,7 +866,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody();
 
             //[.........][....****][********][*****...]
-            Assert.AreEqual("std::int32_t TEST() const", declaration);
+            Assert.AreEqual("Enum TEST() const", declaration);
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;",
                 "const std::int32_t* captured_data = reinterpret_cast<const std::int32_t*>(data_offset);",
