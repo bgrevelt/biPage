@@ -19,6 +19,8 @@ namespace BiPaGe.FrontEnd.CPP
         public uint Shift { get; }
         public uint CaptureSize { get; }
         public String CppType { get; }
+        public String CaptureType { get; }
+        public bool NeedsMasking { get; }
 
         private Model.Field Original;
         public Field(Model.Field original)
@@ -29,6 +31,8 @@ namespace BiPaGe.FrontEnd.CPP
             this.Shift = ComputeShift();
             this.CaptureSize = ComputeCaptureSize();
             this.CppType = buildCppType();
+            this.NeedsMasking = ComputeMaskingRequired();
+            this.CaptureType = BuildCaptureType();            
         }       
 
         private ulong ComputeMask()
@@ -54,6 +58,16 @@ namespace BiPaGe.FrontEnd.CPP
             var cpp_size = (uint)Math.Max(8, Math.Pow(2, Math.Ceiling(Math.Log(this.Size) / Math.Log(2))));
             Debug.Assert(cpp_size % 8 == 0);
             return new FieldTypeConverter().Convert(this.Type, cpp_size);
+        }
+
+        private String BuildCaptureType()
+        {            
+            return new CaptureTypeGenerator().Generate(this.Type, this.CaptureSize, this.NeedsMasking);
+        }
+
+        private bool ComputeMaskingRequired()
+        {
+            return (this.Offset != this.ByteAlginedOfffset) || (this.CaptureSize != this.Size);
         }
     }
 }

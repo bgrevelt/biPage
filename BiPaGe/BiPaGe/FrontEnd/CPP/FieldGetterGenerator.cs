@@ -57,51 +57,60 @@ namespace BiPaGe.FrontEnd.CPP
         public void CreateEnumerationBody()
         {
             String return_type = fieleTypeConverter.Convert(this.field.Type);
-            String to_return = "*" + AddOffsetLine("data_offset", field.ByteAlginedOfffset, field.OffsetField);            
+            String to_return = "*" + AddOffsetLine("data_offset", field.ByteAlginedOfffset, field.OffsetField);
+
+            bool needs_capture = field.CaptureType != "std::uint8_t";
+            if(needs_capture)
+                to_return = "*" + AddCaptureLine("captured_data", field.CaptureType);
 
             var capture_size = field.CaptureSize;
-            if (field.ByteAlginedOfffset == this.field.Offset && capture_size == this.field.Size)
-            {
-                // We can simply cast directly to the return type
-                to_return = "*" + AddCaptureLine("captured_data", return_type);
-            }
-            else
-            {                
-                var capture_type = fieleTypeConverter.Convert((this.field.Type as Model.Enumeration).Type, capture_size);
-                bool needs_capture = capture_type != "std::uint8_t";
-                if (needs_capture)
-                    to_return = "*" + AddCaptureLine("captured_data", capture_type);
-             
-                // If the data we need is not byte algined or not one of C++'s standard data types, we will need to mask out the bits that we don't need
-                // If we do that we will also have to return by value instead of by reference. 
-                bool needs_mask = (field.ByteAlginedOfffset != field.Offset) || (capture_size != field.Size);
-                if (needs_mask)
-                    to_return = AddMaskLine("masked_data", capture_type, to_return, field.Mask, field.Shift);                    
 
-                to_return = AddStaticCast(to_return, "typed_data", return_type);               
+            if (field.NeedsMasking)
+            {
+                to_return = AddMaskLine("masked_data", field.CaptureType, to_return, field.Mask, field.Shift);
+                to_return = AddStaticCast(to_return, "typed_data", return_type);
             }
+
+            //if (field.ByteAlginedOfffset == this.field.Offset && capture_size == this.field.Size)
+            //{
+            //    // We can simply cast directly to the return type
+            //    //to_return = "*" + AddCaptureLine("captured_data", return_type);
+            //}
+            //else
+            //{   
+            //    //bool needs_capture = field.CaptureType != "std::uint8_t";
+            //    //if (needs_capture)
+            //    //    to_return = "*" + AddCaptureLine("captured_data", field.CaptureType);
+             
+            //    // If the data we need is not byte algined or not one of C++'s standard data types, we will need to mask out the bits that we don't need
+            //    // If we do that we will also have to return by value instead of by reference. 
+            //    bool needs_mask = (field.ByteAlginedOfffset != field.Offset) || (capture_size != field.Size);
+            //    if (needs_mask)
+            //        to_return = AddMaskLine("masked_data", field.CaptureType, to_return, field.Mask, field.Shift);                    
+
+            //    to_return = AddStaticCast(to_return, "typed_data", return_type);               
+            //}
             body.Add($"return {to_return};");            
         }       
 
         public void CreateFloatingPointBody()
         {
             String return_type = field.CppType;
+            String to_return = "*"+ AddOffsetLine("data_offset", field.ByteAlginedOfffset, field.OffsetField);
 
-            // Determine offset to the data we need
-            String to_return = "*"+ AddOffsetLine("data_offset", field.ByteAlginedOfffset, field.OffsetField);           
+            bool needs_capture = field.CaptureType != "std::uint8_t";
+            if (needs_capture)
+                to_return = "*" + AddCaptureLine("captured_data", field.CaptureType);
 
             if (field.ByteAlginedOfffset == this.field.Offset)
             {
-                to_return = "*" + AddCaptureLine("captured_data", return_type);                
+            //    to_return = "*" + AddCaptureLine("captured_data", return_type);                
             }
             else
             {
-                var capture_size = field.CaptureSize;
-                var capture_type = String.Format("std::uint{0}_t", capture_size);
+            //    AddCaptureLine("captured_data", field.CaptureType);
 
-                AddCaptureLine("captured_data", capture_type);
-
-                to_return = AddMaskLine("masked_data", capture_type, "*captured_data", field.Mask, field.Shift);
+                to_return = AddMaskLine("masked_data", field.CaptureType, "*captured_data", field.Mask, field.Shift);
                 to_return = AddStaticCast(to_return, "typed_data", return_type);
             }
             body.Add($"return {to_return};");
@@ -142,26 +151,25 @@ namespace BiPaGe.FrontEnd.CPP
 
         public void CreateIntegralBody(String typeTemplate)
         {
+            var return_type = field.CppType;
             String to_return = "*" + AddOffsetLine("data_offset", field.ByteAlginedOfffset, field.OffsetField);            
 
             // Add a line to create a pointer to the encapsulating data type (if that's not an uint8)
             var capture_size = field.CaptureSize;
-            var capture_type = String.Format(typeTemplate, capture_size);
 
-            bool needs_capture = capture_type != "std::uint8_t";
+            bool needs_capture = field.CaptureType != "std::uint8_t";
             if(needs_capture)   
-                to_return = "*" + AddCaptureLine("captured_data", capture_type);       
+                to_return = "*" + AddCaptureLine("captured_data", field.CaptureType);       
 
             // If the data we need is not byte algined or not one of C++'s standard data types, we will need to mask out the bits that we don't need
             // If we do that we will also have to return by value instead of by reference. 
-            bool needs_mask = (field.ByteAlginedOfffset != field.Offset) || (capture_size != field.Size);
-            if(needs_mask)            
-                to_return = AddMaskLine("masked_data", capture_type, to_return, field.Mask, field.Shift);
+            if(field.NeedsMasking)            
+                to_return = AddMaskLine("masked_data", field.CaptureType, to_return, field.Mask, field.Shift);
 
             // In some cases our capture data is larger than the data type we want to return (for example when a standard type is not byte algined). We removed all the data we don't need in the masking and shifting step
             // so now cast back to the type we want to return
-            var return_type = field.CppType;
-            bool needs_type_cast = capture_type != return_type;
+            
+            bool needs_type_cast = field.CaptureType != return_type;
             if(needs_type_cast)
                 to_return = AddStaticCast(to_return, "typed_data", return_type);
 
