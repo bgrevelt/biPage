@@ -64,69 +64,24 @@ namespace BiPaGe.FrontEnd.CPP
             {
                 // We can simply cast directly to the return type
                 to_return = "*" + AddCaptureLine("captured_data", return_type);
-                //body.Add($"const {return_type}* captured_data = reinterpret_cast<const {return_type}*>(data_offset);");
-                //to_return = "*captured_data";
             }
             else
             {                
                 var capture_type = fieleTypeConverter.Convert((this.field.Type as Model.Enumeration).Type, capture_size);
                 bool needs_capture = capture_type != "std::uint8_t";
                 if (needs_capture)
-                {
                     to_return = "*" + AddCaptureLine("captured_data", capture_type);
-                    //body.Add($"const {capture_type}* captured_data = reinterpret_cast<const {capture_type}*>(data_offset);");
-                    //to_return = "*captured_data";
-                }
-
+             
                 // If the data we need is not byte algined or not one of C++'s standard data types, we will need to mask out the bits that we don't need
                 // If we do that we will also have to return by value instead of by reference. 
                 bool needs_mask = (byte_algined_offset != field.Offset) || (capture_size != field.SizeInBits());
                 var shift = GetShift(field.Offset, byte_algined_offset);
                 if (needs_mask)
-                {
-                    var mask = GetMask(field.Offset, field.SizeInBits(), byte_algined_offset);
-                    to_return = AddMaskLine("masked_data", capture_type, to_return, GetMask(field.Offset, field.SizeInBits(), byte_algined_offset), shift);
-                    //var temp = $"{capture_type} masked_data = (*captured_data & 0x{mask.ToString("x")})";
-                    //if (shift > 0)
-                    //    temp = $"{temp} >> {shift};";
-                    //else
-                    //    temp += ";";
-                    //body.Add(temp);
-                    //to_return = "masked_data";
-                }
+                    to_return = AddMaskLine("masked_data", capture_type, to_return, GetMask(field.Offset, field.SizeInBits(), byte_algined_offset), shift);                    
 
-                to_return = AddStaticCast(to_return, "typed_data", return_type);
-                //body.Add($"{return_type} typed_data = static_cast<{return_type}>({to_return});");
-                //to_return = "typed_data";
-
-                // And finally add a line that returns the data
-               
+                to_return = AddStaticCast(to_return, "typed_data", return_type);               
             }
-            body.Add($"return {to_return};");
-            //if (byte_algined_offset == this.field.Offset)
-            //{
-            //    // We can simply cast directly to the return type
-            //    body.Add($"const {return_type}* captured_data = reinterpret_cast<const {return_type}*>(data_offset);");
-            //    to_return = "*captured_data";
-            //}
-            //else
-            //{
-            //    var capture_size = GetCaptureSize(field.Offset, byte_algined_offset, field.SizeInBits());
-            //    var capture_type = String.Format("std::uint{0}_t", capture_size);
-            //    var mask = GetMask(field.Offset, field.SizeInBits(), byte_algined_offset);
-            //    var temp = $"{capture_type} masked_data = (*captured_data & 0x{mask.ToString("x")})";
-            //    var shift = GetShift(field.Offset, byte_algined_offset);
-            //    if (shift > 0)
-            //        temp = $"{temp} >> {shift};";
-            //    else
-            //        temp += ";";
-            //    body.Add(temp);
-            //    to_return = "masked_data";
-            //    body.Add($"const {capture_type}* typed_data = static_cast<{return_type }> (masked_data);");
-            //    to_return = "*typed_data";
-            //}
-
-            //body.Add($"return {to_return};");
+            body.Add($"return {to_return};");            
         }
 
         public void CreateFloatingPointDeclaration()
@@ -177,21 +132,8 @@ namespace BiPaGe.FrontEnd.CPP
 
                 var mask = GetMask(field.Offset, field.SizeInBits(), byte_algined_offset);
                 to_return = AddMaskLine("masked_data", capture_type, "*captured_data", GetMask(field.Offset, field.SizeInBits(), byte_algined_offset), shift);
-
-                //var temp = $"{capture_type} masked_data = (*captured_data & 0x{mask.ToString("x")})";
-                //if (shift > 0)
-                //    temp = $"{temp} >> {shift};";
-                //else
-                //    temp += ";";
-
-                //body.Add(temp);
                 to_return = AddStaticCast(to_return, "typed_data", return_type);
-
-                //body.Add($"{return_type} typed_data = static_cast<{return_type}>(masked_data);");
-                //to_return = "typed_data";
             }
-
-            //// And finally add a line that returns the data
             body.Add($"return {to_return};");
         }
 
@@ -227,15 +169,6 @@ namespace BiPaGe.FrontEnd.CPP
         {
             CreateIntegralDeclaration("std::uint{0}_t");
         }
-
-        /*
-        * return static_cast<std::int32_t>(((*reinterpret_cast<const std::int64_t*>(reinterpret_cast<const std::uint8_t*>(this) + 65) & 0x7fffffff8) >> 3));
-        * 
-        * auto data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;
-        * auto captured_data = *reinterpret_cast<const std::int64_t*>(data_offset);
-        * auto masked_data = (captured_data & 0x7fffffff8) >> 3;
-        * return static_cast<std::int32_t>(masked_data);
-        */
 
         private String AddOffsetLine(String variable_name, uint byte_aligned_offset, String offset_from)
         {
@@ -297,11 +230,7 @@ namespace BiPaGe.FrontEnd.CPP
             var return_type = String.Format(typeTemplate, toStandardSize(field.SizeInBits()));
             bool needs_type_cast = capture_type != return_type;
             if(needs_type_cast)
-            {
                 to_return = AddStaticCast(to_return, "typed_data", return_type);
-                //body.Add($"{return_type} typed_data = static_cast<{return_type}>({to_return});");
-                //to_return = "typed_data";
-            }
 
             // And finally add a line that returns the data
             body.Add($"return {to_return};");
