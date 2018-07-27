@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\Expressions\IExpressionVisitor.cs" />
+    <Compile Include="FrontEnd\CPP\Field.cs" />
     <Compile Include="FrontEnd\CPP\FieldGetterGenerator.cs" />
     <Compile Include="FrontEnd\CPP\FieldTypeConverter.cs" />
     <Compile Include="Model\EnumerationBuilder.cs" />

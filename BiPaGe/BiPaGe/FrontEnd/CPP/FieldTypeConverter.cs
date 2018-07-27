@@ -37,8 +37,13 @@ namespace BiPaGe.FrontEnd.CPP
         }
 
         public void Visit(FloatingPoint f)
-        {
-            throw new NotImplementedException();
+        {            
+            var size = this.size ?? f.Size;
+            Debug.Assert(size == 32 || size == 64);
+            if (size == 32)
+                converted = "float";
+            else
+                converted = "double";
         }
 
         public void Visit(SignedIntegral s)
