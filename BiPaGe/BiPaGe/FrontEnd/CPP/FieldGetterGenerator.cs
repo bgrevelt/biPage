@@ -274,7 +274,7 @@ namespace BiPaGe.FrontEnd.CPP
             if(needs_mask)
             {
                 var mask = GetMask(field.Offset, field.SizeInBits(), byte_algined_offset);
-                var temp = $"{capture_type} masked_data = (*captured_data & 0x{mask.ToString("x")})";
+                var temp = $"{capture_type} masked_data = ({to_return} & 0x{mask.ToString("x")})";
                 if (shift > 0)
                     temp = $"{temp} >> {shift};";
                 else
