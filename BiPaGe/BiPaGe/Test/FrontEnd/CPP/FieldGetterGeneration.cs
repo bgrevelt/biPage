@@ -415,8 +415,10 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
                 "const std::int8_t* captured_data = reinterpret_cast<const std::int8_t*>(data_offset);",
-                "std::int8_t masked_data = (*captured_data & 0x7);",
-                "return masked_data;"}, body);
+                "bool sign_bit = (*captured_data & 0x2) == 0x2;",
+                "std::int8_t masked_data = (*captured_data & 0x2);",
+                "std::int8_t signed_data = masked_data | (sign_bit ? 0xfffc : 0);",
+                "return signed_data;"}, body);
         }
 
         [Test()]
@@ -431,8 +433,10 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
                 "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",
-                "std::int16_t masked_data = (*captured_data & 0xfff);",
-                "return masked_data;"}, body);
+                "bool sign_bit = (*captured_data & 0x400 ) == 0x400;",
+                "std::int16_t masked_data = (*captured_data & 0x7ff);",
+                "std::int16_t signed_data = masked_data | (sign_bit ? 0xf800 : 0);",
+                "return signed_data;"}, body);
         }
 
         [Test()]
@@ -447,8 +451,10 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
                 "const std::int32_t* captured_data = reinterpret_cast<const std::int32_t*>(data_offset);",
-                "std::int32_t masked_data = (*captured_data & 0x1ffff);",
-                "return masked_data;"}, body);
+                "bool sign_bit = (*captured_data & 0x10000) == 0x10000;",
+                "std::int32_t masked_data = (*captured_data & 0xffff);",
+                "std::int32_t signed_data = masked_data | (sign_bit ? 0xffff0000 : 0);",
+                "return signed_data;"}, body);
         }
 
         [Test()]
@@ -463,8 +469,10 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
                 "const std::int64_t* captured_data = reinterpret_cast<const std::int64_t*>(data_offset);",
-                "std::int64_t masked_data = (*captured_data & 0x7fffffffff);",
-                "return masked_data;"}, body);
+                "bool sign_bit = (*captured_data & 0x4000000000) == 0x4000000000;",
+                "std::int64_t masked_data = (*captured_data & 0x3fffffffff);",
+                "std::int64_t signed_data = masked_data | sign_bit ? 0xffffffc000000000 : 0;",
+                "return signed_data;"}, body);
         }
 
         [Test()]
@@ -851,12 +859,14 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
                 "const std::int32_t* captured_data = reinterpret_cast<const std::int32_t*>(data_offset);",
-                "std::int32_t masked_data = (*captured_data & 0x1ffff);",
-                "Enum typed_data = static_cast<Enum>(masked_data);",
+                "bool sign_bit = (*captured_data & 0x10000) == 0x10000*",                
+                "std::int32_t masked_data = (*captured_data & 0xffff);",
+                "std::int32_t signed_data = masked_data | (sign_bit ? 0xffff0000 : 0;)",
+                "Enum typed_data = static_cast<Enum>(signed_data);",
                 "return typed_data;"}, body);
         }
 
-        //
+        // TODO: brackets around ternary operator and look into (1<<x) construct. This is an int by default which may overflow.
         [Test()]
         public void NonStandardWidthNonByteAlignedOffset()
         {
@@ -870,8 +880,10 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;",
                 "const std::int32_t* captured_data = reinterpret_cast<const std::int32_t*>(data_offset);",
-                "std::int32_t masked_data = (*captured_data & 0xffff8) >> 3;",
-                "Enum typed_data = static_cast<Enum>(masked_data);",
+                "bool sign_bit = (*captured_data & 0x10000) == 0x10000;",
+                "std::int32_t masked_data = (*captured_data & 0x7fff8) >> 3;",
+                "std::int32_t signed_data = masked_data | sign_bit ? 0xffff0000 : 0;",
+                "Enum typed_data = static_cast<Enum>(signed_data);",
                 "return typed_data;"}, body);
         }
     }
