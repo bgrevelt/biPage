@@ -20,7 +20,7 @@ namespace BiPaGe.FrontEnd.CPP
         public uint CaptureSize { get; }
         public String CppType { get; }
         public String CaptureType { get; }
-        public bool NeedsMasking { get; }
+        public bool NeedsMasking { get; }        
 
         private Model.Field Original;
         public Field(Model.Field original)
