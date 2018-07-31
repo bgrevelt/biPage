@@ -661,6 +661,274 @@ namespace BiPaGe.Test.FrontEnd.CPP
         }
     }
 
+    public class NonStandardWidthIntegersStaticOffset
+    {
+        /* What we want to test here
+         * Do we select the rigt capture type
+            The capture type depends on the size of the type AND the bit offset from a byte boundary. I don't know how to word that better, so here's an example for a 5 bit integer
+            With an offset of 10 bits, it will be algined in memory like this:
+            [-*****--][--------]
+            meaning we can capture all the data in a single byte. 
+            If, on the other hand, the offset is 5 bits, the data will be algined in memory like this
+            [------**][***-----]
+            and we need two bytes to capture the data
+         * Do we apply the right masking and shifting
+         * For signed types: Do we properly mask out the sign bit
+         */
+
+        [Test()]
+        public void Int5()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(5), 4, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::int8_t TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
+                "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",                
+                "bool sign_bit = (*captured_data & 0x100) == 0x100; ",
+                "std::int16_t masked_data = (*captured_data & 0xf0) >> 4;",
+                "std::int16_t signed_data = masked_data | (sign_bit ? 0xfff0 : 0);",
+                "std::int8_t typed_data = static_cast<std::int8_t>(signed_data);",
+                "return typed_data;"}, body);
+        }
+
+        [Test()]
+        public void Int9()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(9), 22, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::int16_t TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 2;",
+                "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",
+                "bool sign_bit = (*captured_data & 0x4000) == 0x400; ",
+                "std::int16_t masked_data = (*captured_data & 0x3fc0) >> 6;",
+                "std::int16_t signed_data = masked_data | (sign_bit ? 0xff00 : 0);",
+                "return signed_data;"}, body);
+        }
+
+        [Test()]
+        public void Int35()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(35), 523, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::int64_t TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;",
+                "const std::int64_t* captured_data = reinterpret_cast<const std::int64_t*>(data_offset);",
+                "bool sign_bit = (*captured_data & 0x20000000000) == 0x20000000000; ",
+                "std::int64_t masked_data = (*captured_data & 0x1ffffff8) >> 3;",
+                "std::int64_t signed_data = masked_data | (sign_bit ? 0xfffffffc00000000 : 0);",
+                "return signed_data;"}, body);
+        }
+
+        [Test()]
+        public void Uint4()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(4), 4, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::uint8_t TEST() const", declaration);
+            // The encapsulating type should be a 16 bit integer. We should then mask out the most and least significant nibble and shift four places right. The resulting value needs to 
+            // be cast back to the expected type: int8
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
+                "std::uint8_t masked_data = (*data_offset & 0xf0) >> 4;",
+                "return masked_data;"}, body);
+        }
+
+        [Test()]
+        public void Uint12()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(12), 22, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::uint16_t TEST() const", declaration);     
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 2;",
+                "const std::uint32_t* captured_data = reinterpret_cast<const std::uint32_t*>(data_offset);",
+                "std::uint32_t masked_data = (*captured_data & 0x3ffc0) >> 6;",
+                "std::uint16_t typed_data = static_cast<std::uint16_t>(masked_data);",
+                "return typed_data;"}, body);
+        }
+
+        [Test()]
+        public void Uint19()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(19), 523, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::uint32_t TEST() const", declaration);
+            ;
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;",
+                "const std::uint32_t* captured_data = reinterpret_cast<const std::uint32_t*>(data_offset);",
+                "std::uint32_t masked_data = (*captured_data & 0x3ffff8) >> 3;",
+                "return masked_data;"}, body);
+        }
+
+        /*
+        Note that we don't have a test for 64 bit integral types with a non-byte algined offset, because we don't support that yet. Our current methodology of using an encapsulating type 
+        and masking out what we don't need won't work for 64 bit types as there is no standard 128 bit type. We could of course solve this by casting to two 64 bit type (the upper and lower halve)
+        masking each one and constructing the required 64 bit type from that, but as I don't expect this to be required, we have omitted this for now
+        */
+    }
+
+    public class NonStandardWidthIntegersMixedOffset
+    {
+        /* What we want to test here
+         * Do we select the rigt capture type
+            The capture type depends on the size of the type AND the bit offset from a byte boundary. I don't know how to word that better, so here's an example for a 5 bit integer
+            With an offset of 10 bits, it will be algined in memory like this:
+            [-*****--][--------]
+            meaning we can capture all the data in a single byte. 
+            If, on the other hand, the offset is 5 bits, the data will be algined in memory like this
+            [------**][***-----]
+            and we need two bytes to capture the data
+         * Do we apply the right masking and shifting
+         * For signed types: Do we properly mask out the sign bit
+         */
+
+        [Test()]
+        public void Int5()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(5), 4, "SomeOtherField");
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::int8_t TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = SomeOtherField().end();",
+                "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",
+                "bool sign_bit = (*captured_data & 0x100) == 0x100; ",
+                "std::int16_t masked_data = (*captured_data & 0xf0) >> 4;",
+                "std::int16_t signed_data = masked_data | (sign_bit ? 0xfff0 : 0);",
+                "std::int8_t typed_data = static_cast<std::int8_t>(signed_data);",
+                "return typed_data;"}, body);
+        }
+
+        [Test()]
+        public void Int9()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(9), 22, "SomeOtherField");
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::int16_t TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = SomeOtherField().end() + 2;",
+                "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",
+                "bool sign_bit = (*captured_data & 0x4000) == 0x400; ",
+                "std::int16_t masked_data = (*captured_data & 0x3fc0) >> 6;",
+                "std::int16_t signed_data = masked_data | (sign_bit ? 0xff00 : 0);",
+                "return signed_data;"}, body);
+        }
+
+        [Test()]
+        public void Int35()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.SignedIntegral(35), 523, "SomeOtherField");
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::int64_t TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = SomeOtherField().end() + 65;",
+                "const std::int64_t* captured_data = reinterpret_cast<const std::int64_t*>(data_offset);",
+                "bool sign_bit = (*captured_data & 0x20000000000) == 0x20000000000; ",
+                "std::int64_t masked_data = (*captured_data & 0x1ffffff8) >> 3;",
+                "std::int64_t signed_data = masked_data | (sign_bit ? 0xfffffffc00000000 : 0);",
+                "return signed_data;"}, body);
+        }
+
+        [Test()]
+        public void Uint4()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(4), 4, "SomeOtherField");
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::uint8_t TEST() const", declaration);
+            // The encapsulating type should be a 16 bit integer. We should then mask out the most and least significant nibble and shift four places right. The resulting value needs to 
+            // be cast back to the expected type: int8
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = SomeOtherField().end();",
+                "std::uint8_t masked_data = (*data_offset & 0xf0) >> 4;",
+                "return masked_data;"}, body);
+        }
+
+        [Test()]
+        public void Uint12()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(12), 22, "SomeOtherField");
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::uint16_t TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = SomeOtherField().end() + 2;",
+                "const std::uint32_t* captured_data = reinterpret_cast<const std::uint32_t*>(data_offset);",
+                "std::uint32_t masked_data = (*captured_data & 0x3ffc0) >> 6;",
+                "std::uint16_t typed_data = static_cast<std::uint16_t>(masked_data);",
+                "return typed_data;"}, body);
+        }
+
+        [Test()]
+        public void Uint19()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.UnsignedIntegral(19), 523, "SomeOtherField");
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            // Return by value
+            Assert.AreEqual("std::uint32_t TEST() const", declaration);
+            ;
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = SomeOtherField().end() + 65;",
+                "const std::uint32_t* captured_data = reinterpret_cast<const std::uint32_t*>(data_offset);",
+                "std::uint32_t masked_data = (*captured_data & 0x3ffff8) >> 3;",
+                "return masked_data;"}, body);
+        }
+
+        /*
+        Note that we don't have a test for 64 bit integral types with a non-byte algined offset, because we don't support that yet. Our current methodology of using an encapsulating type 
+        and masking out what we don't need won't work for 64 bit types as there is no standard 128 bit type. We could of course solve this by casting to two 64 bit type (the upper and lower halve)
+        masking each one and constructing the required 64 bit type from that, but as I don't expect this to be required, we have omitted this for now
+        */
+    }
+
     // TODO: non-standard width with offsets
 
     public class StandardWidthIntegersStaticAndDynamicOffset
