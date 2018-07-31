@@ -11,8 +11,6 @@ namespace BiPaGe.FrontEnd.CPP
         private List<String> declaration = new List<string>();
         private List<String> body = new List<string>();
         private Field field;
-        private readonly FieldTypeConverter fieleTypeConverter = new FieldTypeConverter();
-        private String to_return = null; 
 
         public FieldGetterGenerator(Model.Field field)
         {
@@ -49,41 +47,22 @@ namespace BiPaGe.FrontEnd.CPP
         private void CreateBody()
         {
             var return_type = field.CppType;
-            to_return = "*" + AddOffsetLine("data_offset", field.ByteAlginedOfffset, field.OffsetField);
+            String to_return = "*" + AddOffsetLine("data_offset", field.ByteAlginedOfffset, field.OffsetField);
 
             bool needs_capture = field.CaptureType != "std::uint8_t";
             if (needs_capture)
                 to_return = "*" + AddCaptureLine("captured_data", field.CaptureType);
 
-            bool isSized = this.field.Type is Model.FieldTypes.SignedIntegral ||
-                (this.field.Type is Model.Enumeration && (this.field.Type as Enumeration).Type is Model.FieldTypes.SignedIntegral);
-            bool hasNonStandardSize = Math.Abs((Math.Log(field.Size) / Math.Log(2)) % 1) >= (double.Epsilon * 100);
-
-            ulong mask = field.Mask;
-
-            if (isSized && hasNonStandardSize)
-            {
-                var sign_bit_mask = ((ulong)Math.Pow(2, field.Size + (field.Offset - field.ByteAlginedOfffset) - 1));
-                body.Add($"bool sign_bit = ({to_return} & 0x{sign_bit_mask.ToString("x")}) == 0x{sign_bit_mask.ToString("x")};");
-
-                // Remove the sign bit from the mask
-                mask &= (~sign_bit_mask);
-
-            }
-
+            if (field.NeedsSignBitStuffing)
+                AddSignBitLine("sign_bit", to_return, this.field.SignBitMask);
+            
             // If the data we need is not byte algined or not one of C++'s standard data types, we will need to mask out the bits that we don't need
             // If we do that we will also have to return by value instead of by reference. 
             if (field.NeedsMasking)
-                to_return = AddMaskLine("masked_data", field.CaptureType, to_return, mask, field.Shift);
+                to_return = AddMaskLine("masked_data", field.CaptureType, to_return, field.Mask, field.Shift);
 
-            if (isSized && hasNonStandardSize)
-            {
-                mask = (ulong)Math.Pow(2, field.Size - 1) - 1;
-                var sign_mask = (((System.Numerics.BigInteger)1 << (int)field.CaptureSize) - 1) & (~mask);
-                body.Add($"{field.CaptureType} signed_data = masked_data | (sign_bit ? 0x{((ulong)sign_mask).ToString("x")} : 0);");
-                to_return = "signed_data";
-            }
-
+            if (field.NeedsSignBitStuffing)
+                to_return = AddSignBitStuffingLine("signed_data", field.Size, field.CaptureSize, field.CaptureType);
 
             // In some cases our capture data is larger than the data type we want to return (for example when a standard type is not byte algined). We removed all the data we don't need in the masking and shifting step
             // so now cast back to the type we want to return
@@ -91,6 +70,8 @@ namespace BiPaGe.FrontEnd.CPP
             bool needs_type_cast = field.CaptureType != return_type;
             if (needs_type_cast)
                 to_return = AddStaticCast(to_return, "typed_data", return_type);
+
+            body.Add($"return {to_return};");
         }
 
         private String AddOffsetLine(String variable_name, uint byte_aligned_offset, String offset_from)
@@ -126,6 +107,30 @@ namespace BiPaGe.FrontEnd.CPP
             return to;
         }
 
+        private String AddSignBitLine(String variable_name, String data_field, ulong signBitMask)
+        {
+            body.Add($"bool {variable_name} = ({data_field} & 0x{signBitMask.ToString("x")}) == 0x{signBitMask.ToString("x")};");
+            return variable_name;
+        }
+
+        private String AddSignBitStuffingLine(String variable_name, uint field_size, uint capture_size, String capture_type)
+        {
+            // Sign bit stuffing means that we have a signed data type that is shorter than the cpp data type. Which is the case for any non standard sized type.
+            // For example, and int5 will be exposed as an int8. That means that there are 3 bits that need to be stuffed in. With an unsigned type, we can just leave
+            // these at zero, but for a signed type, they will need to have the same value as the sign bit.
+
+            // The mask that identifies the bits in the field that have data after shifting
+            var shifted_data_mask = ((System.Numerics.BigInteger)1 << (int)field_size -1) - 1; 
+            
+            // To get to the bits that we need to set we start out with a mask the size of the data field with every bit set to '1'. Note that we use shifting rather then 
+            // math.pow as that uses a double which introduces rounding errors for larger types.
+            var sign_mask = ((System.Numerics.BigInteger)1 << (int)capture_size) - 1;
+            // Now clear the bits on which we have data
+            sign_mask &= ~shifted_data_mask;
+            body.Add($"{capture_type} {variable_name} = masked_data | (sign_bit ? 0x{((ulong)sign_mask).ToString("x")} : 0);");
+            return variable_name;
+        }
+
         public void Visit(AsciiString s)
         {
             throw new NotImplementedException();
@@ -145,21 +150,18 @@ namespace BiPaGe.FrontEnd.CPP
         {
             CreateDeclaration();
             CreateBody();
-            body.Add($"return {to_return};");
         }
 
         public void Visit(SignedIntegral s)
         {
             CreateDeclaration();
             CreateBody();
-            body.Add($"return {to_return};");
         }
 
         public void Visit(UnsignedIntegral u)
         {
             CreateDeclaration();
             CreateBody();
-            body.Add($"return {to_return};");
         }
 
         public void Visit(Structure s)
@@ -170,8 +172,7 @@ namespace BiPaGe.FrontEnd.CPP
         public void Visit(Enumeration e)
         {
             CreateDeclaration();
-            CreateBody();
-            body.Add($"return {to_return};");
+            CreateBody();           
         }
     }
 }
