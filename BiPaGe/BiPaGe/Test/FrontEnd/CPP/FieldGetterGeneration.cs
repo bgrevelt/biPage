@@ -880,7 +880,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;",
                 "const std::int32_t* captured_data = reinterpret_cast<const std::int32_t*>(data_offset);",
-                "bool sign_bit = (*captured_data & 0x10000) == 0x10000;",
+                "bool sign_bit = (*captured_data & 0x80000) == 0x80000;",
                 "std::int32_t masked_data = (*captured_data & 0x7fff8) >> 3;",
                 "std::int32_t signed_data = masked_data | (sign_bit ? 0xffff0000 : 0);",
                 "Enum typed_data = static_cast<Enum>(signed_data);",
