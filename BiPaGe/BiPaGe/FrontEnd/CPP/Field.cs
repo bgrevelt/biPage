@@ -69,7 +69,7 @@ namespace BiPaGe.FrontEnd.CPP
 
         private bool ComputeMaskingRequired()
         {
-            return (this.Offset != this.ByteAlginedOfffset) || (this.CaptureSize != this.Size);
+            return this.CaptureSize != this.Size;
         }
     }
 }
