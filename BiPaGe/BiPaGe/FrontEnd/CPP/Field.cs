@@ -37,8 +37,10 @@ namespace BiPaGe.FrontEnd.CPP
 
         private ulong ComputeMask()
         {
-            var mask = (ulong)Math.Pow(2, this.Size) - 1;
-            return mask << (int)(this.Offset - this.ByteAlginedOfffset);
+            // Note: do not use Math.pow, it will start rounding when the size is too large!
+            var mask = (((System.Numerics.BigInteger)1 << (int)this.Size) - 1) << (int)(this.Offset - this.ByteAlginedOfffset);
+            Debug.Assert(mask <= ulong.MaxValue);
+            return (ulong)mask;
         }
 
         private uint ComputeShift()
