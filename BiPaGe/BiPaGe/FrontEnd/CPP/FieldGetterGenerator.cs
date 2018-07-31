@@ -86,7 +86,7 @@ namespace BiPaGe.FrontEnd.CPP
                 var cpp_size = (uint)Math.Max(8, Math.Pow(2, Math.Ceiling(Math.Log(field.Size) / Math.Log(2))));
                 if ((field.Type as Model.Enumeration).Type is SignedIntegral && cpp_size != field.Size)
                 {
-                    var sign_bit_mask = ((ulong)Math.Pow(2, field.Size - 1)).ToString("x");
+                    var sign_bit_mask = ((ulong)Math.Pow(2, field.Size + (field.Offset - field.ByteAlginedOfffset) - 1)).ToString("x");
                     var data_mask = (ulong)Math.Pow(2, field.Size - 1) - 1;
                     data_mask = data_mask << (int)(field.Offset - field.ByteAlginedOfffset);
                     body.Add($"bool sign_bit = ({to_return} & 0x{sign_bit_mask}) == 0x{sign_bit_mask};");
@@ -129,7 +129,7 @@ namespace BiPaGe.FrontEnd.CPP
                 var cpp_size = (uint)Math.Max(8, Math.Pow(2, Math.Ceiling(Math.Log(field.Size) / Math.Log(2))));
                 if(cpp_size != field.Size)
                 {
-                    var sign_bit_mask = ((ulong)Math.Pow(2, field.Size - 1)).ToString("x");
+                    var sign_bit_mask = ((ulong)Math.Pow(2, field.Size +(field.Offset - field.ByteAlginedOfffset) - 1)).ToString("x");
                     // Recompute data mask because we can't use the one in the field as it includes the sign bit...
                     var data_mask = (ulong)Math.Pow(2, field.Size - 1) - 1;
                     data_mask = data_mask << (int)(field.Offset - field.ByteAlginedOfffset);
@@ -142,7 +142,7 @@ namespace BiPaGe.FrontEnd.CPP
                         temp += ";";
                     body.Add(temp);
 
-
+                    data_mask = (ulong)Math.Pow(2, field.Size - 1) - 1;
                     var sign_mask = (((System.Numerics.BigInteger)1 << (int)field.CaptureSize) - 1) & (~data_mask);
                     body.Add($"{field.CaptureType} signed_data = masked_data | (sign_bit ? 0x{((ulong)sign_mask).ToString("x")} : 0);");
                     to_return = "signed_data";

@@ -689,7 +689,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
                 "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",                
-                "bool sign_bit = (*captured_data & 0x100) == 0x100; ",
+                "bool sign_bit = (*captured_data & 0x100) == 0x100;",
                 "std::int16_t masked_data = (*captured_data & 0xf0) >> 4;",
                 "std::int16_t signed_data = masked_data | (sign_bit ? 0xfff0 : 0);",
                 "std::int8_t typed_data = static_cast<std::int8_t>(signed_data);",
@@ -709,7 +709,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 2;",
                 "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",
-                "bool sign_bit = (*captured_data & 0x4000) == 0x400; ",
+                "bool sign_bit = (*captured_data & 0x4000) == 0x4000;",
                 "std::int16_t masked_data = (*captured_data & 0x3fc0) >> 6;",
                 "std::int16_t signed_data = masked_data | (sign_bit ? 0xff00 : 0);",
                 "return signed_data;"}, body);
@@ -728,8 +728,8 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 65;",
                 "const std::int64_t* captured_data = reinterpret_cast<const std::int64_t*>(data_offset);",
-                "bool sign_bit = (*captured_data & 0x20000000000) == 0x20000000000; ",
-                "std::int64_t masked_data = (*captured_data & 0x1ffffff8) >> 3;",
+                "bool sign_bit = (*captured_data & 0x2000000000) == 0x2000000000;",
+                "std::int64_t masked_data = (*captured_data & 0x1ffffffff8) >> 3;",
                 "std::int64_t signed_data = masked_data | (sign_bit ? 0xfffffffc00000000 : 0);",
                 "return signed_data;"}, body);
         }
@@ -823,7 +823,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = SomeOtherField().end();",
                 "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",
-                "bool sign_bit = (*captured_data & 0x100) == 0x100; ",
+                "bool sign_bit = (*captured_data & 0x100) == 0x100;",
                 "std::int16_t masked_data = (*captured_data & 0xf0) >> 4;",
                 "std::int16_t signed_data = masked_data | (sign_bit ? 0xfff0 : 0);",
                 "std::int8_t typed_data = static_cast<std::int8_t>(signed_data);",
@@ -843,7 +843,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = SomeOtherField().end() + 2;",
                 "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",
-                "bool sign_bit = (*captured_data & 0x4000) == 0x400; ",
+                "bool sign_bit = (*captured_data & 0x4000) == 0x4000;",
                 "std::int16_t masked_data = (*captured_data & 0x3fc0) >> 6;",
                 "std::int16_t signed_data = masked_data | (sign_bit ? 0xff00 : 0);",
                 "return signed_data;"}, body);
@@ -862,8 +862,8 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = SomeOtherField().end() + 65;",
                 "const std::int64_t* captured_data = reinterpret_cast<const std::int64_t*>(data_offset);",
-                "bool sign_bit = (*captured_data & 0x20000000000) == 0x20000000000; ",
-                "std::int64_t masked_data = (*captured_data & 0x1ffffff8) >> 3;",
+                "bool sign_bit = (*captured_data & 0x2000000000) == 0x2000000000;",
+                "std::int64_t masked_data = (*captured_data & 0x1ffffffff8) >> 3;",
                 "std::int64_t signed_data = masked_data | (sign_bit ? 0xfffffffc00000000 : 0);",
                 "return signed_data;"}, body);
         }
