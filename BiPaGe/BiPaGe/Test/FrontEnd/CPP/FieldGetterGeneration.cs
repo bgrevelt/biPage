@@ -688,7 +688,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual("std::int8_t TEST() const", declaration);
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
-                "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",                
+                "const std::int16_t* captured_data = reinterpret_cast<const std::int16_t*>(data_offset);",
                 "bool sign_bit = (*captured_data & 0x100) == 0x100;",
                 "std::int16_t masked_data = (*captured_data & 0xf0) >> 4;",
                 "std::int16_t signed_data = masked_data | (sign_bit ? 0xfff0 : 0);",
@@ -761,7 +761,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             var body = gen.GetBody();
 
             // Return by value
-            Assert.AreEqual("std::uint16_t TEST() const", declaration);     
+            Assert.AreEqual("std::uint16_t TEST() const", declaration);
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this) + 2;",
                 "const std::uint32_t* captured_data = reinterpret_cast<const std::uint32_t*>(data_offset);",
@@ -1127,7 +1127,7 @@ namespace BiPaGe.Test.FrontEnd.CPP
             Assert.AreEqual(new List<String> {
                 "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
                 "const std::int32_t* captured_data = reinterpret_cast<const std::int32_t*>(data_offset);",
-                "bool sign_bit = (*captured_data & 0x10000) == 0x10000;",                
+                "bool sign_bit = (*captured_data & 0x10000) == 0x10000;",
                 "std::int32_t masked_data = (*captured_data & 0xffff);",
                 "std::int32_t signed_data = masked_data | (sign_bit ? 0xffff0000 : 0);",
                 "Enum typed_data = static_cast<Enum>(signed_data);",
@@ -1219,6 +1219,76 @@ namespace BiPaGe.Test.FrontEnd.CPP
                 "const std::uint8_t* data_offset = SomeOtherField().end() + 3;",
                 "const double* captured_data = reinterpret_cast<const double*>(data_offset);",
                 "return *captured_data;"}, body);
+        }
+    }
+
+    [TestFixture()]
+    public class AsciiString
+    {
+        [Test()]
+        public void StaticSizeNoOffset()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.AsciiString(new Model.Expressions.Number(12)), 0, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            Assert.AreEqual("std::string TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
+                "return std::string(static_cast<const char*>(data_offset), 12);" }, body);
+        }
+
+        [Test()]
+        public void ArithmaticStaticSizeNoOffset()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.AsciiString(new Model.Expressions.Addition(new Model.Expressions.Division(new Model.Expressions.Number(24), new Model.Expressions.Number(8)), new Model.Expressions.Number(2))), 0, null);
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            Assert.AreEqual("std::string TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const char* start = reinterpret_cast<char*>(this);",
+                "return std::string(start, (24 / 8) + 2);" }, body); // TODO: do we want this, or just 5?
+        }
+
+        [Test()]
+        // TODO: this test case suggests that 'this' resolved to the offset of this field in it's parent. I'm not 100% sure that that is what I initially envisioned. It may be
+        // that the idea was to get the offset in the root data type. That will make stuff far more complex though and i'm not sure of the use case...
+        public void SizeDeterminedByThisMixedOffset()
+        {
+            // Simulates a case where the message has a fixed size (128) with some dynamic parts in the body and the remainder is taken up by a string
+            var field = new Model.Field("TEST", new Model.FieldTypes.AsciiString(
+                new Model.Expressions.Division(
+                    new Model.Expressions.Subtraction(
+                        new Model.Expressions.Number(128),
+                        new Model.Expressions.This()
+                        ),
+                    new Model.Expressions.Number(8))), 32, "dynamic");
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            Assert.AreEqual("std::string TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "size_t size = 128 - (dynamic.end() -  reinterpret_cast<const std::uint8_t*>(this));",
+                "const char* start = reinterpret_cast<const char*>(dynamic.end() + 4);",
+                "return std::string(start, size);" }, body); // TODO: do we want this, or just 5?
+        }
+
+        [Test()]
+        public void DynamicSizeOtherFieldMixedOffset()
+        {
+            var field = new Model.Field("TEST", new Model.FieldTypes.AsciiString(new Model.Expressions.FieldIdentifier("string_size")), 24, "some_field");
+            BiPaGe.FrontEnd.CPP.FieldGetterGenerator gen = new BiPaGe.FrontEnd.CPP.FieldGetterGenerator(field);
+            var declaration = gen.GetDeclaration();
+            var body = gen.GetBody();
+
+            Assert.AreEqual("std::string TEST() const", declaration);
+            Assert.AreEqual(new List<String> {
+                "const char* start = reinterpret_cast<char*>(some_field.end() + 3);",
+                "return std::string(start, string_size());" }, body); 
         }
     }
 }
