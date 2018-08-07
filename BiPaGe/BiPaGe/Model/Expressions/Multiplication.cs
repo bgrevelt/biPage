@@ -12,5 +12,10 @@
         {
             return this.Left.Resolve() * this.Right.Resolve();
         }
+
+        public override void Accept(IExpressionVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

@@ -12,5 +12,10 @@ namespace BiPaGe.Model.Expressions
             // TODO
             throw new NotImplementedException("I don't know quite how to handle this yet. Sorry");
         }
+
+        public override void Accept(IExpressionVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

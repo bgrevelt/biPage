@@ -68,7 +68,8 @@ namespace BiPaGe.FrontEnd.CPP
 
         public void Visit(AsciiString s)
         {
-            throw new NotImplementedException();
+            this.CaptureType = "std::string";
+            this.CppType = "std::string";
         }
 
         public void Visit(Model.FieldTypes.Boolean b)

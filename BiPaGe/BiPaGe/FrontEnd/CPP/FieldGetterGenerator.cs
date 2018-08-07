@@ -30,6 +30,23 @@ namespace BiPaGe.FrontEnd.CPP
             return this.body;
         }
 
+        private void CreateStringDeclaration()
+        {
+            // String are always returned by value. We could create an encapsulating type
+            // that behaves like a string and cast to the raw data to spare an allocation
+            // (like we do with collections) but since strings aren't used that much
+            // I did not feel like spending the effort (yet)
+            declaration.Add($"std::string {field.Name}() const");
+        }
+
+        private void CreateStringBody(AsciiString s)
+        {
+            String size = new ExpressionTranslator().Translate(s.Size);
+
+            AddOffsetLine("data_offset", field.ByteAlginedOfffset, field.OffsetField);
+            this.body.Add($"return std::string(static_cast<const char*>(data_offset), {size});");
+        }
+
         private void CreateDeclaration()
         {
             String return_type = field.CppType;
@@ -133,7 +150,8 @@ namespace BiPaGe.FrontEnd.CPP
 
         public void Visit(AsciiString s)
         {
-            throw new NotImplementedException();
+            CreateStringDeclaration();
+            CreateStringBody(s);
         }
 
         public void Visit(Model.FieldTypes.Boolean b)

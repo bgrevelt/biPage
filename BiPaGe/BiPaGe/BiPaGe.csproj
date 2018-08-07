@@ -154,6 +154,8 @@
     <Compile Include="Model\FieldTypes\Integral.cs" />
     <Compile Include="Model\FieldTypes\SignedIntegral.cs" />
     <Compile Include="Model\FieldTypes\UnsignedIntegral.cs" />
+    <Compile Include="FrontEnd\CPP\ExpressionTranslator.cs" />
+    <Compile Include="Model\IExpressionVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Model\Notes\FieldParsing.md" />

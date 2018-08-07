@@ -8,6 +8,11 @@
             this.Right = rhs;
         }
 
+        public override void Accept(IExpressionVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
         public override int? Resolve()
         {
             return this.Left.Resolve() + this.Right.Resolve();

@@ -13,5 +13,10 @@ namespace BiPaGe.Model.Expressions
         {
             return null;
         }
+
+        public override void Accept(IExpressionVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }
