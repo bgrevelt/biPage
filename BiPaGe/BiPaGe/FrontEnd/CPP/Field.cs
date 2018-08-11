@@ -26,16 +26,22 @@ namespace BiPaGe.FrontEnd.CPP
         public bool NeedsMasking { get; }     
         public bool NeedsSignBitStuffing { get; private set; }
 
-        private Model.Field Original;
+        public Model.Field Original; // TODO: I'm not sure this should be public
         public Field(Model.Field original)
         {
             // Set generic properties
             this.Original = original;
             this.ByteAlginedOfffset = (original.Offset - (original.Offset % 8));
-            this.Mask = ComputeMask();
-            this.Shift = ComputeShift();
-            this.CaptureSize = ComputeCaptureSize();            
-            this.NeedsMasking = ComputeMaskingRequired();
+            if (original.Type is Model.FieldTypes.Integral ||
+                original.Type is Model.FieldTypes.FloatingPoint ||
+                original.Type is Model.Enumeration)
+            {
+
+                this.Mask = ComputeMask();
+                this.Shift = ComputeShift();
+                this.CaptureSize = ComputeCaptureSize();
+                this.NeedsMasking = ComputeMaskingRequired();
+            }
             this.NeedsSignBitStuffing = false; // Default to false, will be set in the type visitor if required
             // Set type dependent properties
             this.Original.Type.Accept(this);

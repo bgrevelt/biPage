@@ -41,7 +41,7 @@ namespace BiPaGe.FrontEnd.CPP
 
         private void CreateStringBody(AsciiString s)
         {
-            String size = new ExpressionTranslator().Translate(s.Size);
+            String size = new ExpressionTranslator(this.field.Original).Translate(s.Size);
 
             AddOffsetLine("data_offset", field.ByteAlginedOfffset, field.OffsetField);
             this.body.Add($"return std::string(static_cast<const char*>(data_offset), {size});");

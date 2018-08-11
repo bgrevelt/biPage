@@ -1249,8 +1249,8 @@ namespace BiPaGe.Test.FrontEnd.CPP
 
             Assert.AreEqual("std::string TEST() const", declaration);
             Assert.AreEqual(new List<String> {
-                "const char* start = reinterpret_cast<char*>(this);",
-                "return std::string(start, (24 / 8) + 2);" }, body); // TODO: do we want this, or just 5?
+                "const std::uint8_t* data_offset = reinterpret_cast<const std::uint8_t*>(this);",
+                "return std::string(static_cast<const char*>(data_offset), (24 / 8) + 2);" }, body); // TODO: do we want this, or just 5?
         }
 
         [Test()]
@@ -1272,9 +1272,8 @@ namespace BiPaGe.Test.FrontEnd.CPP
 
             Assert.AreEqual("std::string TEST() const", declaration);
             Assert.AreEqual(new List<String> {
-                "size_t size = 128 - (dynamic.end() -  reinterpret_cast<const std::uint8_t*>(this));",
-                "const char* start = reinterpret_cast<const char*>(dynamic.end() + 4);",
-                "return std::string(start, size);" }, body); // TODO: do we want this, or just 5?
+                "const std::uint8_t* data_offset = dynamic().end() + 4;",
+                "return std::string(static_cast<const char*>(data_offset), (128 - (dynamic().end() - reinterpret_cast<const std::uint8_t*>(this)) + 4) / 8);" }, body); // TODO: do we want this, or just 5?
         }
 
         [Test()]
@@ -1287,8 +1286,8 @@ namespace BiPaGe.Test.FrontEnd.CPP
 
             Assert.AreEqual("std::string TEST() const", declaration);
             Assert.AreEqual(new List<String> {
-                "const char* start = reinterpret_cast<char*>(some_field.end() + 3);",
-                "return std::string(start, string_size());" }, body); 
+                "const std::uint8_t* data_offset = some_field().end() + 3;",
+                "return std::string(static_cast<const char*>(data_offset), string_size());" }, body); 
         }
     }
 }
